@@ -31,6 +31,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Added `django-browser-reload` to dependencies and wired middleware/URLs for instantaneous browser refresh on template edits.
 - **Test Suite Expansion**:
   - Created `tests/test_htmx_and_theme.py` testing HTMX partial responses, theme selection, ContactPage rendering/submission, and QuickLinkItem internal foreign keys. (Total tests: 27/27 passing).
+- **Theme & Styling Guide Documentation**:
+  - Authored comprehensive developer guide in `docs/theming.md` covering the DaisyUI v5 / Tailwind CSS v4 theming architecture, Wagtail `SiteSettings` integration, root `data-theme` and inline CSS variable injection, and step-by-step procedures for adding, removing, or customizing themes.
 
 ### Changed
 - **HTMX Partial Swapping across Index Pages**:

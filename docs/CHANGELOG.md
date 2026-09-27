@@ -18,6 +18,7 @@ The format follows:
 ### Added
 
 - Project documentation baseline.
+- Theme & Styling Guide (`docs/theming.md`).
 
 ### Changed
 
