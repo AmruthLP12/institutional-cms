@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% load static wagtailimages_tags wagtailcore_tags %}
+
+{% block title %}{{ page.title }} — Nakashara{% endblock %}
+
+{% block meta_description %}{% if page.meta_description %}{{ page.meta_description }}{% else %}Latest news and announcements from Nakashara.{% endif %}{% endblock %}
+
+{% block content %}
+{# ── Breadcrumb ─────────────────────────────────────────────────── #}
+<nav aria-label="Breadcrumb" class="bg-base-200 border-b border-base-300">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+    <ol class="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-base-content/60">
+      <li>
+        <a href="/" class="hover:text-primary transition-colors">Home</a>
+      </li>
+      <li aria-hidden="true"><span class="mx-1">/</span></li>
+      <li aria-current="page" class="font-medium text-base-content">{{ page.title }}</li>
+    </ol>
+  </div>
+</nav>
+
+{# ── Page header ─────────────────────────────────────────────────── #}
+<header class="bg-base-100 border-b border-base-300">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
+    <h1 class="font-serif text-4xl md:text-5xl font-bold text-primary leading-tight">
+      {{ page.title }}
+    </h1>
+    {% if page.intro %}
+    <div class="mt-4 prose prose-lg max-w-3xl text-base-content/80">
+      {{ page.intro|richtext }}
+    </div>
+    {% endif %}
+  </div>
+</header>
+
+{# ── Category filter ─────────────────────────────────────────────── #}
+{% if all_categories %}
+<section aria-label="Filter by category" class="bg-base-100 border-b border-base-300 sticky top-0 z-10 shadow-sm">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0">
+      <div class="flex items-center gap-2 py-3 min-w-max sm:flex-wrap sm:min-w-0"
+           role="list"
+           aria-label="News categories">
+
+        {# "All" pill #}
+        <a href="{{ page.url }}"
+           role="listitem"
+           class="badge badge-lg transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2
+                  {% if not active_category %}bg-primary text-primary-content border-primary{% else %}badge-outline hover:bg-primary hover:text-primary-content hover:border-primary{% endif %}"
+           hx-get="{{ page.url }}"
+           hx-target="#news-grid"
+           hx-push-url="true"
+           hx-indicator="#grid-loading"
+           aria-pressed="{% if not active_category %}true{% else %}false{% endif %}">
+          All news
+        </a>
+
+        {% for category in all_categories %}
+        <a href="{{ page.url }}?category={{ category.slug }}"
+           role="listitem"
+           class="badge badge-lg transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2
+                  {% if active_category.slug == category.slug %}bg-secondary text-secondary-content text-white border-secondary{% else %}badge-outline hover:bg-secondary text-secondary-content hover:text-white hover:border-secondary{% endif %}"
+           hx-get="{{ page.url }}?category={{ category.slug }}"
+           hx-target="#news-grid"
+           hx-push-url="true"
+           hx-indicator="#grid-loading"
+           aria-pressed="{% if active_category.slug == category.slug %}true{% else %}false{% endif %}">
+          {% if category.icon %}
+            {% image category.icon width-20 as cat_icon %}
+            <img src="{{ cat_icon.url }}" alt="" class="w-4 h-4 rounded-full mr-1 inline" aria-hidden="true">
+          {% endif %}
+          {{ category.name }}
+        </a>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{# ── Main content ─────────────────────────────────────────────────── #}
+<main id="main-content" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-14">
+
+  {# HTMX loading indicator #}
+  <div id="grid-loading" class="htmx-indicator flex justify-center py-8">
+    <span class="loading loading-spinner loading-lg text-secondary" aria-label="Loading articles"></span>
+  </div>
+
+  {# News grid — HTMX replaces this div on category filter #}
+  <div id="news-grid">
+    {% include "news/partials/news_grid.html" %}
+  </div>
+
+</main>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Page Not Found (404) — {{ site_settings.institution_name|default:"Nakashara" }}{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto px-4 py-20 text-center">
+  <div class="text-7xl font-serif font-extrabold text-primary/20 mb-4">404</div>
+  <h1 class="text-3xl font-serif font-bold text-primary mb-4">Record or Page Not Found</h1>
+  <p class="text-base text-base-content/70 leading-relaxed mb-8">
+    The institutional page, document, or publication you requested could not be located. It may have been relocated, archived, or temporarily withdrawn for administrative review.
+  </p>
+  
+  <div class="max-w-md mx-auto mb-8">
+    <form action="/search/" method="get" class="flex gap-2">
+      <input type="text" name="query" placeholder="Search the repository..." class="input input-bordered w-full" />
+      <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+  </div>
+
+  <div class="flex justify-center gap-4 text-sm font-semibold">
+    <a href="/" class="btn btn-outline btn-primary">Return to Homepage</a>
+    <a href="/contact/" class="btn btn-ghost">Contact Webmaster</a>
+  </div>
+</div>
+{% endblock %}

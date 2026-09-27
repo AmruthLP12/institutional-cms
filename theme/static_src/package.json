@@ -1,0 +1,14 @@
+{
+  "name": "theme",
+  "version": "1.0.0",
+  "description": "Nakashara Institutional Theme with Tailwind CSS and DaisyUI",
+  "scripts": {
+    "build": "npx @tailwindcss/cli -i ./src/styles.css -o ../static/css/dist/styles.css --minify",
+    "dev": "npx @tailwindcss/cli -i ./src/styles.css -o ../static/css/dist/styles.css --watch"
+  },
+  "dependencies": {
+    "@tailwindcss/cli": "^4.0.0",
+    "tailwindcss": "^4.0.0",
+    "daisyui": "^5.0.0"
+  }
+}

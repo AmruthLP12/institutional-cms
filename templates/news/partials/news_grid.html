@@ -1,0 +1,230 @@
+{% load static wagtailimages_tags wagtailcore_tags %}
+<!-- {#   Partial: news/partials/news_grid.html
+  ─────────────────────────────────────
+  HTMX target for category-filtered news article grid.
+  Rendered standalone (no page shell) when requested via HX-Request header.
+  Included directly by news_index_page.html for the initial full-page render.
+#} -->
+
+{% if news_items %}
+
+  {# Active category heading #}
+  {% if active_category %}
+  <div class="mb-6 flex items-center gap-3">
+    <h2 class="font-serif text-xl font-semibold text-primary">
+      {{ active_category.name }}
+    </h2>
+    <span class="text-sm text-base-content/50">({{ paginator.count }} article{{ paginator.count|pluralize }})</span>
+    <a href="{{ page.url }}"
+       class="btn btn-ghost btn-xs text-base-content/50 hover:text-primary ml-auto gap-1"
+       hx-get="{{ page.url }}"
+       hx-target="#news-grid"
+       hx-push-url="true"
+       aria-label="Clear category filter">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+        <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
+      </svg>
+      Clear filter
+    </a>
+  </div>
+  {% else %}
+  <div class="mb-6">
+    <p class="text-sm text-base-content/50">{{ paginator.count }} article{{ paginator.count|pluralize }}</p>
+  </div>
+  {% endif %}
+
+  {# News card grid #}
+  <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 list-none p-0"
+      aria-label="News articles">
+    {% for post in news_items %}
+    <li>
+      <article class="card card-bordered bg-base-100 shadow-sm hover:shadow-lg transition-shadow duration-200 h-full flex flex-col">
+
+        {# Featured image #}
+        {% if post.featured_image %}
+        <figure class="aspect-video overflow-hidden rounded-t-2xl">
+          {% image post.featured_image fill-600x338 as card_img %}
+          <a href="{{ post.url }}" tabindex="-1" aria-hidden="true" class="block h-full">
+            <img
+              src="{{ card_img.url }}"
+              width="{{ card_img.width }}"
+              height="{{ card_img.height }}"
+              alt="{{ post.featured_image.title }}"
+              class="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+              loading="lazy"
+            >
+          </a>
+        </figure>
+        {% else %}
+        {# Placeholder when no featured image #}
+        <div class="aspect-video bg-primary/10 rounded-t-2xl flex items-center justify-center" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-primary/20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/>
+          </svg>
+        </div>
+        {% endif %}
+
+        {# Card body #}
+        <div class="card-body p-5 flex flex-col flex-1">
+
+          {# Category badges #}
+          {% with categories=post.categories.all %}
+          {% if categories %}
+          <div class="flex flex-wrap gap-1.5 mb-3" aria-label="Categories for {{ post.headline }}">
+            {% for cat in categories %}
+            <span class="badge badge-sm bg-secondary text-secondary-content/10 text-secondary border-secondary/30">
+              {{ cat.name }}
+            </span>
+            {% endfor %}
+          </div>
+          {% endif %}
+          {% endwith %}
+
+          {# Headline #}
+          <h2 class="font-serif text-lg font-bold text-primary leading-snug mb-2">
+            <a href="{{ post.url }}"
+               class="hover:text-secondary transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 rounded-sm">
+              {{ post.headline }}
+            </a>
+          </h2>
+
+          {# Summary #}
+          {% if post.summary %}
+          <p class="text-sm text-base-content/70 leading-relaxed line-clamp-3 flex-1">
+            {{ post.summary }}
+          </p>
+          {% endif %}
+
+          {# Footer metadata #}
+          <footer class="flex items-center justify-between mt-4 pt-4 border-t border-base-300 text-xs text-base-content/50">
+            <time datetime="{{ post.publication_date|date:'Y-m-d' }}">
+              {{ post.publication_date|date:"j M Y" }}
+            </time>
+            {% if post.author_name %}
+            <span class="truncate max-w-[120px]" title="{{ post.author_name }}">{{ post.author_name }}</span>
+            {% endif %}
+          </footer>
+
+        </div>
+      </article>
+    </li>
+    {% endfor %}
+  </ul>
+
+  {# ── Pagination ─────────────────────────────────────────────── #}
+  {% if news_items.paginator.num_pages > 1 %}
+  <nav aria-label="News pagination" class="flex justify-center mt-10">
+    <div class="join" role="list">
+
+      {# Previous #}
+      {% if news_items.has_previous %}
+      <a href="?{% if category_slug %}category={{ category_slug }}&{% endif %}page={{ news_items.previous_page_number }}"
+         class="join-item btn btn-outline border-base-300 hover:bg-primary hover:text-primary-content hover:border-primary"
+         hx-get="?{% if category_slug %}category={{ category_slug }}&{% endif %}page={{ news_items.previous_page_number }}"
+         hx-target="#news-grid"
+         hx-push-url="true"
+         aria-label="Previous page">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+          <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd"/>
+        </svg>
+        Prev
+      </a>
+      {% else %}
+      <button class="join-item btn btn-outline border-base-300 btn-disabled" disabled aria-disabled="true" aria-label="No previous page">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+          <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd"/>
+        </svg>
+        Prev
+      </button>
+      {% endif %}
+
+      {# Page numbers — show window of 5 around current page #}
+      {% with current=news_items.number total=news_items.paginator.num_pages %}
+      {% for p in news_items.paginator.page_range %}
+        {% if p == 1 or p == total or p >= current|add:"-2" and p <= current|add:"2" %}
+        <a href="?{% if category_slug %}category={{ category_slug }}&{% endif %}page={{ p }}"
+           class="join-item btn border-base-300
+                  {% if p == current %}bg-primary text-primary-content border-primary{% else %}btn-outline hover:bg-primary hover:text-primary-content hover:border-primary{% endif %}"
+           hx-get="?{% if category_slug %}category={{ category_slug }}&{% endif %}page={{ p }}"
+           hx-target="#news-grid"
+           hx-push-url="true"
+           aria-label="Page {{ p }}"
+           {% if p == current %}aria-current="page"{% endif %}>
+          {{ p }}
+        </a>
+        {% elif p == current|add:"-3" or p == current|add:"3" %}
+        <span class="join-item btn btn-disabled border-base-300 pointer-events-none" aria-hidden="true">…</span>
+        {% endif %}
+      {% endfor %}
+      {% endwith %}
+
+      {# Next #}
+      {% if news_items.has_next %}
+      <a href="?{% if category_slug %}category={{ category_slug }}&{% endif %}page={{ news_items.next_page_number }}"
+         class="join-item btn btn-outline border-base-300 hover:bg-primary hover:text-primary-content hover:border-primary"
+         hx-get="?{% if category_slug %}category={{ category_slug }}&{% endif %}page={{ news_items.next_page_number }}"
+         hx-target="#news-grid"
+         hx-push-url="true"
+         aria-label="Next page">
+        Next
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+          <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
+        </svg>
+      </a>
+      {% else %}
+      <button class="join-item btn btn-outline border-base-300 btn-disabled" disabled aria-disabled="true" aria-label="No next page">
+        Next
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+          <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
+        </svg>
+      </button>
+      {% endif %}
+
+    </div>
+  </nav>
+
+  <p class="text-center text-sm text-base-content/50 mt-3">
+    Page {{ news_items.number }} of {{ news_items.paginator.num_pages }}
+    &nbsp;·&nbsp; {{ paginator.count }} article{{ paginator.count|pluralize }} total
+  </p>
+  {% endif %}
+
+{% else %}
+
+  {# ── Empty state ─────────────────────────────────────────────── #}
+  <div class="flex flex-col items-center justify-center py-24 text-center" role="status" aria-live="polite">
+    <svg xmlns="http://www.w3.org/2000/svg"
+         class="h-20 w-20 text-base-content/20 mb-6"
+         fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
+            d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/>
+    </svg>
+
+    <h2 class="font-serif text-2xl font-semibold text-primary mb-3">
+      {% if active_category %}
+        No articles in &ldquo;{{ active_category.name }}&rdquo;
+      {% else %}
+        No articles published yet
+      {% endif %}
+    </h2>
+
+    <p class="text-base-content/60 max-w-sm">
+      {% if active_category %}
+        Try selecting a different category or view all news.
+      {% else %}
+        Check back soon for the latest news and announcements from Nakashara.
+      {% endif %}
+    </p>
+
+    {% if active_category %}
+    <a href="{{ page.url }}"
+       class="btn btn-outline border-primary text-primary hover:bg-primary hover:text-primary-content mt-6"
+       hx-get="{{ page.url }}"
+       hx-target="#news-grid"
+       hx-push-url="true">
+      View all news
+    </a>
+    {% endif %}
+  </div>
+
+{% endif %}

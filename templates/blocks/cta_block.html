@@ -1,0 +1,19 @@
+<div class="my-8 p-8 bg-gradient-to-r from-primary to-primary/85 text-primary-content rounded-xl shadow-md flex flex-col md:flex-row items-center justify-between gap-6">
+  <div class="max-w-xl">
+    <h3 class="text-2xl font-serif font-bold text-white mb-2">{{ value.title }}</h3>
+    {% if value.text %}
+      <p class="text-white/80 leading-relaxed">{{ value.text }}</p>
+    {% endif %}
+  </div>
+  <div>
+    {% if value.button_page %}
+      <a href="{{ value.button_page.url }}" class="btn btn-warning font-semibold px-6 py-2 shadow hover:brightness-105">
+        {{ value.button_label }}
+      </a>
+    {% elif value.button_url %}
+      <a href="{{ value.button_url }}" class="btn btn-warning font-semibold px-6 py-2 shadow hover:brightness-105" target="_blank" rel="noopener noreferrer">
+        {{ value.button_label }}
+      </a>
+    {% endif %}
+  </div>
+</div>

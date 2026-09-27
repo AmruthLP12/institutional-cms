@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 py-12">
+  <header class="mb-8">
+    <h1 class="text-3xl sm:text-4xl font-serif font-bold text-primary mb-4">Search Institutional Records</h1>
+    
+    <form action="{% url 'search' %}" method="get" class="flex gap-2">
+      <div class="relative flex-grow">
+        <input 
+          type="text" 
+          name="query" 
+          value="{{ search_query|default:'' }}" 
+          placeholder="Search by keywords, faculty, departments, or document numbers..." 
+          class="input input-bordered w-full pl-10 pr-4 text-base focus:border-secondary" 
+          hx-get="{% url 'search' %}" 
+          hx-trigger="keyup changed delay:400ms" 
+          hx-target="#search-results" 
+          hx-indicator="#search-loading"
+        />
+        <svg class="w-5 h-5 text-base-content/40 absolute left-3 top-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+      </div>
+      <button type="submit" class="btn btn-primary px-6">Search</button>
+    </form>
+    
+    <div id="search-loading" class="htmx-indicator mt-2 text-xs text-base-content/60 flex items-center gap-2">
+      <span class="loading loading-spinner loading-xs"></span> Searching repository...
+    </div>
+  </header>
+
+  <div id="search-results">
+    {% include "search/includes/search_results.html" %}
+  </div>
+</div>
+{% endblock %}

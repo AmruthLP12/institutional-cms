@@ -1,0 +1,159 @@
+{% load static wagtailimages_tags wagtailcore_tags %}
+{# HTMX partial for people grid & pagination #}
+
+{# HTMX loading indicator #}
+<div id="grid-loader" class="htmx-indicator flex justify-center py-8" aria-live="polite" aria-label="Loading people">
+  <span class="loading loading-spinner loading-lg text-primary"></span>
+</div>
+
+{% if not people_page.object_list %}
+  <div class="text-center py-16" role="status">
+    <p class="text-xl text-base-content/60">No people found{% if active_category %} in &ldquo;{{ active_category.name }}&rdquo;{% endif %}.</p>
+    {% if active_category %}
+      <a href="{{ page.url }}"
+         class="btn btn-outline btn-primary mt-4"
+         hx-get="{{ page.url }}"
+         hx-target="#people-grid-region"
+         hx-push-url="true">View all people</a>
+    {% endif %}
+  </div>
+
+{% elif active_category %}
+  {# ── Flat grid for filtered view ── #}
+  <section aria-label="People — {{ active_category.name }}">
+    <h2 class="sr-only">{{ active_category.name }}</h2>
+    <ul class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6" role="list">
+      {% for person in people_page.object_list %}
+        <li class="group" role="listitem">
+          <a href="{{ person.url }}"
+             class="card card-compact bg-base-100 border border-base-200 shadow-sm hover:shadow-md hover:border-secondary transition-all duration-200 h-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 rounded-2xl overflow-hidden"
+             aria-label="View profile of {{ person.full_name }}">
+            <figure class="flex justify-center pt-6 pb-2">
+              {% if person.profile_photo %}
+                {% image person.profile_photo fill-160x160 class="w-28 h-28 rounded-full object-cover ring-4 ring-base-200 group-hover:ring-secondary transition-all duration-200" alt=person.full_name %}
+              {% else %}
+                <div class="w-28 h-28 rounded-full bg-primary flex items-center justify-center ring-4 ring-base-200 group-hover:ring-secondary transition-all duration-200" aria-hidden="true">
+                  <span class="text-white text-3xl font-bold font-serif select-none">
+                    {{ person.first_name|first }}{{ person.last_name|first }}
+                  </span>
+                </div>
+              {% endif %}
+            </figure>
+            <div class="card-body items-center text-center px-4 pb-5">
+              <h3 class="card-title text-base font-semibold text-primary group-hover:text-secondary transition-colors leading-snug">
+                {{ person.full_name }}
+              </h3>
+              {% if person.designation %}
+                <p class="text-xs text-base-content/60 -mt-1 leading-tight">{{ person.designation }}</p>
+              {% endif %}
+              {% if person.department %}
+                <p class="text-xs text-base-content/50">{{ person.department.title }}</p>
+              {% endif %}
+            </div>
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  </section>
+
+{% else %}
+  {# ── Grouped view ── #}
+  {% for group in grouped_people %}
+    <section class="mb-14" aria-labelledby="group-heading-{% if group.category %}{{ group.category.slug }}{% else %}other{% endif %}">
+      <h2 id="group-heading-{% if group.category %}{{ group.category.slug }}{% else %}other{% endif %}"
+          class="font-serif text-2xl font-semibold text-primary mb-6 pb-2 border-b-2 border-secondary">
+        {% if group.category %}{{ group.category.name }}{% else %}Other{% endif %}
+      </h2>
+      <ul class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6" role="list">
+        {% for person in group.people %}
+          <li class="group" role="listitem">
+            <a href="{{ person.url }}"
+               class="card card-compact bg-base-100 border border-base-200 shadow-sm hover:shadow-md hover:border-secondary transition-all duration-200 h-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 rounded-2xl overflow-hidden"
+               aria-label="View profile of {{ person.full_name }}">
+              <figure class="flex justify-center pt-6 pb-2">
+                {% if person.profile_photo %}
+                  {% image person.profile_photo fill-160x160 class="w-28 h-28 rounded-full object-cover ring-4 ring-base-200 group-hover:ring-secondary transition-all duration-200" alt=person.full_name %}
+                {% else %}
+                  <div class="w-28 h-28 rounded-full bg-primary flex items-center justify-center ring-4 ring-base-200 group-hover:ring-secondary transition-all duration-200" aria-hidden="true">
+                    <span class="text-white text-3xl font-bold font-serif select-none">
+                      {{ person.first_name|first }}{{ person.last_name|first }}
+                    </span>
+                  </div>
+                {% endif %}
+              </figure>
+              <div class="card-body items-center text-center px-4 pb-5">
+                <h3 class="card-title text-base font-semibold text-primary group-hover:text-secondary transition-colors leading-snug">
+                  {{ person.full_name }}
+                </h3>
+                {% if person.designation %}
+                  <p class="text-xs text-base-content/60 -mt-1 leading-tight">{{ person.designation }}</p>
+                {% endif %}
+                {% if person.department %}
+                  <p class="text-xs text-base-content/50">{{ person.department.title }}</p>
+                {% endif %}
+              </div>
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    </section>
+  {% endfor %}
+{% endif %}
+
+{# ─────────────────────────────── Pagination ─────────────────────────── #}
+{% if people_page.has_other_pages %}
+  <nav aria-label="Page navigation" class="mt-12 flex justify-center">
+    <div class="join" role="navigation">
+
+      {% if people_page.has_previous %}
+        <a href="?{% if category_slug %}category={{ category_slug }}&{% endif %}page={{ people_page.previous_page_number }}"
+           class="join-item btn btn-outline"
+           hx-get="?{% if category_slug %}category={{ category_slug }}&{% endif %}page={{ people_page.previous_page_number }}"
+           hx-target="#people-grid-region"
+           hx-push-url="true"
+           hx-indicator="#grid-loader"
+           aria-label="Previous page"
+           rel="prev">
+          ← Previous
+        </a>
+      {% else %}
+        <button type="button" class="join-item btn btn-outline" disabled aria-disabled="true" aria-label="No previous page">← Previous</button>
+      {% endif %}
+
+      {% for num in people_page.paginator.page_range %}
+        {% if num == people_page.number %}
+          <button type="button" class="join-item btn btn-primary" aria-current="page" aria-label="Page {{ num }}, current">{{ num }}</button>
+        {% elif num >= people_page.number|add:"-3" and num <= people_page.number|add:"3" %}
+          <a href="?{% if category_slug %}category={{ category_slug }}&{% endif %}page={{ num }}"
+             class="join-item btn btn-outline"
+             hx-get="?{% if category_slug %}category={{ category_slug }}&{% endif %}page={{ num }}"
+             hx-target="#people-grid-region"
+             hx-push-url="true"
+             hx-indicator="#grid-loader"
+             aria-label="Page {{ num }}">
+            {{ num }}
+          </a>
+        {% endif %}
+      {% endfor %}
+
+      {% if people_page.has_next %}
+        <a href="?{% if category_slug %}category={{ category_slug }}&{% endif %}page={{ people_page.next_page_number }}"
+           class="join-item btn btn-outline"
+           hx-get="?{% if category_slug %}category={{ category_slug }}&{% endif %}page={{ people_page.next_page_number }}"
+           hx-target="#people-grid-region"
+           hx-push-url="true"
+           hx-indicator="#grid-loader"
+           aria-label="Next page"
+           rel="next">
+          Next →
+        </a>
+      {% else %}
+        <button type="button" class="join-item btn btn-outline" disabled aria-disabled="true" aria-label="No next page">Next →</button>
+      {% endif %}
+
+    </div>
+  </nav>
+  <p class="text-center text-sm text-base-content/50 mt-3" aria-live="polite">
+    Showing {{ people_page.start_index }}–{{ people_page.end_index }} of {{ people_page.paginator.count }} people
+  </p>
+{% endif %}

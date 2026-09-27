@@ -1,0 +1,41 @@
+{% load wagtailimages_tags %}
+
+{# ──────────────────────────────────────────────────────────────────────────
+   Person card partial — reused in the index grid.
+   Usage: {% include "people/includes/person_card.html" with person=person %}
+────────────────────────────────────────────────────────────────────────── #}
+<li class="group" role="listitem">
+  <a
+    href="{{ person.url }}"
+    class="card card-compact bg-base-100 border border-base-200 shadow-sm hover:shadow-md hover:border-secondary transition-all duration-200 h-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 rounded-2xl overflow-hidden"
+    aria-label="View profile of {{ person.full_name }}"
+  >
+    {# Profile photo #}
+    <figure class="flex justify-center pt-6 pb-2">
+      {% if person.profile_photo %}
+        {% image person.profile_photo fill-160x160 class="w-28 h-28 rounded-full object-cover ring-4 ring-base-200 group-hover:ring-secondary transition-all duration-200" alt=person.full_name %}
+      {% else %}
+        <div
+          class="w-28 h-28 rounded-full bg-primary flex items-center justify-center ring-4 ring-base-200 group-hover:ring-secondary transition-all duration-200"
+          aria-hidden="true"
+        >
+          <span class="text-white text-3xl font-bold font-['Source_Serif_4'] select-none">
+            {{ person.first_name|first }}{{ person.last_name|first }}
+          </span>
+        </div>
+      {% endif %}
+    </figure>
+
+    <div class="card-body items-center text-center px-4 pb-5">
+      <h3 class="card-title text-base font-semibold text-primary group-hover:text-secondary transition-colors leading-snug">
+        {{ person.full_name }}
+      </h3>
+      {% if person.designation %}
+        <p class="text-xs text-base-content/60 -mt-1 leading-tight">{{ person.designation }}</p>
+      {% endif %}
+      {% if person.department %}
+        <p class="text-xs text-base-content/50">{{ person.department.title }}</p>
+      {% endif %}
+    </div>
+  </a>
+</li>

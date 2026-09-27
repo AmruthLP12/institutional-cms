@@ -1,0 +1,295 @@
+{% load static tailwind_tags wagtailcore_tags wagtailimages_tags %}
+<!DOCTYPE html>
+<html lang="en" data-theme="{{ site_settings.theme|default:'corporate' }}" class="h-full"
+  {% if site_settings.custom_primary_color or site_settings.custom_accent_color %}
+    style="{% if site_settings.custom_primary_color %}--color-primary: {{ site_settings.custom_primary_color }}; --p: {{ site_settings.custom_primary_color }};{% endif %}{% if site_settings.custom_accent_color %}--color-secondary: {{ site_settings.custom_accent_color }}; --s: {{ site_settings.custom_accent_color }}; --color-accent: {{ site_settings.custom_accent_color }}; --a: {{ site_settings.custom_accent_color }};{% endif %}"
+  {% endif %}>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}{% if page.seo_title %}{{ page.seo_title }}{% elif page.title %}{{ page.title }}{% else %}Home{% endif %}{% endblock %} — {{ site_settings.institution_name|default:"Nakashara" }}</title>
+
+  <!-- SEO & Meta -->
+  <meta name="description" content="{% block meta_description %}{% if page.get_meta_description %}{{ page.get_meta_description }}{% else %}{{ site_settings.tagline|default:'Institutional Website and Content Management System' }}{% endif %}{% endblock %}" />
+  {% if page.robots_noindex %}
+    <meta name="robots" content="noindex, nofollow" />
+  {% else %}
+    <meta name="robots" content="index, follow" />
+  {% endif %}
+
+  <!-- Canonical URL -->
+  {% if page %}
+    <link rel="canonical" href="{{ page.get_canonical_url }}" />
+  {% endif %}
+
+  <!-- Open Graph -->
+  <meta property="og:site_name" content="{{ site_settings.institution_name|default:'Nakashara' }}" />
+  <meta property="og:title" content="{% if page.seo_title %}{{ page.seo_title }}{% elif page.title %}{{ page.title }}{% else %}{{ site_settings.institution_name|default:'Nakashara' }}{% endif %}" />
+  <meta property="og:description" content="{% if page.get_meta_description %}{{ page.get_meta_description }}{% else %}{{ site_settings.tagline }}{% endif %}" />
+  <meta property="og:type" content="website" />
+  {% if page.og_image %}
+    {% image page.og_image width-1200 as og_img %}
+    <meta property="og:image" content="{{ og_img.url }}" />
+  {% elif site_settings.logo %}
+    {% image site_settings.logo width-600 as s_logo %}
+    <meta property="og:image" content="{{ s_logo.url }}" />
+  {% endif %}
+
+  <!-- Favicon -->
+  {% if site_settings.favicon %}
+    {% image site_settings.favicon width-64 as fav %}
+    <link rel="icon" type="image/png" href="{{ fav.url }}" />
+  {% else %}
+    <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}" />
+  {% endif %}
+
+  <!-- Fonts & Local CSS -->
+  <link rel="stylesheet" href="{% static 'css/fonts.css' %}" />
+  {% tailwind_css %}
+
+  <!-- Local Alpine.js and HTMX (No CDN) -->
+  <script defer src="{% static 'js/alpine.min.js' %}"></script>
+  <script defer src="{% static 'js/htmx.min.js' %}"></script>
+
+  {% block extra_head %}{% endblock %}
+</head>
+<body class="min-h-full flex flex-col bg-base-100 text-base-content font-sans antialiased selection:bg-primary selection:text-primary-content">
+  <!-- Accessibility Skip Link -->
+  <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-content focus:rounded-md focus:shadow-lg">
+    Skip to main content
+  </a>
+
+  <!-- Emergency / Site Alert Banner -->
+  {% if alert_banner %}
+    <aside class="py-2.5 px-4 text-sm font-medium transition-colors
+      {% if alert_banner.banner_type == 'critical' %}bg-error text-error-content
+      {% elif alert_banner.banner_type == 'warning' %}bg-warning text-warning-content
+      {% else %}bg-info text-info-content{% endif %}" role="alert">
+      <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
+        <div class="flex items-center gap-2">
+          <svg class="w-5 h-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <span>
+            {% if alert_banner.title %}<strong>{{ alert_banner.title }}:</strong>{% endif %}
+            {{ alert_banner.message }}
+          </span>
+        </div>
+        {% if alert_banner.link_url %}
+          <a href="{{ alert_banner.link_url }}" class="underline font-bold text-xs uppercase tracking-wider hover:opacity-80 flex-shrink-0">
+            {{ alert_banner.link_text|default:"Read more" }} &rarr;
+          </a>
+        {% endif %}
+      </div>
+    </aside>
+  {% endif %}
+
+  <!-- Institutional Top Header -->
+  <header class="bg-primary text-primary-content border-b border-primary-content/20" x-data="{ mobileMenuOpen: false }">
+    <!-- Utility Bar -->
+    <div class="border-b border-primary-content/15 text-xs py-1.5 px-4">
+      <div class="max-w-7xl mx-auto flex justify-between items-center">
+        <div class="flex items-center gap-4">
+          <span class="text-primary-content/80">{{ site_settings.tagline|default:"Advancing Research, Learning, and Institutional Excellence" }}</span>
+        </div>
+        <div class="flex items-center gap-4">
+          <a href="/legal/" class="text-primary-content/85 hover:text-secondary transition-colors">Policies</a>
+          <a href="/documents/" class="text-primary-content/85 hover:text-secondary transition-colors">Documents</a>
+          <a href="/contact/" class="text-primary-content/85 hover:text-secondary transition-colors">Contact</a>
+          <a href="/admin/" class="text-primary-content/70 hover:text-primary-content transition-colors" title="CMS Portal">Staff Portal</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Identity & Nav Bar -->
+    <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between gap-6">
+      <a href="/" class="flex items-center gap-3.5 group">
+        {% if site_settings.logo %}
+          {% image site_settings.logo height-64 as nav_logo %}
+          <img src="{{ nav_logo.url }}" alt="{{ site_settings.logo_alt_text }}" class="h-12 w-auto object-contain" />
+        {% else %}
+          <div class="w-11 h-11 rounded-lg bg-secondary text-secondary-content font-serif font-black text-2xl flex items-center justify-center shadow-md">
+            N
+          </div>
+        {% endif %}
+        <div>
+          <div class="font-serif font-bold text-xl md:text-2xl tracking-tight text-primary-content group-hover:text-secondary transition-colors">
+            {{ site_settings.institution_name|default:"Nakashara" }}
+          </div>
+          {% if site_settings.institution_short_name %}
+            <div class="text-xs font-semibold tracking-widest uppercase text-secondary">
+              {{ site_settings.institution_short_name }}
+            </div>
+          {% endif %}
+        </div>
+      </a>
+
+      <!-- Desktop Search Bar -->
+      <form action="/search/" method="get" class="hidden md:flex items-center relative max-w-xs w-full">
+        <input type="text" name="query" placeholder="Search pages, faculty, research..." class="input input-sm w-full bg-primary-content/10 text-primary-content placeholder-primary-content/60 border-primary-content/25 rounded-full pl-9 pr-4 focus:outline-none focus:border-secondary focus:bg-primary-content/20" aria-label="Search" />
+        <svg class="w-4 h-4 text-primary-content/60 absolute left-3 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+      </form>
+
+      <!-- Mobile Hamburger Button -->
+      <button @click="mobileMenuOpen = !mobileMenuOpen" class="md:hidden btn btn-sm btn-ghost text-primary-content" aria-label="Toggle navigation">
+        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Navigation Menu (Desktop) -->
+    <nav class="hidden md:block bg-primary/95 border-t border-primary-content/15" aria-label="Primary Navigation">
+      <div class="max-w-7xl mx-auto px-4 flex items-center justify-between">
+        <ul class="flex items-center gap-1 text-sm font-medium">
+          <li><a href="/" class="block py-3 px-3.5 text-primary-content/90 hover:text-secondary hover:bg-primary-content/10 rounded transition-colors">Home</a></li>
+          <li><a href="/about/" class="block py-3 px-3.5 text-primary-content/90 hover:text-secondary hover:bg-primary-content/10 rounded transition-colors">About</a></li>
+          <li><a href="/departments/" class="block py-3 px-3.5 text-primary-content/90 hover:text-secondary hover:bg-primary-content/10 rounded transition-colors">Departments</a></li>
+          <li><a href="/research/" class="block py-3 px-3.5 text-primary-content/90 hover:text-secondary hover:bg-primary-content/10 rounded transition-colors">Research</a></li>
+          <li><a href="/people/" class="block py-3 px-3.5 text-primary-content/90 hover:text-secondary hover:bg-primary-content/10 rounded transition-colors">People</a></li>
+          <li><a href="/news/" class="block py-3 px-3.5 text-primary-content/90 hover:text-secondary hover:bg-primary-content/10 rounded transition-colors">News</a></li>
+          <li><a href="/events/" class="block py-3 px-3.5 text-primary-content/90 hover:text-secondary hover:bg-primary-content/10 rounded transition-colors">Events</a></li>
+          <li><a href="/announcements/" class="block py-3 px-3.5 text-primary-content/90 hover:text-secondary hover:bg-primary-content/10 rounded transition-colors">Announcements</a></li>
+          <li><a href="/tenders/" class="block py-3 px-3.5 text-primary-content/90 hover:text-secondary hover:bg-primary-content/10 rounded transition-colors">Tenders</a></li>
+          <li><a href="/careers/" class="block py-3 px-3.5 text-primary-content/90 hover:text-secondary hover:bg-primary-content/10 rounded transition-colors">Careers</a></li>
+          <li><a href="/contact/" class="block py-3 px-3.5 text-primary-content/90 hover:text-secondary hover:bg-primary-content/10 rounded transition-colors">Contact</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Navigation Menu (Mobile) -->
+    <div x-show="mobileMenuOpen" x-transition class="md:hidden bg-primary/95 border-t border-primary-content/15 px-4 py-4 space-y-2">
+      <form action="/search/" method="get" class="mb-3">
+        <input type="text" name="query" placeholder="Search..." class="input input-sm w-full bg-primary-content/10 text-primary-content placeholder-primary-content/60 border-primary-content/25 rounded" />
+      </form>
+      <ul class="space-y-1 text-sm font-medium">
+        <li><a href="/" class="block py-2 px-3 rounded hover:bg-primary-content/10">Home</a></li>
+        <li><a href="/about/" class="block py-2 px-3 rounded hover:bg-primary-content/10">About</a></li>
+        <li><a href="/departments/" class="block py-2 px-3 rounded hover:bg-primary-content/10">Departments</a></li>
+        <li><a href="/research/" class="block py-2 px-3 rounded hover:bg-primary-content/10">Research</a></li>
+        <li><a href="/people/" class="block py-2 px-3 rounded hover:bg-primary-content/10">People</a></li>
+        <li><a href="/news/" class="block py-2 px-3 rounded hover:bg-primary-content/10">News</a></li>
+        <li><a href="/events/" class="block py-2 px-3 rounded hover:bg-primary-content/10">Events</a></li>
+        <li><a href="/announcements/" class="block py-2 px-3 rounded hover:bg-primary-content/10">Announcements</a></li>
+        <li><a href="/notices/" class="block py-2 px-3 rounded hover:bg-primary-content/10">Notices</a></li>
+        <li><a href="/tenders/" class="block py-2 px-3 rounded hover:bg-primary-content/10">Tenders</a></li>
+        <li><a href="/careers/" class="block py-2 px-3 rounded hover:bg-primary-content/10">Careers</a></li>
+        <li><a href="/legal/" class="block py-2 px-3 rounded hover:bg-primary-content/10">Policies & Legal</a></li>
+        <li><a href="/contact/" class="block py-2 px-3 rounded hover:bg-primary-content/10">Contact</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <!-- Breadcrumbs -->
+  {% block breadcrumbs %}
+    {% if page and page.url != '/' %}
+      <div class="bg-base-200/60 border-b border-base-200 py-2.5 px-4 text-xs text-base-content/70">
+        <div class="max-w-7xl mx-auto flex items-center gap-1.5 flex-wrap">
+          <a href="/" class="hover:text-primary transition-colors">Home</a>
+          {% for ancestor in page.get_ancestors %}
+            {% if ancestor.is_root == False and ancestor.url != '/' %}
+              <span>/</span>
+              <a href="{{ ancestor.url }}" class="hover:text-primary transition-colors">{{ ancestor.title }}</a>
+            {% endif %}
+          {% endfor %}
+          <span>/</span>
+          <span class="font-medium text-base-content">{{ page.title }}</span>
+        </div>
+      </div>
+    {% endif %}
+  {% endblock %}
+
+  <!-- Main Content -->
+  <main id="main-content" class="flex-grow focus:outline-none">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- Institutional Footer -->
+  <footer class="bg-primary text-primary-content mt-16 border-t border-primary-content/20" aria-label="Institutional Footer">
+    <!-- Top Footer Columns -->
+    <div class="max-w-7xl mx-auto px-4 py-14 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+      <!-- Col 1: Identity & Contact -->
+      <div class="lg:col-span-2 space-y-3">
+        <div class="font-serif font-bold text-2xl tracking-tight text-primary-content">
+          {{ site_settings.institution_name|default:"Nakashara" }}
+        </div>
+        <p class="text-sm text-primary-content/75 max-w-sm leading-relaxed">
+          {{ site_settings.tagline|default:"Dedicated to the advancement of science, technology, public knowledge, and high-impact scholarship." }}
+        </p>
+        <div class="pt-2 text-xs text-primary-content/75 space-y-1">
+          {% if site_settings.address_line_1 %}
+            <p>{{ site_settings.address_line_1 }}{% if site_settings.address_line_2 %}, {{ site_settings.address_line_2 }}{% endif %}</p>
+            <p>{{ site_settings.city }}, {{ site_settings.state }} {{ site_settings.postal_code }}</p>
+          {% else %}
+            <p>Institutional Enclave, Campus Road</p>
+            <p>Knowledge City, India</p>
+          {% endif %}
+          {% if site_settings.phone_primary %}<p>Phone: {{ site_settings.phone_primary }}</p>{% endif %}
+          {% if site_settings.email_general %}<p>Email: <a href="mailto:{{ site_settings.email_general }}" class="text-secondary hover:underline">{{ site_settings.email_general }}</a></p>{% endif %}
+        </div>
+      </div>
+
+      <!-- Col 2: Institutional -->
+      <div>
+        <h3 class="text-sm font-semibold uppercase tracking-wider text-secondary mb-3 font-serif">Institution</h3>
+        <ul class="space-y-2 text-sm text-primary-content/75">
+          <li><a href="/about/" class="hover:text-secondary transition-colors">About Nakashara</a></li>
+          <li><a href="/departments/" class="hover:text-secondary transition-colors">Departments & Centers</a></li>
+          <li><a href="/people/" class="hover:text-secondary transition-colors">Faculty & Staff Directory</a></li>
+          <li><a href="/research/" class="hover:text-secondary transition-colors">Research Projects</a></li>
+          <li><a href="/publications/" class="hover:text-secondary transition-colors">Publications</a></li>
+          <li><a href="/reports/" class="hover:text-secondary transition-colors">Annual Reports</a></li>
+        </ul>
+      </div>
+
+      <!-- Col 3: Public Information -->
+      <div>
+        <h3 class="text-sm font-semibold uppercase tracking-wider text-secondary mb-3 font-serif">Public Notices</h3>
+        <ul class="space-y-2 text-sm text-primary-content/75">
+          <li><a href="/announcements/" class="hover:text-secondary transition-colors">Announcements</a></li>
+          <li><a href="/notices/" class="hover:text-secondary transition-colors">Official Circulars</a></li>
+          <li><a href="/tenders/" class="hover:text-secondary transition-colors">Tenders & Procurement</a></li>
+          <li><a href="/careers/" class="hover:text-secondary transition-colors">Careers & Vacancies</a></li>
+          <li><a href="/events/" class="hover:text-secondary transition-colors">Conferences & Events</a></li>
+          <li><a href="/news/" class="hover:text-secondary transition-colors">Press & News</a></li>
+        </ul>
+      </div>
+
+      <!-- Col 4: Legal & Policies -->
+      <div>
+        <h3 class="text-sm font-semibold uppercase tracking-wider text-secondary mb-3 font-serif">Legal & Policy</h3>
+        <ul class="space-y-2 text-sm text-primary-content/75">
+          <li><a href="/legal/" class="hover:text-secondary transition-colors">Institutional Policies</a></li>
+          <li><a href="/legal/privacy-policy/" class="hover:text-secondary transition-colors">Privacy Policy</a></li>
+          <li><a href="/legal/accessibility-statement/" class="hover:text-secondary transition-colors">Accessibility Statement</a></li>
+          <li><a href="/legal/terms-of-use/" class="hover:text-secondary transition-colors">Terms of Use</a></li>
+          <li><a href="/legal/copyright-notice/" class="hover:text-secondary transition-colors">Copyright Notice</a></li>
+          <li><a href="/legal/disclaimer/" class="hover:text-secondary transition-colors">Disclaimer</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Bottom Copyright Bar -->
+    <div class="border-t border-primary-content/15 bg-primary/95 py-4 px-4 text-xs text-primary-content/70">
+      <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
+        <div>
+          &copy; {% now "Y" %} {{ site_settings.institution_name|default:"Nakashara" }}. All rights reserved.
+          {% if site_settings.footer_copyright_text %} &bull; {{ site_settings.footer_copyright_text }}{% endif %}
+        </div>
+        <div class="flex items-center gap-4 text-primary-content/70">
+          <span>Targeting WCAG 2.2 AA Accessibility</span>
+          <span>&bull;</span>
+          <a href="/contact/" class="hover:text-primary-content">Grievance & Feedback</a>
+          <span>&bull;</span>
+          <a href="/sitemap.xml" class="hover:text-primary-content">Sitemap</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  {% block extra_js %}{% endblock %}
+</body>
+</html>
+

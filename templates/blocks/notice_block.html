@@ -1,0 +1,26 @@
+{% load wagtailcore_tags %}
+<div class="my-6 p-4 rounded-lg border-l-4 flex gap-3 
+  {% if value.notice_type == 'warning' %}bg-warning/10 border-warning text-warning-content
+  {% elif value.notice_type == 'important' %}bg-error/10 border-error text-error-content
+  {% elif value.notice_type == 'success' %}bg-success/10 border-success text-success-content
+  {% else %}bg-info/10 border-info text-info-content{% endif %}">
+  <div class="flex-shrink-0 mt-0.5">
+    {% if value.notice_type == 'warning' %}
+      <svg class="w-5 h-5 text-warning" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+    {% elif value.notice_type == 'important' %}
+      <svg class="w-5 h-5 text-error" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+    {% elif value.notice_type == 'success' %}
+      <svg class="w-5 h-5 text-success" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+    {% else %}
+      <svg class="w-5 h-5 text-info" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+    {% endif %}
+  </div>
+  <div class="flex-grow">
+    {% if value.title %}
+      <h4 class="font-bold text-base mb-1">{{ value.title }}</h4>
+    {% endif %}
+    <div class="prose prose-sm max-w-none text-current opacity-90">
+      {{ value.text|richtext }}
+    </div>
+  </div>
+</div>

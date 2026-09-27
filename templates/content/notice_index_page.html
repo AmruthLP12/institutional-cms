@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto px-4 py-12">
+  <header class="mb-10 pb-6 border-b border-base-200">
+    <h1 class="text-4xl font-serif font-bold text-primary mb-3">Official Notices & Circulars</h1>
+    {% if page.intro %}
+      <div class="text-base-content/80 text-lg leading-relaxed">{{ page.intro|richtext }}</div>
+    {% endif %}
+  </header>
+
+  {% if notices %}
+    <div class="bg-base-100 border border-base-200 rounded-xl overflow-hidden shadow-sm">
+      <div class="overflow-x-auto">
+        <table class="table w-full">
+          <thead class="bg-base-200/60 text-primary font-serif">
+            <tr>
+              <th class="w-28">Date</th>
+              <th class="w-36">Ref No.</th>
+              <th>Notice Title</th>
+              <th class="w-44">Issuing Authority</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-base-200 text-sm">
+            {% for notice in notices %}
+              <tr class="hover:bg-base-200/40 transition-colors">
+                <td class="text-xs text-base-content/70 whitespace-nowrap">{{ notice.first_published_at|date:"d M Y" }}</td>
+                <td class="font-mono text-xs text-primary font-semibold">{{ notice.notice_number|default:"—" }}</td>
+                <td>
+                  <a href="{{ notice.url }}" class="font-medium text-primary hover:text-primary transition-colors block">
+                    {{ notice.title }}
+                  </a>
+                  {% if notice.summary %}
+                    <span class="text-xs text-base-content/60 line-clamp-1 mt-0.5">{{ notice.summary }}</span>
+                  {% endif %}
+                </td>
+                <td class="text-xs text-base-content/70">{{ notice.issuing_authority|default:"Administration" }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Pagination -->
+    {% if notices.has_other_pages %}
+      <div class="flex justify-center mt-10 join">
+        {% if notices.has_previous %}
+          <a href="?page={{ notices.previous_page_number }}" class="join-item btn btn-sm">&laquo;</a>
+        {% endif %}
+        <span class="join-item btn btn-sm btn-disabled">Page {{ notices.number }} of {{ notices.paginator.num_pages }}</span>
+        {% if notices.has_next %}
+          <a href="?page={{ notices.next_page_number }}" class="join-item btn btn-sm">&raquo;</a>
+        {% endif %}
+      </div>
+    {% endif %}
+  {% else %}
+    <p class="text-base-content/60 italic py-8">No formal notices published yet.</p>
+  {% endif %}
+</div>
+{% endblock %}

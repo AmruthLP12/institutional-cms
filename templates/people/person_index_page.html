@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% load static wagtailimages_tags wagtailcore_tags %}
+
+{% block title %}{{ page.title }} — Nakashara{% endblock %}
+
+{% block meta_description %}
+  {% if page.meta_description %}{{ page.meta_description }}{% else %}Browse the Nakashara faculty, staff, and research community.{% endif %}
+{% endblock %}
+
+{% block content %}
+
+{# ─────────────────────────────────────────────────────────────────────────── #}
+{#  Breadcrumb                                                                 #}
+{# ─────────────────────────────────────────────────────────────────────────── #}
+<nav aria-label="Breadcrumb" class="bg-base-200 border-b border-base-300">
+  <div class="container mx-auto px-4 py-2">
+    <ol class="breadcrumbs text-sm" itemscope itemtype="https://schema.org/BreadcrumbList">
+      <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a href="/" itemprop="item" class="hover:text-primary transition-colors">
+          <span itemprop="name">Home</span>
+        </a>
+        <meta itemprop="position" content="1" />
+      </li>
+      <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <span itemprop="name" class="text-base-content/60">{{ page.title }}</span>
+        <meta itemprop="position" content="2" />
+      </li>
+    </ol>
+  </div>
+</nav>
+
+{# ─────────────────────────────────────────────────────────────────────────── #}
+{#  Page header                                                                #}
+{# ─────────────────────────────────────────────────────────────────────────── #}
+<header class="bg-primary text-white py-14">
+  <div class="container mx-auto px-4 max-w-5xl">
+    <h1 class="font-['Source_Serif_4'] text-4xl md:text-5xl font-bold tracking-tight">
+      {{ page.title }}
+    </h1>
+    {% if page.intro %}
+      <div class="mt-4 text-lg text-white/80 prose prose-invert max-w-2xl">
+        {{ page.intro|richtext }}
+      </div>
+    {% endif %}
+  </div>
+</header>
+
+{# ─────────────────────────────────────────────────────────────────────────── #}
+{#  Category filter — Alpine.js client-side pill navigation                   #}
+{# ─────────────────────────────────────────────────────────────────────────── #}
+{% if all_categories %}
+<section
+  aria-label="Filter by category"
+  class="sticky top-0 z-10 bg-base-100 border-b border-base-200 shadow-sm"
+>
+  <div class="container mx-auto px-4 py-3 max-w-5xl overflow-x-auto">
+    <div class="flex gap-2 flex-nowrap min-w-max" role="list" aria-label="Category filters">
+
+      {# All people pill #}
+      <a
+        href="{{ page.url }}"
+        role="listitem"
+        class="btn btn-sm {% if not active_category %}btn-primary{% else %}btn-outline btn-primary{% endif %} rounded-full"
+        aria-pressed="{% if not active_category %}true{% else %}false{% endif %}"
+        aria-label="Show all people"
+      >
+        All
+      </a>
+
+      {% for cat in all_categories %}
+      <a
+        href="{{ page.url }}?category={{ cat.slug }}"
+        role="listitem"
+        class="btn btn-sm {% if active_category.slug == cat.slug %}btn-primary{% else %}btn-outline btn-primary{% endif %} rounded-full"
+        aria-pressed="{% if active_category.slug == cat.slug %}true{% else %}false{% endif %}"
+        aria-label="Filter by {{ cat.name }}"
+        hx-get="{{ page.url }}?category={{ cat.slug }}"
+        hx-target="#people-grid-region"
+        hx-push-url="true"
+        hx-indicator="#grid-loader"
+      >
+        {{ cat.name }}
+      </a>
+      {% endfor %}
+
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{# ─────────────────────────────────────────────────────────────────────────── #}
+{#  People grid                                                                #}
+{# ─────────────────────────────────────────────────────────────────────────── #}
+<main id="people-grid-region" class="container mx-auto px-4 py-12 max-w-5xl">
+  {% include "people/partials/people_grid.html" %}
+</main>
+
+{% endblock %}
+

@@ -1,0 +1,8 @@
+<blockquote class="my-6 p-6 border-l-4 border-secondary bg-base-200/50 rounded-r-lg italic text-lg text-base-content">
+  <p class="mb-2">“{{ value.text }}”</p>
+  {% if value.attribution %}
+    <footer class="text-sm font-sans font-semibold text-base-content/80 not-italic">
+      — {{ value.attribution }}{% if value.attribution_title %}, <span class="text-xs font-normal opacity-75">{{ value.attribution_title }}</span>{% endif %}
+    </footer>
+  {% endif %}
+</blockquote>

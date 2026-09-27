@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 py-12">
+  <article class="bg-base-100 p-8 rounded-xl border border-base-200 shadow-sm">
+    <div class="flex items-center gap-2 mb-3 text-xs text-base-content/60">
+      <span class="badge badge-neutral text-xs capitalize">{{ page.get_document_type_display|default:page.document_type }}</span>
+      {% if page.version %}<span>Version {{ page.version }}</span>{% endif %}
+      <span>&bull; Published {{ page.publication_date|date:"d F Y" }}</span>
+    </div>
+
+    <h1 class="text-3xl font-serif font-bold text-primary mb-4">{{ page.title }}</h1>
+
+    {% if page.description %}
+      <div class="p-4 bg-base-200/50 rounded-lg text-sm text-base-content/80 leading-relaxed mb-6">
+        {{ page.description }}
+      </div>
+    {% endif %}
+
+    {% if page.document_file %}
+      <div class="p-6 bg-primary text-primary-content rounded-xl flex items-center justify-between gap-4 my-8">
+        <div>
+          <h2 class="font-bold text-lg text-secondary mb-1">Download Document File</h2>
+          <p class="text-xs text-white/70">
+            Format: {{ page.document_file.file_extension|upper }} &bull; Size: {{ page.document_file.get_file_size|filesizeformat }}
+          </p>
+        </div>
+        <a href="{{ page.document_file.url }}" class="btn btn-warning font-semibold px-6 shadow" download>
+          Download Now
+        </a>
+      </div>
+    {% endif %}
+
+    <div class="pt-6 border-t border-base-200 flex justify-between text-xs text-base-content/60">
+      <span>Issuing Department: {{ page.department|default:"Institutional Registrar" }}</span>
+      <a href="/documents/" class="text-primary font-semibold hover:underline">&larr; Back to all documents</a>
+    </div>
+  </article>
+</div>
+{% endblock %}

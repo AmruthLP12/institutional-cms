@@ -1,0 +1,22 @@
+<div class="my-6">
+  {% if value.title %}
+    <h3 class="text-lg font-serif font-bold text-primary mb-3">{{ value.title }}</h3>
+  {% endif %}
+  <ul class="space-y-2">
+    {% for link in value.links %}
+      <li>
+        {% if link.block_type == "internal" %}
+          <a href="{{ link.value.page.url }}" class="inline-flex items-center gap-1.5 text-primary hover:underline font-medium">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+            {{ link.value.label|default:link.value.page.title }}
+          </a>
+        {% elif link.block_type == "external" %}
+          <a href="{{ link.value.url }}" class="inline-flex items-center gap-1.5 text-primary hover:underline font-medium" {% if link.value.opens_new_tab %}target="_blank" rel="noopener noreferrer"{% endif %}>
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+            {{ link.value.label }}
+          </a>
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+</div>

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 py-10 md:py-14">
+  <header class="mb-8 border-b border-base-200 pb-6">
+    <h1 class="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold text-primary tracking-tight mb-4">
+      {{ page.title }}
+    </h1>
+    {% if page.intro %}
+      <div class="text-lg text-base-content/80 font-sans leading-relaxed">
+        {{ page.intro|richtext }}
+      </div>
+    {% endif %}
+  </header>
+
+  <div class="prose max-w-none text-base-content/90 leading-relaxed">
+    {% for block in page.body %}
+      {% include_block block %}
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

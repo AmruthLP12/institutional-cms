@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 py-12">
+  <article class="bg-base-100 p-8 rounded-xl border border-base-200 shadow-sm">
+    <div class="badge badge-neutral text-xs mb-3 font-semibold">Report Year: {{ page.report_year }}</div>
+    <h1 class="text-3xl font-serif font-bold text-primary mb-4">{{ page.title }}</h1>
+
+    {% if page.summary %}
+      <p class="text-base text-base-content/85 leading-relaxed mb-6">{{ page.summary }}</p>
+    {% endif %}
+
+    {% if page.document_file %}
+      <div class="p-6 bg-primary text-primary-content rounded-xl flex items-center justify-between gap-4 my-6">
+        <div>
+          <h2 class="font-bold text-lg text-secondary">Download Complete Report</h2>
+          <p class="text-xs text-white/70">Official archival document</p>
+        </div>
+        <a href="{{ page.document_file.url }}" class="btn btn-warning font-semibold px-6 shadow" download>
+          Download PDF
+        </a>
+      </div>
+    {% endif %}
+
+    <div class="pt-6 border-t border-base-200">
+      <a href="/reports/" class="text-xs font-semibold text-primary hover:underline">&larr; Back to Annual Reports</a>
+    </div>
+  </article>
+</div>
+{% endblock %}

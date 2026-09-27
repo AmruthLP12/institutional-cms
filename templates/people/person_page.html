@@ -1,0 +1,309 @@
+{% extends "base.html" %}
+{% load static wagtailimages_tags wagtailcore_tags %}
+
+{% block title %}{{ page.full_name }}{% if page.designation %} — {{ page.designation }}{% endif %} | Nakashara{% endblock %}
+
+{% block meta_description %}
+  {% if page.meta_description %}{{ page.meta_description }}{% elif page.designation %}{{ page.full_name }}, {{ page.designation }} at Nakashara.{% else %}Profile of {{ page.full_name }} at Nakashara.{% endif %}
+{% endblock %}
+
+{# ─────────────────────────────────────────────────────────────────────────── #}
+{#  Schema.org Person JSON-LD                                                  #}
+{# ─────────────────────────────────────────────────────────────────────────── #}
+{% block extra_head %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "{{ page.full_name|escapejs }}",
+  {% if page.designation %}"jobTitle": "{{ page.designation|escapejs }}",{% endif %}
+  {% if page.department %}"worksFor": {
+    "@type": "Organization",
+    "name": "{{ page.department.title|escapejs }}",
+    "url": "{{ request.scheme }}://{{ request.get_host }}{{ page.department.url }}"
+  },{% endif %}
+  "url": "{{ request.scheme }}://{{ request.get_host }}{{ page.url }}",
+  {% if page.is_public_contact and page.email %}"email": "mailto:{{ page.email|escapejs }}",{% endif %}
+  {% if page.is_public_contact and page.phone %}"telephone": "{{ page.phone|escapejs }}",{% endif %}
+  {% if page.office_location %}"workLocation": "{{ page.office_location|escapejs }}",{% endif %}
+  "affiliation": {
+    "@type": "Organization",
+    "name": "Nakashara",
+    "url": "{{ request.scheme }}://{{ request.get_host }}"
+  }
+}
+</script>
+{% endblock %}
+
+{% block content %}
+
+{# ─────────────────────────────────────────────────────────────────────────── #}
+{#  Breadcrumb                                                                 #}
+{# ─────────────────────────────────────────────────────────────────────────── #}
+<nav aria-label="Breadcrumb" class="bg-base-200 border-b border-base-300">
+  <div class="container mx-auto px-4 py-2">
+    <ol class="breadcrumbs text-sm" itemscope itemtype="https://schema.org/BreadcrumbList">
+      <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a href="/" itemprop="item" class="hover:text-primary transition-colors">
+          <span itemprop="name">Home</span>
+        </a>
+        <meta itemprop="position" content="1" />
+      </li>
+      {% if index_page %}
+      <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a href="{{ index_page.url }}" itemprop="item" class="hover:text-primary transition-colors">
+          <span itemprop="name">{{ index_page.title }}</span>
+        </a>
+        <meta itemprop="position" content="2" />
+      </li>
+      {% endif %}
+      <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <span itemprop="name" class="text-base-content/60">{{ page.full_name }}</span>
+        <meta itemprop="position" content="3" />
+      </li>
+    </ol>
+  </div>
+</nav>
+
+{# ─────────────────────────────────────────────────────────────────────────── #}
+{#  Profile hero section                                                       #}
+{# ─────────────────────────────────────────────────────────────────────────── #}
+<section
+  class="bg-primary text-white py-14"
+  aria-labelledby="person-name-heading"
+>
+  <div class="container mx-auto px-4 max-w-5xl">
+    <div class="flex flex-col md:flex-row gap-8 md:gap-12 items-center md:items-start">
+
+      {# ── Profile photo ── #}
+      <div class="flex-shrink-0">
+        {% if page.profile_photo %}
+          {% image page.profile_photo fill-240x240 class="w-44 h-44 md:w-56 md:h-56 rounded-full object-cover ring-4 ring-secondary shadow-xl" alt=page.full_name %}
+        {% else %}
+          <div
+            class="w-44 h-44 md:w-56 md:h-56 rounded-full bg-secondary text-secondary-content/20 border-4 border-secondary flex items-center justify-center shadow-xl"
+            aria-label="No photo available for {{ page.full_name }}"
+            role="img"
+          >
+            <span class="text-secondary text-5xl md:text-6xl font-bold font-['Source_Serif_4'] select-none">
+              {{ page.first_name|first }}{{ page.last_name|first }}
+            </span>
+          </div>
+        {% endif %}
+      </div>
+
+      {# ── Name, role, meta ── #}
+      <div class="flex-1 text-center md:text-left">
+        <h1
+          id="person-name-heading"
+          class="font-['Source_Serif_4'] text-4xl md:text-5xl font-bold tracking-tight leading-tight"
+        >
+          {{ page.full_name }}
+        </h1>
+
+        {% if page.designation %}
+          <p class="mt-2 text-xl text-secondary font-medium">{{ page.designation }}</p>
+        {% endif %}
+
+        {% if page.department %}
+          <p class="mt-1 text-white/70">
+            <a
+              href="{{ page.department.url }}"
+              class="hover:text-secondary transition-colors underline-offset-2 hover:underline"
+              aria-label="Go to {{ page.department.title }} department page"
+            >
+              {{ page.department.title }}
+            </a>
+          </p>
+        {% endif %}
+
+        {# Category badges #}
+        {% with cats=page.categories.all %}
+          {% if cats %}
+            <div class="flex flex-wrap gap-2 mt-4 justify-center md:justify-start" aria-label="Categories">
+              {% for cat in cats %}
+                <a
+                  href="{% if index_page %}{{ index_page.url }}?category={{ cat.slug }}{% else %}#{% endif %}"
+                  class="badge badge-outline border-secondary text-secondary hover:bg-secondary text-secondary-content hover:text-white transition-colors"
+                  aria-label="Browse all {{ cat.name }}"
+                >
+                  {{ cat.name }}
+                </a>
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
+
+        {# ── Contact info — ONLY rendered when is_public_contact is True ── #}
+        {% if page.is_public_contact or page.office_location %}
+          <address
+            class="mt-6 not-italic space-y-2 text-sm text-white/80"
+            aria-label="Contact information"
+          >
+            {% if page.is_public_contact and page.email %}
+              <p class="flex items-center gap-2 justify-center md:justify-start">
+                <svg class="w-4 h-4 text-secondary flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                </svg>
+                <a
+                  href="mailto:{{ page.email }}"
+                  class="hover:text-secondary transition-colors break-all"
+                  aria-label="Send email to {{ page.full_name }}"
+                >
+                  {{ page.email }}
+                </a>
+              </p>
+            {% endif %}
+
+            {% if page.is_public_contact and page.phone %}
+              <p class="flex items-center gap-2 justify-center md:justify-start">
+                <svg class="w-4 h-4 text-secondary flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+                </svg>
+                <a
+                  href="tel:{{ page.phone }}"
+                  class="hover:text-secondary transition-colors"
+                  aria-label="Call {{ page.full_name }}"
+                >
+                  {{ page.phone }}
+                </a>
+              </p>
+            {% endif %}
+
+            {% if page.office_location %}
+              <p class="flex items-center gap-2 justify-center md:justify-start">
+                <svg class="w-4 h-4 text-secondary flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                </svg>
+                <span>{{ page.office_location }}</span>
+              </p>
+            {% endif %}
+          </address>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+{# ─────────────────────────────────────────────────────────────────────────── #}
+{#  Main content — biography and research interests                            #}
+{# ─────────────────────────────────────────────────────────────────────────── #}
+<main class="container mx-auto px-4 py-12 max-w-5xl" id="main-content">
+
+  {# Sidebar-like navigation for long profiles (Alpine.js) #}
+  {% if page.biography or page.research_interests %}
+    <div
+      class="flex flex-col lg:flex-row gap-10"
+      x-data="{ activeSection: 'biography' }"
+    >
+
+      {# ── Side tabs (desktop) / Top tabs (mobile) ── #}
+      {% if page.biography and page.research_interests %}
+        <aside class="lg:w-48 flex-shrink-0">
+          <nav
+            aria-label="Profile sections"
+            class="flex lg:flex-col gap-2 overflow-x-auto lg:overflow-visible pb-1 lg:pb-0 lg:sticky lg:top-24"
+          >
+            <button
+              class="btn btn-sm w-full justify-start text-left"
+              :class="activeSection === 'biography' ? 'btn-primary' : 'btn-ghost'"
+              @click="activeSection = 'biography'"
+              aria-controls="section-biography"
+              :aria-pressed="activeSection === 'biography' ? 'true' : 'false'"
+            >
+              Biography
+            </button>
+            <button
+              class="btn btn-sm w-full justify-start text-left"
+              :class="activeSection === 'research' ? 'btn-primary' : 'btn-ghost'"
+              @click="activeSection = 'research'"
+              aria-controls="section-research"
+              :aria-pressed="activeSection === 'research' ? 'true' : 'false'"
+            >
+              Research
+            </button>
+          </nav>
+        </aside>
+      {% endif %}
+
+      {# ── Content panels ── #}
+      <div class="flex-1 min-w-0">
+
+        {# Biography #}
+        {% if page.biography %}
+          <section
+            id="section-biography"
+            aria-labelledby="biography-heading"
+            x-show="activeSection === 'biography'"
+            x-transition:enter="transition ease-out duration-150"
+            x-transition:enter-start="opacity-0 translate-y-1"
+            x-transition:enter-end="opacity-100 translate-y-0"
+          >
+            <h2
+              id="biography-heading"
+              class="font-['Source_Serif_4'] text-2xl font-semibold text-primary mb-6 pb-2 border-b-2 border-secondary"
+            >
+              Biography
+            </h2>
+            <div class="prose prose-lg max-w-none prose-headings:font-['Source_Serif_4'] prose-headings:text-primary prose-a:text-secondary prose-a:no-underline hover:prose-a:underline">
+              {% for block in page.biography %}
+                {% include_block block %}
+              {% endfor %}
+            </div>
+          </section>
+        {% endif %}
+
+        {# Research interests #}
+        {% if page.research_interests %}
+          <section
+            id="section-research"
+            aria-labelledby="research-heading"
+            {% if page.biography %}
+              x-show="activeSection === 'research'"
+              x-transition:enter="transition ease-out duration-150"
+              x-transition:enter-start="opacity-0 translate-y-1"
+              x-transition:enter-end="opacity-100 translate-y-0"
+            {% endif %}
+          >
+            <h2
+              id="research-heading"
+              class="font-['Source_Serif_4'] text-2xl font-semibold text-primary mb-6 pb-2 border-b-2 border-secondary {% if page.biography %}mt-0{% else %}mt-0{% endif %}"
+            >
+              Research Interests
+            </h2>
+            <div class="prose prose-lg max-w-none prose-headings:font-['Source_Serif_4'] prose-headings:text-primary prose-a:text-secondary prose-a:no-underline hover:prose-a:underline">
+              {{ page.research_interests|richtext }}
+            </div>
+          </section>
+        {% endif %}
+
+      </div>{# /content panels #}
+    </div>
+  {% else %}
+    {# No biography or research — show a friendly placeholder for editors #}
+    <p class="text-base-content/40 italic text-center py-10">
+      Profile content is being updated. Please check back later.
+    </p>
+  {% endif %}
+
+  {# ─── Back link ─── #}
+  {% if index_page %}
+    <div class="mt-16 pt-8 border-t border-base-200">
+      <a
+        href="{{ index_page.url }}"
+        class="btn btn-outline btn-primary"
+        aria-label="Back to {{ index_page.title }}"
+      >
+        ← Back to {{ index_page.title }}
+      </a>
+    </div>
+  {% endif %}
+
+</main>
+
+{% endblock %}

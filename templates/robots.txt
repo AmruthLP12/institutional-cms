@@ -1,0 +1,8 @@
+User-agent: *
+Disallow: /admin/
+Disallow: /django-admin/
+Disallow: /documents/authenticate/
+Disallow: /search/
+Allow: /
+
+Sitemap: https://www.nakashara.example.org/sitemap.xml

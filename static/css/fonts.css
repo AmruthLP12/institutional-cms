@@ -1,0 +1,29 @@
+/* Nakashara Institutional Typography */
+:root {
+  --font-serif: "Source Serif 4", Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+body {
+  font-family: var(--font-sans);
+}
+
+h1, h2, h3, .font-serif {
+  font-family: var(--font-serif);
+}
+
+/* Institutional palette variables */
+:root {
+  --color-navy: #1A2B4A;
+  --color-navy-mid: #2C4070;
+  --color-accent: #C8963E;
+  --color-surface: #F7F6F3;
+}
+
+.bg-navy { background-color: #1A2B4A; }
+.bg-navy-mid { background-color: #2C4070; }
+.text-navy { color: #1A2B4A; }
+.text-navy-mid { color: #2C4070; }
+.border-navy { border-color: #1A2B4A; }
+.border-navy-mid { border-color: #2C4070; }
+.bg-surface { background-color: #F7F6F3; }

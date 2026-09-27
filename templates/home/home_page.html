@@ -1,0 +1,247 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags static %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="relative bg-primary text-primary-content overflow-hidden" aria-labelledby="hero-heading">
+  <div class="absolute inset-0 z-0 opacity-20 bg-cover bg-center" 
+       {% if page.hero_image %}
+         {% image page.hero_image original as hero_bg %}
+         style="background-image: url('{{ hero_bg.url }}');"
+       {% else %}
+         style="background-image: radial-gradient(var(--color-secondary, currentColor) 1px, transparent 1px); background-size: 24px 24px;"
+       {% endif %}>
+  </div>
+
+  <div class="relative z-10 max-w-7xl mx-auto px-4 py-16 md:py-24 lg:py-28 flex flex-col items-start justify-center">
+    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary/20 border border-secondary/40 text-secondary text-xs font-semibold uppercase tracking-wider mb-6">
+      <span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+      Official Institutional Portal
+    </div>
+
+    <h1 id="hero-heading" class="text-3xl sm:text-5xl lg:text-6xl font-serif font-bold text-primary-content tracking-tight leading-tight max-w-3xl mb-6">
+      {{ page.hero_headline|default:"Fostering Rigorous Research & Intellectual Discovery" }}
+    </h1>
+
+    {% if page.hero_subheadline %}
+      <p class="text-lg sm:text-xl text-primary-content/85 font-sans max-w-2xl leading-relaxed mb-8">
+        {{ page.hero_subheadline }}
+      </p>
+    {% endif %}
+
+    <div class="flex flex-wrap items-center gap-4">
+      <a href="{{ page.hero_cta_href }}" class="btn btn-secondary font-semibold px-6 shadow-md hover:brightness-105">
+        {{ page.hero_cta_label|default:"Explore Institutional Programs" }} &rarr;
+      </a>
+      <a href="/about/" class="btn btn-outline text-primary-content border-primary-content/40 hover:bg-primary-content/10 hover:border-primary-content px-6">
+        About the Institution
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Quick Institutional Announcements Bar -->
+{% if announcements %}
+<section class="bg-base-200 border-y border-base-300 py-3 px-4" aria-label="Important Announcements">
+  <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
+    <div class="flex items-center gap-3">
+      <span class="badge badge-secondary text-xs font-bold uppercase tracking-wider flex-shrink-0">Announcement</span>
+      <div class="text-sm font-medium text-base-content truncate max-w-3xl">
+        {% for announcement in announcements|slice:":1" %}
+          <a href="{{ announcement.url }}" class="hover:underline font-semibold text-primary">{{ announcement.title }}</a>: {{ announcement.summary }}
+        {% endfor %}
+      </div>
+    </div>
+    <a href="/announcements/" class="text-xs font-bold text-primary hover:underline flex-shrink-0">
+      View all ({{ announcements|length }}) &rarr;
+    </a>
+  </div>
+</section>
+{% endif %}
+
+<!-- Quick Links Grid -->
+{% if quick_links %}
+<section class="py-8 bg-base-200/50 border-b border-base-300" aria-label="Quick Access Links">
+  <div class="max-w-7xl mx-auto px-4">
+    <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3">
+      {% for ql in quick_links %}
+        <a href="{{ ql.get_url }}" class="p-3 bg-base-100 hover:bg-base-200 border border-base-300 hover:border-secondary rounded-lg text-center transition-all group shadow-sm flex flex-col items-center justify-center">
+          <div class="w-8 h-8 rounded-full bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-content flex items-center justify-center mb-1.5 transition-colors">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+          </div>
+          <span class="text-xs font-semibold text-base-content group-hover:text-primary">{{ ql.label }}</span>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- Institutional Statistics Strip -->
+{% if page.statistics %}
+  <section class="max-w-7xl mx-auto px-4 py-6" aria-label="Key Figures">
+    {% for block in page.statistics %}
+      {% include_block block %}
+    {% endfor %}
+  </section>
+{% endif %}
+
+<!-- Main Dual Columns: News & Events -->
+<section class="max-w-7xl mx-auto px-4 py-12">
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+    <!-- Featured News Column (8 cols) -->
+    <div class="lg:col-span-8">
+      <div class="flex items-center justify-between border-b-2 border-primary pb-3 mb-6">
+        <h2 class="text-2xl font-serif font-bold text-primary flex items-center gap-2">
+          <span class="w-3 h-3 bg-secondary rounded-sm"></span>
+          Institutional News & Reports
+        </h2>
+        <a href="/news/" class="text-sm font-semibold text-primary hover:underline">
+          All news &rarr;
+        </a>
+      </div>
+
+      {% if featured_news %}
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {% for item in featured_news %}
+            <article class="bg-base-100 border border-base-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col">
+              {% if item.featured_image %}
+                {% image item.featured_image fill-600x380 as news_thumb %}
+                <img src="{{ news_thumb.url }}" alt="{{ item.headline }}" class="w-full h-44 object-cover" loading="lazy" />
+              {% else %}
+                <div class="w-full h-44 bg-primary/10 flex items-center justify-center text-primary font-serif font-bold text-2xl">
+                  NKSR
+                </div>
+              {% endif %}
+              <div class="p-4 flex-grow flex flex-col justify-between">
+                <div>
+                  <div class="text-xs text-base-content/60 mb-1">
+                    {{ item.publication_date|date:"d M Y" }}
+                  </div>
+                  <h3 class="font-serif font-bold text-base text-primary hover:text-secondary transition-colors leading-snug mb-2">
+                    <a href="{{ item.url }}">{{ item.headline }}</a>
+                  </h3>
+                  {% if item.summary %}
+                    <p class="text-xs text-base-content/80 line-clamp-3 leading-relaxed">
+                      {{ item.summary }}
+                    </p>
+                  {% endif %}
+                </div>
+                <div class="mt-4 pt-2 border-t border-base-200/60 flex items-center justify-between text-xs text-primary font-medium">
+                  <span>Read article</span>
+                  <span>&rarr;</span>
+                </div>
+              </div>
+            </article>
+          {% endfor %}
+        </div>
+      {% else %}
+        <p class="text-sm text-base-content/60 italic py-6">No news articles published yet.</p>
+      {% endif %}
+
+      <!-- Official Notices List Under News -->
+      {% if notices %}
+        <div class="mt-10 p-5 bg-base-100 border border-base-200 rounded-lg shadow-sm">
+          <div class="flex items-center justify-between mb-4 pb-2 border-b border-base-200">
+            <h3 class="font-serif font-bold text-lg text-primary">Official Circulars & Orders</h3>
+            <a href="/notices/" class="text-xs font-semibold text-primary hover:underline">All notices &rarr;</a>
+          </div>
+          <ul class="divide-y divide-base-200 text-sm">
+            {% for notice in notices %}
+              <li class="py-2.5 flex items-start justify-between gap-4">
+                <div>
+                  <a href="{{ notice.url }}" class="font-medium text-primary hover:underline">{{ notice.title }}</a>
+                  {% if notice.notice_number %}
+                    <span class="text-xs text-base-content/60 block">Ref: {{ notice.notice_number }}</span>
+                  {% endif %}
+                </div>
+                <span class="text-xs text-base-content/60 whitespace-nowrap">{{ notice.first_published_at|date:"d M Y" }}</span>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Upcoming Events Column (4 cols) -->
+    <div class="lg:col-span-4">
+      <div class="flex items-center justify-between border-b-2 border-primary pb-3 mb-6">
+        <h2 class="text-2xl font-serif font-bold text-primary flex items-center gap-2">
+          <span class="w-3 h-3 bg-primary rounded-sm"></span>
+          Events
+        </h2>
+        <a href="/events/" class="text-sm font-semibold text-primary hover:underline">
+          Calendar &rarr;
+        </a>
+      </div>
+
+      {% if upcoming_events %}
+        <div class="space-y-4">
+          {% for ev in upcoming_events %}
+            <article class="p-4 bg-base-100 border border-base-200 rounded-lg shadow-sm hover:border-secondary transition-colors flex gap-4">
+              <!-- Date Badge -->
+              <div class="flex-shrink-0 w-12 h-14 bg-primary text-primary-content rounded flex flex-col items-center justify-center text-center">
+                <span class="text-xs uppercase font-bold tracking-wider text-secondary">{{ ev.start_datetime|date:"M" }}</span>
+                <span class="text-xl font-bold font-serif leading-none">{{ ev.start_datetime|date:"d" }}</span>
+              </div>
+              <div>
+                <h3 class="font-serif font-bold text-sm text-primary hover:text-secondary transition-colors leading-snug mb-1">
+                  <a href="{{ ev.url }}">{{ ev.title }}</a>
+                </h3>
+                <p class="text-xs text-base-content/70 flex items-center gap-1 mb-1">
+                  <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                  {{ ev.start_datetime|date:"g:i A" }}{% if ev.location_name %} &bull; {{ ev.location_name }}{% endif %}
+                </p>
+                {% if ev.registration_url and not ev.is_registration_closed %}
+                  <a href="{{ ev.registration_url }}" class="inline-block text-xs font-semibold text-secondary hover:underline mt-1" target="_blank" rel="noopener noreferrer">
+                    Register online &rarr;
+                  </a>
+                {% endif %}
+              </div>
+            </article>
+          {% endfor %}
+        </div>
+      {% else %}
+        <p class="text-sm text-base-content/60 italic py-6">No upcoming events scheduled.</p>
+      {% endif %}
+
+      <!-- Quick Tenders / Careers Card -->
+      <div class="mt-8 p-5 bg-primary text-primary-content rounded-xl shadow-md">
+        <h3 class="font-serif font-bold text-lg text-secondary mb-2">Work & Collaborate</h3>
+        <p class="text-xs text-primary-content/85 leading-relaxed mb-4">
+          Discover current procurement notices, career vacancies, and collaborative grant opportunities at Nakashara.
+        </p>
+        <div class="flex flex-col gap-2 text-xs font-semibold">
+          <a href="/tenders/" class="btn btn-sm btn-outline border-primary-content/40 text-primary-content hover:bg-primary-content hover:text-primary justify-between">
+            <span>Active Tenders & Notices</span>
+            <span>&rarr;</span>
+          </a>
+          <a href="/careers/" class="btn btn-sm btn-outline border-primary-content/40 text-primary-content hover:bg-primary-content hover:text-primary justify-between">
+            <span>Career Opportunities</span>
+            <span>&rarr;</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Research Highlights Section -->
+{% if page.research_highlights %}
+<section class="bg-base-200/50 border-t border-base-200 py-12">
+  <div class="max-w-7xl mx-auto px-4">
+    <div class="mb-8">
+      <h2 class="text-3xl font-serif font-bold text-primary mb-2">Research Highlights</h2>
+      <p class="text-base-content/70 text-sm">Pioneering discoveries and strategic research programs across centers.</p>
+    </div>
+    <div class="prose max-w-none">
+      {% for block in page.research_highlights %}
+        {% include_block block %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+{% endblock %}
