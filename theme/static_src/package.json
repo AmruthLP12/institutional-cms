@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Nakashara Institutional Theme with Tailwind CSS and DaisyUI",
   "scripts": {
+    "start": "npx @tailwindcss/cli -i ./src/styles.css -o ../static/css/dist/styles.css --watch",
     "build": "npx @tailwindcss/cli -i ./src/styles.css -o ../static/css/dist/styles.css --minify",
     "dev": "npx @tailwindcss/cli -i ./src/styles.css -o ../static/css/dist/styles.css --watch"
   },

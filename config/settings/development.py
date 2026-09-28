@@ -17,14 +17,6 @@ DATABASES = {
     }
 }
 
-INSTALLED_APPS += [  # noqa: F405
-    "django_browser_reload",
-]
-
-MIDDLEWARE += [  # noqa: F405
-    "django_browser_reload.middleware.BrowserReloadMiddleware",
-]
-
 # Email — print to console in dev
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 

@@ -7,6 +7,52 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [Unreleased] - 2026-09-28
+
+### Added
+- **Fully Dynamic Navigation Bar**:
+  - `base.html` navbar now renders from `NavMenuItem` CMS records (managed in Wagtail Admin → Snippets → Navigation menu items).
+  - Desktop dropdown menus for nav items with child entries (Alpine.js animated panel, `rounded-2xl`, shadow).
+  - Mobile hamburger menu with animated open/close icon, smooth `x-transition` enter/leave, and child item indentation.
+  - Active-page highlight indicator (bottom border accent on the current page link).
+- **Fully Dynamic Footer**:
+  - Footer link columns now render from `FooterLinkGroup` Snippets (Wagtail Admin → Snippets → Footer link groups).
+  - Static fallback columns shown only when no groups are configured yet.
+  - Social media icon buttons with hover animation (rounded square pill, `hover:bg-secondary`).
+  - Contact address, phone, and email injected from `SiteSettings`.
+- **Custom 404 & 500 Error Pages (always rendered)**:
+  - Added `apps/core/views.py` with `custom_404` and `custom_500` views that use `render()` instead of Django's default, ensuring branded templates render even when `DEBUG=True`.
+  - Registered `handler404` and `handler500` in `config/urls.py`.
+  - Added `/test-404/` and `/test-500/` dev-only routes for preview without toggling `DEBUG`.
+  - Redesigned `templates/404.html` and `templates/500.html` with decorative large number, icon card, search bar, and action buttons.
+- **Design System Upgrade**:
+  - Added `@layer components` overrides in `theme/static_src/src/styles.css`:
+    - `.btn` — `rounded-xl`, `shadow-md hover:shadow-lg`, subtle lift on hover (`translateY(-1px)`).
+    - `.card` — `rounded-2xl`, `shadow-sm hover:shadow-md`.
+    - `.badge` — fully pill-shaped (`rounded-full`), bolder weight.
+    - `.input`, `.select`, `.textarea` — `rounded-xl` with focus ring.
+    - `.modal-box` — `rounded-xl` with deep shadow.
+  - Added `.card-lift` utility class for interactive card hover lift effect.
+  - Added `.section-rule` utility — secondary-colored pill divider for section headings.
+  - Added `.richtext` component styles for prose content (headings, links, lists, blockquote).
+
+### Changed
+- **Context Processor** (`apps/core/context_processors.py`):
+  - Now injects `footer_groups` (ordered `FooterLinkGroup` with prefetched `links__page`).
+  - Filters nav items by `is_visible=True` in the query.
+  - Graceful degradation extended to `footer_groups = []`.
+- **Breadcrumbs** in `base.html` now use SVG chevron separators instead of plain `/` characters.
+- **Utility Bar** tagline now hidden on small screens (only `sm:block`) to reduce mobile clutter.
+### Fixed
+- **VS Code CSS Diagnostic Warning**:
+  - Moved dynamic color custom property declarations from inline `style=""` on the `<html>` tag to a scoped `<style>` block in `<head>`, preventing editor CSS linting false-positives.
+- **Tailwind CLI Script Compatibility**:
+  - Added `"start": "npx @tailwindcss/cli -i ./src/styles.css -o ../static/css/dist/styles.css --watch"` script to `theme/static_src/package.json` so `uv run python manage.py tailwind start` runs as expected.
+- **Custom Error Route Ordering**:
+  - Moved `test-404/` and `test-500/` preview routes before Wagtail's catch-all `path("", include(wagtail_urls))` in `config/urls.py`, allowing direct browser testing of branded 404/500 templates in development.
+
+---
+
 ## [Unreleased] - 2026-09-27
 
 ### Added

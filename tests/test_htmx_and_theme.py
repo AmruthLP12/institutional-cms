@@ -102,3 +102,14 @@ class TestHtmxAndTheme:
             # Internal links must have link_page set
             assert link.link_page is not None
             assert link.get_url().startswith("/")
+
+    def test_custom_404_and_500_routes(self, client: Client, seeded_site):
+        resp_404 = client.get("/test-404/")
+        assert resp_404.status_code == 404
+        assert b"Page Not Found" in resp_404.content
+        assert b"404" in resp_404.content
+
+        resp_500 = client.get("/test-500/")
+        assert resp_500.status_code == 500
+        assert b"Internal Server Error" in resp_500.content
+        assert b"500" in resp_500.content
