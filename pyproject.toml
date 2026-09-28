@@ -2,12 +2,11 @@
 name = "nakashara-cms"
 version = "0.1.0"
 description = "Nakashara Institutional Website and CMS — Django + Wagtail"
-requires-python = ">=3.14"
+requires-python = ">=3.13,<3.14"
 dependencies = [
     "Django>=6.1.1,<6.2",
     "wagtail>=8.0,<8.1",
     "django-tailwind>=4.5.0",
-    "django-browser-reload",
     "honcho",
     "psycopg[binary]>=3.2.0",
     "whitenoise>=6.9.0",

@@ -6,7 +6,7 @@ DEBUG = True
 
 SECRET_KEY = "insecure-development-secret-key-do-not-use-in-production"
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1", "0.0.0.0"]  # noqa: S104
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "0.0.0.0", "172.16.102.225"]  # noqa: S104
 
 # Use SQLite for development to avoid requiring PostgreSQL locally.
 # Override with DATABASE_URL env var if you need PostgreSQL locally.
