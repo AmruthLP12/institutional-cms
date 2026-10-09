@@ -1,5 +1,5 @@
 <div class="my-6">
-  <{{ value.level }} id="{{ value.anchor_id|default:'' }}" class="font-serif font-bold text-primary {% if value.level == 'h2' %}text-3xl mt-8 mb-4 border-b border-base-200 pb-2{% elif value.level == 'h3' %}text-2xl mt-6 mb-3{% else %}text-xl mt-4 mb-2{% endif %}">
+  <{{ value.level }} id="{{ value.anchor_id|default:'' }}" class="font-serif font-bold text-base-content tracking-tight {% if value.level == 'h2' %}text-2xl sm:text-3xl mt-8 mb-4 border-b border-base-300 pb-2{% elif value.level == 'h3' %}text-xl sm:text-2xl mt-6 mb-3{% else %}text-lg sm:text-xl mt-4 mb-2{% endif %}">
     {{ value.text }}
   </{{ value.level }}>
 </div>

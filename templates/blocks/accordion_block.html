@@ -1,16 +1,16 @@
 {% load wagtailcore_tags %}
 <div class="my-6">
   {% if value.title %}
-    <h3 class="text-xl font-serif font-bold text-primary mb-4">{{ value.title }}</h3>
+    <h3 class="text-xl font-serif font-bold text-base-content mb-4">{{ value.title }}</h3>
   {% endif %}
   <div class="space-y-2">
     {% for item in value.items %}
-      <div class="collapse collapse-plus bg-base-100 border border-base-200 rounded-lg">
+      <div class="collapse collapse-plus bg-base-100 border border-base-300 rounded-lg">
         <input type="radio" name="accordion-{{ block.id }}" {% if forloop.first %}checked="checked"{% endif %} />
-        <div class="collapse-title text-base font-semibold text-base-content">
+        <div class="collapse-title text-sm sm:text-base font-semibold text-base-content">
           {{ item.question }}
         </div>
-        <div class="collapse-content prose max-w-none text-base-content/80 text-sm">
+        <div class="collapse-content prose max-w-none text-base-content/85 text-xs sm:text-sm leading-relaxed">
           {{ item.answer|richtext }}
         </div>
       </div>

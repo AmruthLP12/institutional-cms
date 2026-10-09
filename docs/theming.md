@@ -8,28 +8,45 @@ This guide explains how the dynamic theming and styling architecture works in th
 
 Nakashara CMS uses a modern, token-driven theming architecture combining **Wagtail Site Settings**, **Tailwind CSS v4**, and **DaisyUI v5**.
 
-The core principle is **zero hardcoded brand colors in templates**. All UI components consume semantic CSS variables and tokens (`primary`, `secondary`, `accent`, `base-100`, `base-content`, etc.). When a theme changes in the Wagtail Admin, the entire site instantly reflects the new color palette without recompiling CSS or redeploying code.
+The core design principle is **authoritative institutional elegance with zero hardcoded brand colors in templates**. All UI components consume semantic CSS variables and tokens (`primary`, `secondary`, `accent`, `base-100`, `base-200`, `base-300`, `base-content`, etc.). When a theme changes in the Wagtail Admin, the entire site instantly reflects the new color palette without recompiling CSS or redeploying code.
 
 ```mermaid
 flowchart TD
-    Admin["Wagtail Admin (Settings > Site Settings)"] -->|"Selects theme or hex override"| DB[("Database (SiteSettings)")]
+    Admin["Wagtail Admin (Settings > Site Settings)"] -->|"Selects curated institutional theme or validated hex override"| DB[("Database (SiteSettings)")]
     DB -->|"Injected via Wagtail context"| BaseTpl["templates/base.html"]
-    BaseTpl -->|"Sets data-theme='...' & inline style='...' on <html>"| RootHTML["<html data-theme='corporate' style='...'>"]
-    RootHTML -->|"Binds CSS variables (--color-primary, --p, etc.)"| DaisyUI["DaisyUI v5 CSS Engine"]
-    DaisyUI -->|"Applies semantic tokens to utilities"| Components["UI Components (.btn-primary, .bg-base-100, .text-primary)"]
-    Components -->|"Instant theme switch"| Browser["End-User Browser"]
+    BaseTpl -->|"Sets data-theme='...' & validated CSS variables on <html>"| RootHTML["<html data-theme='corporate' style='...'>"]
+    RootHTML -->|"Binds CSS variables (--color-primary, --color-secondary, etc.)"| DaisyUI["DaisyUI v5 CSS Engine"]
+    DaisyUI -->|"Applies semantic tokens to utilities"| Components["UI Components (.btn-primary, .bg-base-100, .border-base-300)"]
+    Components -->|"WCAG 2.2 AA compliant rendering"| Browser["End-User Browser"]
 ```
 
-### Key Components
+### Key Architectural Pillars
 
-1. **`apps.site_settings.models.SiteSettings`**:
+1. **Institutional Color Palette & 50–900 Tonal Scale**:
+   - **Primary** (`#24466B` / Oxford Navy): Anchor color for identity, navigation accents, primary buttons, and key headings.
+   - **Secondary** (`#52766F` / Academic Sage): Calm complementary tone for status tags, secondary badges, and subtle section accents.
+   - **Accent** (`#B58A48` / Antique Gold): Distinctive highlight for award labels, quote borders, and featured badges.
+   - **Surfaces**:
+     - `base-100` (`#FFFFFF`): Pure crisp background for reading clarity.
+     - `base-200` (`#F5F4EF`): Warm off-white surface for callout blocks, table headers, and alternating rows.
+     - `base-300` (`#E2E4E1`): Restrained light gray-green divider border ensuring sharp structure without harsh lines.
+   - **Typography Content**:
+     - `base-content` (`#202B36`): High-contrast charcoal slate ensuring WCAG 2.2 AAA contrast ratio against white surfaces.
+     - Muted text: `text-base-content/75` and `text-base-content/60` (minimum 4.8:1 contrast).
+
+2. **Typography System**:
+   - **Display / Headings**: Editorial serif typography (`font-serif`, Source Serif 4 / Georgia fallback) with tracking-tight and restrained weights.
+   - **Body / Interface**: Clean grotesque sans-serif (`font-sans`, Inter / Plus Jakarta Sans / system-ui fallback) with optimized line heights (`leading-relaxed`).
+   - **Code / Identifiers**: Precise monospace (`font-mono`) for document numbers, policy codes, and tender IDs.
+
+3. **`apps.site_settings.models.SiteSettings`**:
    A Wagtail `BaseSiteSetting` registered model providing administrative controls:
-   - `theme`: A dropdown selection from curated themes (e.g., `corporate`, `emerald`, `nord`, etc.).
-   - `custom_primary_color`: An optional hex code string (e.g., `#1E40AF`) for fine-grained brand color overrides.
-   - `custom_accent_color`: An optional hex code string (e.g., `#D97706`) for secondary/accent overrides.
+   - `theme`: A dropdown selection from curated institutional palettes (e.g., `corporate`, `emerald`, `nord`, `autumn`, `luxury`, etc.).
+   - `custom_primary_color`: Regex-validated hex code string (e.g., `#24466B`) with server-side validation against `^#(?:[0-9a-fA-F]{3}){1,2}$`.
+   - `custom_accent_color`: Regex-validated hex code string (e.g., `#B58A48`).
 
-2. **Root HTML Injection (`templates/base.html`)**:
-   The root `<html>` element dynamically receives the `data-theme` attribute and any inline CSS variable overrides:
+4. **Root HTML Injection (`templates/base.html`)**:
+   The root `<html>` element dynamically receives the `data-theme` attribute and any validated inline CSS variable overrides:
    ```html
    <html lang="en" data-theme="{{ site_settings.theme|default:'corporate' }}" class="h-full"
      {% if site_settings.custom_primary_color or site_settings.custom_accent_color %}
@@ -37,8 +54,8 @@ flowchart TD
      {% endif %}>
    ```
 
-3. **DaisyUI v5 Plugin Configuration (`theme/static_src/src/styles.css`)**:
-   Uses the Tailwind v4 `@plugin` directive to include themes:
+5. **DaisyUI v5 Plugin Configuration (`theme/static_src/src/styles.css`)**:
+   Uses the Tailwind v4 `@plugin` directive and explicit theme color rules:
    ```css
    @import "tailwindcss";
    @plugin "daisyui" {
@@ -50,13 +67,13 @@ flowchart TD
    @source "../../templates/**/*.html";
    ```
 
-4. **Semantic Token Consumption in Templates**:
+6. **Semantic Token Consumption in Templates**:
    Templates rely exclusively on semantic classes:
    - `bg-primary`, `text-primary`, `text-primary-content`
    - `bg-secondary`, `text-secondary`, `badge-secondary`
    - `bg-base-100` (main surface), `bg-base-200` (cards/sub-surfaces), `bg-base-300` (borders/dividers)
-   - `text-base-content` (main text), `text-base-content/70` (muted text)
-   - `btn-primary`, `btn-secondary`, `btn-outline`
+   - `text-base-content` (main text), `text-base-content/80` (body text), `text-base-content/60` (subtle captions)
+   - `btn-primary`, `btn-outline btn-primary`, `btn-ghost`
 
 ---
 
@@ -66,15 +83,15 @@ The system ships with 9 curated themes suited for institutional and academic use
 
 | Theme Name | Style Description | Primary / Base Tone | Best For |
 |---|---|---|---|
-| `corporate` *(Default)* | Clean, modern blue, slate, crisp borders | Deep Navy / Clean White | General institutional portals, university headquarters |
-| `emerald` | Academic forest green, mint accents | Deep Emerald / Light Cream | Sciences, agriculture, ecological & forestry institutes |
-| `nord` | Arctic slate, muted frost blues | Nord Slate / Snow Flurry | Technology, medical research, northern institutes |
+| `corporate` *(Default)* | Nakashara Oxford Navy, Sage & Antique Gold | Oxford Navy (`#24466B`) / Warm Off-White (`#F5F4EF`) | General institutional portals, university headquarters |
+| `emerald` | Academic forest green, mint accents | Deep Emerald (`#1B4D3E`) / Light Cream | Sciences, agriculture, ecological & forestry institutes |
+| `nord` | Arctic slate, muted frost blues | Nord Slate (`#2E3440`) / Snow Flurry | Technology, medical research, northern institutes |
 | `winter` | Crisp cyan, bright icy highlights | Crisp Indigo / Ice White | Clinical institutions, hospitals, labs |
-| `business` | High-contrast corporate dark mode | Deep Charcoal / Bright Amber | Executive boards, business schools, foundation offices |
+| `business` | High-contrast corporate dark mode | Deep Charcoal / Warm Amber | Executive boards, business schools, foundation offices |
 | `night` | Ultra-deep dark blue palette | Deep Cobalt / Dark Indigo | Developer docs, astronomy, physics departments |
-| `autumn` | Warm terracotta, bronze, cream | Earth Rust / Warm Cream | Humanities, historical archives, arts faculties |
+| `autumn` | Warm terracotta, bronze, cream | Earth Rust (`#8C3B24`) / Warm Cream | Humanities, historical archives, arts faculties |
 | `luxury` | Deep obsidian, champagne gold | Obsidian / Burnished Gold | Law faculties, distinguished honors, endowments |
-| `light` | Bright, clean minimalist palette | Sky Blue / Crisp White | Standard high-readability public information |
+| `light` | Bright, clean minimalist palette | Slate Blue / Crisp White | Standard high-readability public information |
 
 ---
 

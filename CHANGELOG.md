@@ -10,24 +10,44 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased] - 2026-10-09
 
 ### Added
-- **Multi-Image Hero Carousel**:
-  - Added `HomePageHeroSlide` model in `apps/home/models.py` enabling editors to add multiple hero slides with custom images, tags, headlines, subheadlines, and CTAs.
-  - Implemented interactive Alpine.js hero carousel in `templates/home/home_page.html` featuring auto-advance (6.5s interval), pause on mouse hover, keyboard arrow controls, prev/next buttons, and pill dot indicators.
-  - Multi-stop dark gradient scrim overlay (`bg-gradient-to-r from-slate-950/95 via-slate-950/80 to-slate-900/40` and bottom vignette) ensuring 100% crystal-clear text readability over any background image.
-  - Added unit test `test_hero_carousel_slides` in `tests/test_home.py`.
+- **Centralized Institutional Contact Information & Site Settings Architecture**:
+  - Enriched Wagtail `SiteSettings` (`apps.site_settings.models.SiteSettings` / `InstitutionSettings`) with comprehensive institutional fields:
+    - Structured Postal Address: `building_or_campus`, `address_line_1`, `address_line_2`, `city`, `state`, `postal_code`, `country`.
+    - Extended Contact Lines: `phone_primary`, `phone_secondary`, `phone_toll_free`, `fax_number`.
+    - Departmental Inboxes: `email_general`, `email_admissions`, `email_media`, `email_reception`, `email_accessibility`.
+    - Operations & Visiting: `office_hours`, `directions_info`, `directions_url`.
+    - Footer & Legal: `footer_description`, `footer_copyright_text`, `footer_note`.
+  - Added helper properties: `formatted_address` (single-line comma-delimited omitting blanks), `address_lines` (structured list of non-empty lines), `has_address`, `has_contact_info`, `has_social_links`, and `social_links_list`.
+  - Created reusable, accessible template partials:
+    - `templates/includes/institutional_address.html`: Microdata `PostalAddress` rendering with zero broken empty lines.
+    - `templates/includes/contact_details.html`: Structured contact details with accessible `tel:` and `mailto:` links, hours, and direction maps.
+    - `templates/includes/social_links.html`: Official social links omitting unconfigured platforms.
+    - `templates/includes/footer.html`: Modular 4-column institutional footer partial.
+  - Injected `institution_settings` alongside `site_settings` in `apps.core.context_processors.site_context` for seamless template access.
+  - Added test suite `tests/test_institution_settings.py` covering model registration, address formatting, social link parsing, context injection, footer rendering, contact page integration, and multi-site isolation (37/37 tests passing).
+- **Complete Institutional UI/UX Overhaul**:
+  - Implemented authoritative, accessible academic design system across all 50 Django templates.
+  - Defined 50-900 tonal color scale in `theme/static_src/src/styles.css` with semantic color tokens: Oxford Navy (`#24466B`), Academic Sage (`#52766F`), Antique Gold (`#B58A48`), Crisp White (`#FFFFFF`), Warm Off-White (`#F5F4EF`), Soft Gray-Green (`#E2E4E1`), and Charcoal Slate (`#202B36`).
+  - Added server-side hex color regex validator `^#(?:[0-9a-fA-F]{3}){1,2}$` for `SiteSettings.custom_primary_color` and `custom_accent_color`.
+  - Multi-image Hero Carousel in `templates/home/home_page.html` with Alpine.js controls, keyboard navigation, auto-advance, and high-legibility dark gradient scrim overlay.
+  - Full print stylesheet rules (`@media print`) and WCAG 2.2 AA compliant contrast ratios across light and dark modes.
+  - Schema.org microdata `BreadcrumbList` integration in global `templates/base.html` breadcrumbs.
 
 ### Changed
-- **Calmed & Modernized Color Palette**:
-  - Redesigned `base.html` header from blinding full-bleed blue to a distinguished two-tone academic aesthetic: dark slate utility bar (`bg-slate-950 text-slate-300`) and crisp clean brand & navigation bar (`bg-base-100 text-base-content border-b border-base-200`).
-  - Redesigned footer to deep institutional slate/charcoal canvas (`bg-slate-950 text-slate-300 border-t-2 border-amber-500/40`) with soft muted text (`text-slate-400`), warm amber heading accents, and dark pill social buttons (`bg-slate-900 text-slate-400 hover:bg-amber-500 hover:text-slate-950`).
-  - Softened page headers across `departments`, `news`, `events`, and `people` index and detail pages with clean, modern styling.
-  - Refined theme tokens in `theme/static_src/src/styles.css` for balanced institutional contrast.
+- **Typography & Component Restraint**:
+  - Replaced SaaS-style gradients, neon accents, and heavy pill radius overload with restrained `rounded-xl` / `rounded-lg` cards, crisp 1px borders (`border-base-300`), and subtle focus rings.
+  - Standardized display headings to Source Serif 4 (`font-serif`) with tight tracking and body text to legible grotesk sans-serif (`font-sans`).
+  - Redesigned all StreamField blocks (`templates/blocks/`): `cta_block`, `statistics_block`, `accordion_block`, `document_list_block`, `notice_block`, `quote_block`, `heading_block`, `image_block`, `embed_block`.
+  - Redesigned all document, research, content, and legal templates: `career_index_page`, `career_page`, `document_index_page`, `document_page`, `publication_index_page`, `publication_page`, `report_index_page`, `report_page`, `tender_index_page`, `tender_page`, `contact_page`, `contact_page_landing`, `standard_page`, `announcement_index_page`, `announcement_page`, `notice_index_page`, `notice_page`, `research_index_page`, `research_project_page`, `legal_index_page`, `legal_page`, `department_index_page`, `department_page`.
+  - Upgraded search templates (`search.html`, `search_results.html`) with clean search input, live HTMX debounced querying, and clear count summaries.
 
 ### Fixed
-- **Text Selection Visibility Bug**:
-  - Replaced low-contrast selection class with high-contrast amber/neutral selection (`selection:bg-amber-300 selection:text-slate-950 dark:selection:bg-amber-500/40 dark:selection:text-amber-100` and global `::selection` CSS rule), ensuring highlighted text never disappears on any background.
-- **Duplicate Breadcrumbs Across Templates**:
-  - Removed duplicate `<nav aria-label="Breadcrumb">` bars from `department_index_page.html`, `department_page.html`, `news_index_page.html`, `news_page.html`, `event_index_page.html`, `event_page.html`, `person_index_page.html`, and `person_page.html`. All pages now use `base.html`'s single, accessible, unified Wagtail hierarchy breadcrumb bar.
+- **Text Selection & Contrast Bug**:
+  - Replaced low-contrast selection class with high-contrast amber/neutral selection (`selection:bg-amber-300 selection:text-slate-950` and global `::selection` CSS rule).
+- **Duplicate Breadcrumbs**:
+  - Removed duplicate `<nav aria-label="Breadcrumb">` bars from interior templates; centralized breadcrumbs into `base.html`'s single, accessible breadcrumbs block.
+- **Department Page Header Contrast**:
+  - Fixed white text against light background in `templates/departments/department_page.html`.
 
 ---
 

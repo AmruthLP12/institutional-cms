@@ -1,18 +1,21 @@
-<div class="my-8 py-6 px-4 bg-primary text-primary-content rounded-xl shadow-inner">
+<div class="my-8 p-6 sm:p-8 bg-base-100 border border-base-300 rounded-xl">
   {% if value.title %}
-    <h3 class="text-xl font-serif font-bold text-center text-secondary mb-6">{{ value.title }}</h3>
+    <div class="text-center mb-6">
+      <div class="section-accent-rule mx-auto"></div>
+      <h3 class="text-xl font-serif font-bold text-base-content">{{ value.title }}</h3>
+    </div>
   {% endif %}
-  <div class="grid grid-cols-2 md:grid-cols-{{ value.items|length }} gap-6 text-center divide-y md:divide-y-0 md:divide-x divide-white/20">
+  <div class="grid grid-cols-2 md:grid-cols-{{ value.items|length }} gap-6 text-center divide-y md:divide-y-0 md:divide-x divide-base-300">
     {% for item in value.items %}
-      <div class="pt-4 md:pt-0 px-2">
-        <div class="text-3xl lg:text-4xl font-extrabold text-secondary font-serif tracking-tight">
+      <div class="pt-4 md:pt-0 px-3">
+        <div class="text-3xl lg:text-4xl font-extrabold text-primary font-serif tracking-tight">
           {{ item.value }}
         </div>
-        <div class="text-sm font-semibold uppercase tracking-wider text-white/90 mt-1">
+        <div class="text-xs sm:text-sm font-semibold uppercase tracking-wider text-base-content/85 mt-1.5">
           {{ item.label }}
         </div>
         {% if item.description %}
-          <div class="text-xs text-white/70 mt-0.5">
+          <div class="text-xs text-base-content/65 mt-1">
             {{ item.description }}
           </div>
         {% endif %}

@@ -1,9 +1,9 @@
 {% load wagtailimages_tags %}
 <figure class="my-6 {% if value.full_width %}w-full{% else %}max-w-3xl mx-auto{% endif %}">
   {% image value.image width-1200 as img %}
-  <img src="{{ img.url }}" width="{{ img.width }}" height="{{ img.height }}" alt="{{ value.alt_text }}" class="w-full h-auto rounded-lg shadow-sm border border-base-200" loading="lazy" />
+  <img src="{{ img.url }}" width="{{ img.width }}" height="{{ img.height }}" alt="{{ value.alt_text }}" class="w-full h-auto rounded-xl border border-base-300" loading="lazy" />
   {% if value.caption %}
-    <figcaption class="mt-2 text-sm text-center text-base-content/70 italic">
+    <figcaption class="mt-2 text-xs text-center text-base-content/70 italic">
       {{ value.caption }}
     </figcaption>
   {% endif %}

@@ -2,26 +2,34 @@
 {% load wagtailcore_tags %}
 
 {% block content %}
-<div class="max-w-5xl mx-auto px-4 py-12">
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
   <article>
     <!-- Header with Governance Meta -->
-    <header class="mb-10 pb-8 border-b border-base-200">
-      <div class="flex flex-wrap items-center gap-2 mb-3">
-        <span class="badge badge-neutral text-xs font-semibold">{{ page.get_policy_type_display }}</span>
-        {% if page.version %}
-          <span class="badge badge-outline text-xs font-mono font-semibold">Version {{ page.version }}</span>
-        {% endif %}
-        <span class="badge {{ page.get_approval_status_badge_class }} text-xs font-semibold uppercase">
-          {{ page.get_approval_status_display }}
-        </span>
+    <header class="mb-10 pb-8 border-b border-base-300">
+      <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="badge badge-neutral text-xs font-semibold">{{ page.get_policy_type_display }}</span>
+          {% if page.version %}
+            <span class="badge badge-outline text-xs font-mono font-semibold">Version {{ page.version }}</span>
+          {% endif %}
+          <span class="badge {{ page.get_approval_status_badge_class }} text-xs font-semibold uppercase">
+            {{ page.get_approval_status_display }}
+          </span>
+        </div>
+        <button onclick="window.print()" class="no-print btn btn-xs btn-ghost text-base-content/70 hover:text-primary gap-1">
+          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+          </svg>
+          Print Policy
+        </button>
       </div>
 
-      <h1 class="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold text-primary mb-6">
+      <h1 class="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold text-base-content leading-tight mb-6">
         {{ page.title }}
       </h1>
 
       <!-- Structured Metadata Grid -->
-      <div class="bg-base-200/50 rounded-xl p-5 grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs">
+      <div class="bg-base-200 border border-base-300 rounded-xl p-5 grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs">
         <div>
           <span class="text-base-content/60 block uppercase tracking-wider font-semibold">Effective Date</span>
           <span class="font-medium text-base-content text-sm">{{ page.effective_from|date:"d F Y"|default:"Not specified" }}</span>
@@ -55,16 +63,16 @@
 
     <!-- Policy Summary -->
     {% if page.summary %}
-      <div class="mb-8 p-6 bg-base-200 border-l-4 border-secondary rounded-r-xl">
-        <h2 class="text-xs uppercase tracking-wider font-bold text-primary mb-2 font-serif">Executive Summary</h2>
-        <div class="prose max-w-none text-sm text-base-content leading-relaxed">
+      <div class="mb-8 p-6 bg-base-200/70 border-l-4 border-accent rounded-r-xl">
+        <h2 class="text-xs uppercase tracking-wider font-bold text-base-content mb-2 font-serif">Executive Summary</h2>
+        <div class="prose max-w-none text-sm text-base-content/90 leading-relaxed richtext">
           {{ page.summary|richtext }}
         </div>
       </div>
     {% endif %}
 
     <!-- Policy Body (StreamField) -->
-    <div class="prose max-w-none text-base-content/90 leading-relaxed mb-12">
+    <div class="prose max-w-none text-base-content leading-relaxed mb-12 richtext">
       {% for block in page.body %}
         {% include_block block %}
       {% endfor %}
@@ -72,19 +80,19 @@
 
     <!-- Related Documents / Downloads -->
     {% if page.related_documents %}
-      <section class="mb-10 p-6 bg-base-100 border border-base-200 rounded-xl shadow-sm" aria-labelledby="docs-heading">
-        <h2 id="docs-heading" class="text-lg font-serif font-bold text-primary mb-4">Official Downloads & Related Gazettes</h2>
+      <section class="mb-10 p-6 bg-base-100 border border-base-300 rounded-xl" aria-labelledby="docs-heading">
+        <h2 id="docs-heading" class="text-lg font-serif font-bold text-base-content mb-4">Official Downloads &amp; Gazettes</h2>
         <div class="divide-y divide-base-200 text-sm">
           {% for doc_block in page.related_documents %}
             {% if doc_block.value %}
-              <div class="py-3 flex items-center justify-between">
+              <div class="py-3 flex items-center justify-between gap-4">
                 <div class="flex items-center gap-3">
-                  <svg class="w-5 h-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg class="w-5 h-5 text-primary shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
                   </svg>
                   <span class="font-medium text-base-content">{{ doc_block.value.title }}</span>
                 </div>
-                <a href="{{ doc_block.value.url }}" class="btn btn-xs btn-outline btn-primary" download>
+                <a href="{{ doc_block.value.url }}" class="btn btn-xs btn-outline btn-primary shrink-0" download>
                   Download PDF
                 </a>
               </div>
@@ -94,15 +102,15 @@
       </section>
     {% endif %}
 
-    <!-- Policy Contact / Grievance -->
+    <!-- Policy Contact / Inquiries -->
     {% if page.contact_email or page.contact_phone %}
-      <footer class="p-4 bg-base-200/40 rounded-lg text-xs text-base-content/70 flex flex-wrap items-center justify-between gap-4">
+      <footer class="p-4 bg-base-200 border border-base-300 rounded-xl text-xs text-base-content/75 flex flex-wrap items-center justify-between gap-4">
         <div>
           <strong>Policy Inquiries:</strong>
           {% if page.contact_email %} Email: <a href="mailto:{{ page.contact_email }}" class="text-primary underline">{{ page.contact_email }}</a>{% endif %}
           {% if page.contact_phone %} &bull; Phone: {{ page.contact_phone }}{% endif %}
         </div>
-        <a href="/policies/" class="text-primary font-semibold hover:underline">&larr; Back to all policies</a>
+        <a href="/legal/" class="text-primary font-semibold hover:underline">&larr; Back to all policies</a>
       </footer>
     {% endif %}
   </article>

@@ -1,0 +1,22 @@
+{# Reusable Institutional Address Partial #}
+{% with s=settings|default:site_settings|default:institution_settings %}
+  {% if s and s.has_address %}
+    <address class="not-italic text-inherit" itemscope itemtype="https://schema.org/PostalAddress">
+      {% if s.building_or_campus %}
+        <span itemprop="streetAddress" class="block">{{ s.building_or_campus }}</span>
+      {% endif %}
+      {% if s.address_line_1 %}
+        <span itemprop="streetAddress" class="block">{{ s.address_line_1 }}</span>
+      {% endif %}
+      {% if s.address_line_2 %}
+        <span class="block">{{ s.address_line_2 }}</span>
+      {% endif %}
+      <span class="block">
+        {% if s.city %}<span itemprop="addressLocality">{{ s.city }}</span>{% endif %}{% if s.state %}, <span itemprop="addressRegion">{{ s.state }}</span>{% endif %}{% if s.postal_code %} <span itemprop="postalCode">{{ s.postal_code }}</span>{% endif %}
+      </span>
+      {% if s.country %}
+        <span itemprop="addressCountry" class="block">{{ s.country }}</span>
+      {% endif %}
+    </address>
+  {% endif %}
+{% endwith %}

@@ -2,20 +2,20 @@
 {% load wagtailcore_tags %}
 
 {% block content %}
-<div class="max-w-4xl mx-auto px-4 py-12">
+<div class="max-w-4xl mx-auto px-4 py-10">
   <article>
-    <header class="mb-8 pb-6 border-b border-base-200">
-      <div class="flex items-center gap-2 text-xs text-base-content/60 mb-3">
+    <header class="mb-8 pb-6 border-b border-base-300">
+      <div class="flex items-center gap-2 text-xs text-base-content/70 mb-3">
         <span>Published {{ page.first_published_at|date:"d F Y" }}</span>
         {% if page.is_pinned %}
           <span>&bull;</span>
-          <span class="badge badge-warning text-xs">Pinned Announcement</span>
+          <span class="badge badge-warning text-xs font-medium">Pinned Announcement</span>
         {% endif %}
       </div>
-      <h1 class="text-3xl sm:text-4xl font-serif font-bold text-primary mb-4">{{ page.title }}</h1>
-      <p class="text-lg text-base-content/90 font-medium leading-relaxed bg-base-200 p-4 rounded-lg border-l-4 border-secondary">
+      <h1 class="text-2xl sm:text-4xl font-serif font-bold text-base-content tracking-tight mb-4">{{ page.title }}</h1>
+      <div class="text-base text-base-content/90 font-medium leading-relaxed bg-base-200 p-4 sm:p-5 rounded-xl border border-base-300 border-l-4 border-l-secondary">
         {{ page.summary }}
-      </p>
+      </div>
     </header>
 
     {% if page.body %}
@@ -26,8 +26,8 @@
       </div>
     {% endif %}
 
-    <div class="pt-6 border-t border-base-200">
-      <a href="/announcements/" class="text-sm font-semibold text-primary hover:underline">&larr; Back to all announcements</a>
+    <div class="pt-6 border-t border-base-300">
+      <a href="/announcements/" class="text-xs font-semibold text-primary hover:underline">&larr; Back to all announcements</a>
     </div>
   </article>
 </div>

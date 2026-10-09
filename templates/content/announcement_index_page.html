@@ -2,22 +2,27 @@
 {% load wagtailcore_tags %}
 
 {% block content %}
-<div class="max-w-5xl mx-auto px-4 py-12">
-  <header class="mb-10 pb-6 border-b border-base-200">
-    <h1 class="text-4xl font-serif font-bold text-primary mb-3">Institutional Announcements</h1>
+<div class="max-w-5xl mx-auto px-4 py-10">
+  <header class="mb-8 pb-6 border-b border-base-300">
+    <div class="inline-block px-2.5 py-0.5 bg-primary/10 text-primary text-xs font-semibold uppercase tracking-wider rounded mb-3">
+      Campus Dispatches
+    </div>
+    <h1 class="text-2xl sm:text-4xl font-serif font-bold text-base-content tracking-tight mb-3">Institutional Announcements</h1>
     {% if page.intro %}
-      <div class="text-base-content/80 text-lg leading-relaxed">{{ page.intro|richtext }}</div>
+      <div class="text-base text-base-content/80 leading-relaxed">{{ page.intro|richtext }}</div>
+    {% else %}
+      <p class="text-base text-base-content/80 leading-relaxed">Official notices, campus updates, and communications from Nakashara leadership.</p>
     {% endif %}
   </header>
 
   {% if announcements %}
     <div class="space-y-4">
       {% for announcement in announcements %}
-        <article class="p-6 bg-base-100 border border-base-200 rounded-xl shadow-sm hover:border-secondary transition-all {% if announcement.is_pinned %}ring-2 ring-secondary/40{% endif %}">
+        <article class="p-5 sm:p-6 bg-base-100 border border-base-300 rounded-xl hover:border-primary/40 transition-colors {% if announcement.is_pinned %}border-l-4 border-l-secondary{% endif %}">
           <div class="flex items-center justify-between gap-4 mb-2">
             <div class="flex items-center gap-2">
               {% if announcement.is_pinned %}
-                <span class="badge badge-warning text-xs font-semibold">Pinned</span>
+                <span class="badge badge-warning text-xs font-medium">Pinned</span>
               {% endif %}
               <span class="text-xs text-base-content/60">{{ announcement.first_published_at|date:"d M Y" }}</span>
             </div>
@@ -25,28 +30,28 @@
               <span class="badge badge-ghost text-xs">Archived</span>
             {% endif %}
           </div>
-          <h2 class="text-xl font-serif font-bold text-primary hover:text-primary transition-colors mb-2">
+          <h2 class="text-lg sm:text-xl font-serif font-bold text-base-content hover:text-primary transition-colors mb-2">
             <a href="{{ announcement.url }}">{{ announcement.title }}</a>
           </h2>
-          <p class="text-sm text-base-content/80 leading-relaxed">{{ announcement.summary }}</p>
+          <p class="text-xs sm:text-sm text-base-content/80 leading-relaxed">{{ announcement.summary }}</p>
         </article>
       {% endfor %}
     </div>
 
     <!-- Pagination -->
     {% if announcements.has_other_pages %}
-      <div class="flex justify-center mt-10 join">
+      <div class="flex justify-center mt-8 join">
         {% if announcements.has_previous %}
           <a href="?page={{ announcements.previous_page_number }}" class="join-item btn btn-sm">&laquo;</a>
         {% endif %}
-        <span class="join-item btn btn-sm btn-disabled">Page {{ announcements.number }} of {{ announcements.paginator.num_pages }}</span>
+        <span class="join-item btn btn-sm btn-disabled text-xs">Page {{ announcements.number }} of {{ announcements.paginator.num_pages }}</span>
         {% if announcements.has_next %}
           <a href="?page={{ announcements.next_page_number }}" class="join-item btn btn-sm">&raquo;</a>
         {% endif %}
       </div>
     {% endif %}
   {% else %}
-    <p class="text-base-content/60 italic py-8">No announcements at this time.</p>
+    <p class="text-base-content/60 italic py-10 text-center">No announcements at this time.</p>
   {% endif %}
 </div>
 {% endblock %}

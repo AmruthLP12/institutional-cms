@@ -1,18 +1,19 @@
-<div class="my-8 p-8 bg-gradient-to-r from-primary to-primary/85 text-primary-content rounded-xl shadow-md flex flex-col md:flex-row items-center justify-between gap-6">
+<div class="my-8 p-6 sm:p-8 bg-base-200 border border-base-300 rounded-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
   <div class="max-w-xl">
-    <h3 class="text-2xl font-serif font-bold text-white mb-2">{{ value.title }}</h3>
+    <div class="section-accent-rule"></div>
+    <h3 class="text-xl sm:text-2xl font-serif font-bold text-base-content mb-2">{{ value.title }}</h3>
     {% if value.text %}
-      <p class="text-white/80 leading-relaxed">{{ value.text }}</p>
+      <p class="text-sm sm:text-base text-base-content/80 leading-relaxed">{{ value.text }}</p>
     {% endif %}
   </div>
-  <div>
+  <div class="shrink-0">
     {% if value.button_page %}
-      <a href="{{ value.button_page.url }}" class="btn btn-warning font-semibold px-6 py-2 shadow hover:brightness-105">
-        {{ value.button_label }}
+      <a href="{{ value.button_page.url }}" class="btn btn-primary px-6">
+        {{ value.button_label }} &rarr;
       </a>
     {% elif value.button_url %}
-      <a href="{{ value.button_url }}" class="btn btn-warning font-semibold px-6 py-2 shadow hover:brightness-105" target="_blank" rel="noopener noreferrer">
-        {{ value.button_label }}
+      <a href="{{ value.button_url }}" class="btn btn-primary px-6" target="_blank" rel="noopener noreferrer">
+        {{ value.button_label }} &rarr;
       </a>
     {% endif %}
   </div>

@@ -1,0 +1,180 @@
+{# Reusable Institutional Footer Partial #}
+{% load wagtailimages_tags %}
+{% with s=settings|default:site_settings|default:institution_settings %}
+<footer class="bg-slate-950 text-slate-300 mt-20 border-t-2 border-amber-500/40" aria-label="Institutional Footer">
+
+  <!-- Top Footer: Identity, Address, Contact & Dynamic Link Groups -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10">
+
+    <!-- Col 1: Identity, Contact & Social (spans 4 cols on LG) -->
+    <div class="lg:col-span-4 space-y-4">
+      <!-- Logo / Wordmark -->
+      <a href="/" class="inline-flex items-center gap-3 group" aria-label="{{ s.institution_name|default:'Nakashara' }} Home">
+        {% if s.logo %}
+          {% image s.logo height-40 as footer_logo %}
+          <img src="{{ footer_logo.url }}" alt="{{ s.logo_alt_text }}" class="h-10 w-auto object-contain opacity-90 group-hover:opacity-100 transition-opacity" />
+        {% else %}
+          <div class="w-10 h-10 rounded-xl bg-slate-900 text-amber-400 font-serif font-black text-xl flex items-center justify-center border border-slate-800">
+            {{ s.institution_short_name|slice:":1"|default:"N" }}
+          </div>
+        {% endif %}
+        <div>
+          <div class="font-serif font-bold text-xl text-white group-hover:text-amber-300 transition-colors leading-tight">
+            {{ s.institution_name|default:"Nakashara" }}
+          </div>
+          {% if s.institution_short_name %}
+            <div class="text-[10px] font-semibold tracking-widest uppercase text-slate-400 leading-tight mt-0.5">
+              {{ s.institution_short_name }}
+            </div>
+          {% endif %}
+        </div>
+      </a>
+
+      <!-- Tagline / Description -->
+      <p class="text-xs text-slate-400 max-w-sm leading-relaxed">
+        {{ s.footer_description|default:s.tagline|default:"Dedicated to the advancement of science, technology, public knowledge, and high-impact scholarship." }}
+      </p>
+
+      <!-- Institutional Address -->
+      {% if s.has_address %}
+        <div class="text-xs text-slate-400 space-y-1 pt-1 flex items-start gap-1.5">
+          <svg class="w-3.5 h-3.5 mt-0.5 shrink-0 text-amber-400/80" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+          </svg>
+          <div>
+            {% include "includes/institutional_address.html" with settings=s %}
+          </div>
+        </div>
+      {% else %}
+        <div class="text-xs text-slate-400 space-y-1 pt-1 flex items-start gap-1.5">
+          <svg class="w-3.5 h-3.5 mt-0.5 shrink-0 text-amber-400/80" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+          </svg>
+          <address class="not-italic">
+            <span class="block">Institutional Enclave, Campus Road</span>
+            <span class="block">Knowledge City, India</span>
+          </address>
+        </div>
+      {% endif %}
+
+      <!-- Core Contact -->
+      <div class="not-italic text-xs text-slate-400 space-y-1.5 pt-1">
+        {% if s.phone_primary %}
+          <p class="flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5 shrink-0 text-amber-400/80" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.948V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+            </svg>
+            <a href="tel:{{ s.phone_primary }}" class="hover:text-amber-300 transition-colors">{{ s.phone_primary }}</a>
+            {% if s.phone_toll_free %}
+              <span class="text-slate-500">| Toll-free: <a href="tel:{{ s.phone_toll_free }}" class="hover:text-amber-300">{{ s.phone_toll_free }}</a></span>
+            {% endif %}
+          </p>
+        {% endif %}
+        {% if s.email_general %}
+          <p class="flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5 shrink-0 text-amber-400/80" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+            </svg>
+            <a href="mailto:{{ s.email_general }}" class="text-amber-400 hover:text-amber-300 transition-colors hover:underline">{{ s.email_general }}</a>
+          </p>
+        {% endif %}
+        {% if s.office_hours %}
+          <p class="flex items-center gap-1.5 text-slate-400">
+            <svg class="w-3.5 h-3.5 shrink-0 text-amber-400/80" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            <span>{{ s.office_hours }}</span>
+          </p>
+        {% endif %}
+      </div>
+
+      <!-- Social Media Links -->
+      {% include "includes/social_links.html" with settings=s wrapper_class="pt-2" %}
+    </div>
+
+    <!-- Dynamic Footer Link Groups (span remaining 8 cols) -->
+    {% if footer_groups %}
+      <div class="lg:col-span-8 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-{{ footer_groups|length|default:3 }} gap-8">
+        {% for group in footer_groups %}
+          <div>
+            <h3 class="text-xs font-bold uppercase tracking-widest text-amber-400/90 mb-4 font-serif border-b border-slate-800 pb-2">
+              {{ group.title }}
+            </h3>
+            <ul class="space-y-2.5">
+              {% for link in group.links.all %}
+                <li>
+                  <a href="{{ link.get_url }}"
+                    class="text-sm text-slate-400 hover:text-amber-300 hover:translate-x-0.5 transition-all inline-flex items-center gap-1.5 group"
+                    {% if link.open_in_new_tab %}target="_blank" rel="noopener noreferrer"{% endif %}>
+                    <span class="w-1 h-1 rounded-full bg-amber-400/40 group-hover:bg-amber-400 transition-colors shrink-0"></span>
+                    {{ link.label }}
+                  </a>
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <!-- Fallback static columns if no groups are configured yet -->
+      <div class="lg:col-span-8 grid grid-cols-2 sm:grid-cols-4 gap-8">
+        <div>
+          <h3 class="text-xs font-bold uppercase tracking-widest text-amber-400/90 mb-4 font-serif border-b border-slate-800 pb-2">Institution</h3>
+          <ul class="space-y-2.5 text-sm text-slate-400">
+            <li><a href="/about/" class="hover:text-amber-300 transition-colors">About</a></li>
+            <li><a href="/departments/" class="hover:text-amber-300 transition-colors">Departments</a></li>
+            <li><a href="/people/" class="hover:text-amber-300 transition-colors">Faculty &amp; Staff</a></li>
+            <li><a href="/research/" class="hover:text-amber-300 transition-colors">Research</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-xs font-bold uppercase tracking-widest text-amber-400/90 mb-4 font-serif border-b border-slate-800 pb-2">Public Notices</h3>
+          <ul class="space-y-2.5 text-sm text-slate-400">
+            <li><a href="/announcements/" class="hover:text-amber-300 transition-colors">Announcements</a></li>
+            <li><a href="/tenders/" class="hover:text-amber-300 transition-colors">Tenders</a></li>
+            <li><a href="/careers/" class="hover:text-amber-300 transition-colors">Careers</a></li>
+            <li><a href="/events/" class="hover:text-amber-300 transition-colors">Events</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-xs font-bold uppercase tracking-widest text-amber-400/90 mb-4 font-serif border-b border-slate-800 pb-2">Legal</h3>
+          <ul class="space-y-2.5 text-sm text-slate-400">
+            <li><a href="/legal/" class="hover:text-amber-300 transition-colors">Policies</a></li>
+            <li><a href="/legal/privacy-policy/" class="hover:text-amber-300 transition-colors">Privacy Policy</a></li>
+            <li><a href="/legal/terms-of-use/" class="hover:text-amber-300 transition-colors">Terms of Use</a></li>
+            <li><a href="/legal/accessibility-statement/" class="hover:text-amber-300 transition-colors">Accessibility</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-xs font-bold uppercase tracking-widest text-amber-400/90 mb-4 font-serif border-b border-slate-800 pb-2">Quick Links</h3>
+          <ul class="space-y-2.5 text-sm text-slate-400">
+            <li><a href="/news/" class="hover:text-amber-300 transition-colors">News</a></li>
+            <li><a href="/documents/" class="hover:text-amber-300 transition-colors">Documents</a></li>
+            <li><a href="/contact/" class="hover:text-amber-300 transition-colors">Contact</a></li>
+            <li><a href="/search/" class="hover:text-amber-300 transition-colors">Search</a></li>
+          </ul>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- Bottom Copyright Bar -->
+  <div class="border-t border-slate-900 bg-black/40 py-4 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500">
+      <div class="text-center sm:text-left">
+        &copy; {% now "Y" %} {{ s.institution_name|default:"Nakashara" }}. All rights reserved.
+        {% if s.footer_copyright_text %}&bull; {{ s.footer_copyright_text }}{% endif %}
+      </div>
+      <div class="flex flex-wrap items-center justify-center gap-3">
+        <span>WCAG 2.2 AA Target</span>
+        <span class="text-slate-700" aria-hidden="true">&bull;</span>
+        <a href="/contact/" class="hover:text-slate-300 transition-colors">Grievance &amp; Feedback</a>
+        <span class="text-slate-700" aria-hidden="true">&bull;</span>
+        <a href="/sitemap.xml" class="hover:text-slate-300 transition-colors">Sitemap</a>
+        <span class="text-slate-700" aria-hidden="true">&bull;</span>
+        <a href="/admin/" class="hover:text-slate-300 transition-colors">Admin</a>
+      </div>
+    </div>
+  </div>
+</footer>
+{% endwith %}

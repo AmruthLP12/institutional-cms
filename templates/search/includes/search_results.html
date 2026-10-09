@@ -1,30 +1,30 @@
 {% load wagtailcore_tags %}
 {% if search_query %}
-  <div class="mb-4 text-sm text-base-content/70">
-    Found <strong>{{ search_results.paginator.count }}</strong> result{{ search_results.paginator.count|pluralize }} for <span class="font-medium text-primary">“{{ search_query }}”</span>
+  <div class="mb-4 text-xs sm:text-sm text-base-content/70">
+    Found <strong class="text-base-content">{{ search_results.paginator.count }}</strong> result{{ search_results.paginator.count|pluralize }} for <span class="font-medium text-primary">“{{ search_query }}”</span>
   </div>
 
   {% if search_results %}
-    <div class="divide-y divide-base-200">
+    <div class="divide-y divide-base-300">
       {% for result in search_results %}
-        <article class="py-5">
-          <div class="text-xs text-base-content/50 uppercase tracking-wider font-semibold mb-1">
+        <article class="py-4 sm:py-5 first:pt-0">
+          <div class="text-xs text-base-content/60 uppercase tracking-wider font-medium mb-1">
             {{ result.content_type.name|default:"Page" }}
           </div>
-          <h2 class="text-lg font-serif font-bold text-primary hover:text-primary transition-colors mb-1.5">
+          <h2 class="text-base sm:text-lg font-serif font-bold text-base-content hover:text-primary transition-colors mb-1.5">
             <a href="{% pageurl result %}">{{ result.title }}</a>
           </h2>
           {% if result.search_description %}
-            <p class="text-sm text-base-content/80 leading-relaxed line-clamp-2">
+            <p class="text-xs sm:text-sm text-base-content/80 leading-relaxed line-clamp-2">
               {{ result.search_description|safe }}
             </p>
           {% elif result.intro %}
-            <p class="text-sm text-base-content/80 leading-relaxed line-clamp-2">
+            <p class="text-xs sm:text-sm text-base-content/80 leading-relaxed line-clamp-2">
               {{ result.intro|striptags }}
             </p>
           {% endif %}
           <div class="mt-2 text-xs text-primary font-medium">
-            <a href="{% pageurl result %}">View details &rarr;</a>
+            <a href="{% pageurl result %}" class="hover:underline">View details &rarr;</a>
           </div>
         </article>
       {% endfor %}
@@ -36,15 +36,15 @@
         {% if search_results.has_previous %}
           <a href="?query={{ search_query }}&page={{ search_results.previous_page_number }}" class="join-item btn btn-sm">&laquo;</a>
         {% endif %}
-        <span class="join-item btn btn-sm btn-disabled">Page {{ search_results.number }} of {{ search_results.paginator.num_pages }}</span>
+        <span class="join-item btn btn-sm btn-disabled text-xs">Page {{ search_results.number }} of {{ search_results.paginator.num_pages }}</span>
         {% if search_results.has_next %}
           <a href="?query={{ search_query }}&page={{ search_results.next_page_number }}" class="join-item btn btn-sm">&raquo;</a>
         {% endif %}
       </div>
     {% endif %}
   {% else %}
-    <div class="p-8 text-center bg-base-100 border border-base-200 rounded-xl my-6">
-      <p class="text-base font-semibold text-base-content mb-1">No matching results found</p>
+    <div class="p-8 text-center bg-base-100 border border-base-300 rounded-xl my-6">
+      <p class="text-base font-serif font-bold text-base-content mb-1">No matching results found</p>
       <p class="text-xs text-base-content/60">Try searching with broader terms or check the spelling.</p>
     </div>
   {% endif %}

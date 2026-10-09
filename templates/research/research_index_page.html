@@ -2,29 +2,29 @@
 {% load wagtailcore_tags wagtailimages_tags %}
 
 {% block content %}
-<div class="max-w-7xl mx-auto px-4 py-12">
-  <header class="mb-10 pb-6 border-b border-base-200">
-    <div class="inline-block px-3 py-1 bg-secondary/15 text-primary text-xs font-semibold uppercase tracking-wider rounded mb-3">
+<div class="max-w-7xl mx-auto px-4 py-10">
+  <header class="mb-8 pb-6 border-b border-base-300">
+    <div class="inline-block px-2.5 py-0.5 bg-primary/10 text-primary text-xs font-semibold uppercase tracking-wider rounded mb-3">
       Academic Discovery
     </div>
-    <h1 class="text-4xl font-serif font-bold text-primary mb-4">Research & Strategic Programs</h1>
+    <h1 class="text-2xl sm:text-4xl font-serif font-bold text-base-content tracking-tight mb-3">Research &amp; Strategic Programs</h1>
     {% if page.intro %}
-      <div class="text-lg text-base-content/80 max-w-3xl leading-relaxed">{{ page.intro|richtext }}</div>
+      <div class="text-base text-base-content/80 max-w-3xl leading-relaxed">{{ page.intro|richtext }}</div>
     {% else %}
-      <p class="text-lg text-base-content/80 max-w-3xl leading-relaxed">
+      <p class="text-base text-base-content/80 max-w-3xl leading-relaxed">
         Investigating fundamental scientific principles, cutting-edge technologies, and high-impact societal challenges at Nakashara.
       </p>
     {% endif %}
 
     <!-- Research Areas Filter -->
     {% if areas %}
-      <div class="mt-6 flex flex-wrap items-center gap-2">
-        <span class="text-xs font-semibold text-base-content/60 mr-2">Filter by area:</span>
-        <a href="?" class="btn btn-xs {% if not current_area %}btn-primary{% else %}btn-ghost{% endif %} rounded-full">
+      <div class="mt-6 flex flex-wrap items-center gap-1.5">
+        <span class="text-xs font-medium text-base-content/70 mr-1">Filter by area:</span>
+        <a href="?" class="btn btn-xs {% if not current_area %}btn-primary{% else %}btn-ghost border border-base-300{% endif %} rounded-md font-medium">
           All Areas
         </a>
         {% for area in areas %}
-          <a href="?area={{ area.slug }}" class="btn btn-xs {% if current_area == area.slug %}btn-primary{% else %}btn-ghost{% endif %} rounded-full">
+          <a href="?area={{ area.slug }}" class="btn btn-xs {% if current_area == area.slug %}btn-primary{% else %}btn-ghost border border-base-300{% endif %} rounded-md font-medium">
             {{ area.name }}
           </a>
         {% endfor %}
@@ -33,22 +33,22 @@
   </header>
 
   {% if projects %}
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {% for project in projects %}
-        <article class="bg-base-100 border border-base-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all flex flex-col justify-between group">
+        <article class="bg-base-100 border border-base-300 rounded-xl overflow-hidden flex flex-col justify-between hover:border-primary/40 transition-colors group">
           <div>
             {% if project.project_image %}
               {% image project.project_image fill-600x340 as p_img %}
-              <img src="{{ p_img.url }}" alt="{{ project.title }}" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
+              <img src="{{ p_img.url }}" alt="{{ project.title }}" class="w-full h-48 object-cover border-b border-base-300" loading="lazy" />
             {% else %}
-              <div class="w-full h-48 bg-primary/10 flex items-center justify-center text-primary font-serif font-bold text-xl">
+              <div class="w-full h-48 bg-base-200 flex items-center justify-center text-base-content/70 font-serif font-bold text-lg border-b border-base-300">
                 Research Project
               </div>
             {% endif %}
             
-            <div class="p-6">
+            <div class="p-5">
               <div class="flex items-center justify-between gap-2 mb-2">
-                <span class="badge badge-sm {% if project.status == 'ongoing' %}badge-success{% elif project.status == 'completed' %}badge-neutral{% else %}badge-warning{% endif %} font-medium capitalize">
+                <span class="badge badge-sm {% if project.status == 'ongoing' %}badge-success{% elif project.status == 'completed' %}badge-neutral{% else %}badge-warning{% endif %} font-medium capitalize text-xs">
                   {{ project.status }}
                 </span>
                 {% if project.department %}
@@ -56,26 +56,26 @@
                 {% endif %}
               </div>
 
-              <h2 class="text-lg font-serif font-bold text-primary group-hover:text-primary transition-colors leading-snug mb-2">
+              <h2 class="text-base sm:text-lg font-serif font-bold text-base-content group-hover:text-primary transition-colors leading-snug mb-2">
                 <a href="{{ project.url }}">{{ project.title }}</a>
               </h2>
 
               {% if project.summary %}
-                <p class="text-xs text-base-content/80 line-clamp-3 leading-relaxed mb-4">
+                <p class="text-xs text-base-content/75 line-clamp-3 leading-relaxed">
                   {{ project.summary }}
                 </p>
               {% endif %}
             </div>
           </div>
 
-          <div class="px-6 pb-6 pt-3 border-t border-base-200/60 flex items-center justify-between text-xs">
-            <span class="text-base-content/70">
+          <div class="px-5 pb-5 pt-3 border-t border-base-300 flex items-center justify-between text-xs">
+            <span class="text-base-content/70 truncate mr-2">
               {% if project.principal_investigator %}
                 <strong>PI:</strong> {{ project.principal_investigator }}
               {% endif %}
             </span>
-            <a href="{{ project.url }}" class="text-primary font-semibold hover:underline">
-              Learn more &rarr;
+            <a href="{{ project.url }}" class="text-primary font-semibold hover:underline flex-shrink-0">
+              Details &rarr;
             </a>
           </div>
         </article>
@@ -84,18 +84,18 @@
 
     <!-- Pagination -->
     {% if projects.has_other_pages %}
-      <div class="flex justify-center mt-12 join">
+      <div class="flex justify-center mt-10 join">
         {% if projects.has_previous %}
           <a href="?page={{ projects.previous_page_number }}{% if current_area %}&area={{ current_area }}{% endif %}" class="join-item btn btn-sm">&laquo;</a>
         {% endif %}
-        <span class="join-item btn btn-sm btn-disabled">Page {{ projects.number }} of {{ projects.paginator.num_pages }}</span>
+        <span class="join-item btn btn-sm btn-disabled text-xs">Page {{ projects.number }} of {{ projects.paginator.num_pages }}</span>
         {% if projects.has_next %}
           <a href="?page={{ projects.next_page_number }}{% if current_area %}&area={{ current_area }}{% endif %}" class="join-item btn btn-sm">&raquo;</a>
         {% endif %}
       </div>
     {% endif %}
   {% else %}
-    <p class="text-base-content/60 italic py-12">No research projects listed in this category.</p>
+    <p class="text-base-content/60 italic py-10 text-center">No research projects listed in this category.</p>
   {% endif %}
 </div>
 {% endblock %}

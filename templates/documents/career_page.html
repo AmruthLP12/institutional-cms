@@ -2,69 +2,70 @@
 {% load wagtailcore_tags %}
 
 {% block content %}
-<div class="max-w-4xl mx-auto px-4 py-12">
+<div class="max-w-4xl mx-auto px-4 py-10">
   <article>
-    <header class="mb-8 pb-6 border-b border-base-200">
-      <div class="flex items-center gap-2 mb-3 text-xs">
-        <span class="badge badge-neutral capitalize">{{ page.get_position_type_display|default:page.position_type }}</span>
+    <header class="mb-8 pb-6 border-b border-base-300">
+      <div class="flex flex-wrap items-center gap-2 mb-3 text-xs">
+        <span class="badge badge-neutral text-xs capitalize font-medium">{{ page.get_position_type_display|default:page.position_type }}</span>
         {% if page.department %}
-          <span class="badge badge-outline">{{ page.department }}</span>
+          <span class="badge badge-outline text-xs">{{ page.department }}</span>
         {% endif %}
-        <span class="badge {% if page.status == 'open' %}badge-success{% else %}badge-ghost{% endif %} capitalize font-semibold">
+        <span class="badge {% if page.status == 'open' %}badge-success{% else %}badge-ghost{% endif %} text-xs capitalize font-semibold">
           {{ page.status }}
         </span>
       </div>
 
-      <h1 class="text-3xl sm:text-4xl font-serif font-bold text-primary mb-4">{{ page.title }}</h1>
+      <h1 class="text-2xl sm:text-4xl font-serif font-bold text-base-content tracking-tight mb-4">{{ page.title }}</h1>
 
       {% if page.closing_date %}
-        <div class="p-3 bg-base-200 border border-base-300 rounded-lg text-xs text-primary font-semibold inline-block">
-          Application Deadline: {{ page.closing_date|date:"d F Y" }}
+        <div class="p-3 bg-base-200 border border-base-300 rounded-lg text-xs font-medium text-base-content inline-flex items-center gap-2">
+          <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+          <span>Application Deadline: <strong class="text-base-content">{{ page.closing_date|date:"d F Y" }}</strong></span>
         </div>
       {% endif %}
     </header>
 
     {% if page.description %}
       <div class="mb-8">
-        <h2 class="text-xl font-serif font-bold text-primary mb-3">Role Overview & Responsibilities</h2>
+        <h2 class="text-lg sm:text-xl font-serif font-bold text-base-content mb-3">Role Overview &amp; Responsibilities</h2>
         <div class="prose max-w-none text-base-content/90 leading-relaxed">{{ page.description|richtext }}</div>
       </div>
     {% endif %}
 
     {% if page.qualifications %}
       <div class="mb-8">
-        <h2 class="text-xl font-serif font-bold text-primary mb-3">Minimum Qualifications & Eligibility</h2>
+        <h2 class="text-lg sm:text-xl font-serif font-bold text-base-content mb-3">Minimum Qualifications &amp; Eligibility</h2>
         <div class="prose max-w-none text-base-content/90 leading-relaxed">{{ page.qualifications|richtext }}</div>
       </div>
     {% endif %}
 
     <!-- Application Action -->
-    <div class="my-10 p-6 bg-primary text-primary-content rounded-xl flex flex-col sm:flex-row items-center justify-between gap-4">
+    <div class="my-8 p-6 bg-base-200 border border-base-300 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-4">
       <div>
-        <h2 class="font-bold text-lg text-secondary mb-1">Ready to Apply?</h2>
-        <p class="text-xs text-white/70">
+        <h2 class="font-serif font-bold text-base text-base-content mb-1">Application Submission</h2>
+        <p class="text-xs text-base-content/70">
           {% if page.application_email %}
-            Send dossiers to: <a href="mailto:{{ page.application_email }}" class="underline text-white">{{ page.application_email }}</a>
+            Send dossiers to: <a href="mailto:{{ page.application_email }}" class="font-medium text-primary hover:underline">{{ page.application_email }}</a>
           {% else %}
             Submit credentials through the official institutional recruitment portal.
           {% endif %}
         </p>
       </div>
       {% if page.application_url and page.status == 'open' %}
-        <a href="{{ page.application_url }}" class="btn btn-warning font-semibold px-6 shadow" target="_blank" rel="noopener noreferrer">
+        <a href="{{ page.application_url }}" class="btn btn-primary text-xs font-semibold px-5" target="_blank" rel="noopener noreferrer">
           Apply Online &nearr;
         </a>
       {% endif %}
     </div>
 
     {% if page.document_file %}
-      <div class="p-4 bg-base-200/50 rounded-lg flex items-center justify-between text-xs mb-8">
-        <span>Download Official Recruitment Notification & Advertisement (PDF)</span>
+      <div class="p-4 bg-base-100 border border-base-300 rounded-lg flex items-center justify-between text-xs mb-8">
+        <span class="font-medium text-base-content/80">Download Official Recruitment Notification &amp; Advertisement (PDF)</span>
         <a href="{{ page.document_file.url }}" class="btn btn-xs btn-outline btn-primary" download>Download</a>
       </div>
     {% endif %}
 
-    <div class="pt-6 border-t border-base-200">
+    <div class="pt-6 border-t border-base-300">
       <a href="/careers/" class="text-xs font-semibold text-primary hover:underline">&larr; Back to all Careers</a>
     </div>
   </article>

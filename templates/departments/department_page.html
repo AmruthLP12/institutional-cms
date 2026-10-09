@@ -36,22 +36,21 @@
 {# ------------------------------------------------------------------ #}
 {# Page hero / header                                                 #}
 {# ------------------------------------------------------------------ #}
-<header class="bg-base-100 border-b border-base-200 py-12 md:py-16">
+<header class="bg-base-100 border-b border-base-300 py-10 md:py-14">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     {# Short name badge #}
     {% if page.short_name %}
-      <span class="inline-block mb-3 badge badge-lg text-secondary border-secondary border bg-transparent
-                   font-semibold tracking-wide text-sm">
+      <span class="inline-block mb-3 badge badge-outline badge-primary font-semibold tracking-wide text-xs">
         {{ page.short_name }}
       </span>
     {% endif %}
 
-    <h1 class="font-serif text-4xl lg:text-5xl font-bold tracking-tight">
+    <h1 class="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-base-content">
       {{ page.title }}
     </h1>
 
     {% if page.description %}
-      <div class="mt-4 text-lg text-white/80 max-w-3xl richtext [&_a]:text-secondary [&_a:hover]:underline">
+      <div class="mt-4 text-base sm:text-lg text-base-content/80 max-w-3xl richtext">
         {{ page.description|richtext }}
       </div>
     {% endif %}
@@ -226,14 +225,13 @@
                role="list"
                aria-label="Department members">
             {% for person in people %}
-              <article class="card bg-base-100 border border-base-300 shadow-sm
-                              hover:shadow-md hover:-translate-y-0.5 transition-all duration-200"
+              <article class="card bg-base-100 border border-base-300 rounded-xl overflow-hidden
+                              hover:border-primary/40 transition-colors"
                        role="listitem">
                 <a href="{{ person.url }}"
-                   class="block focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary
-                          focus-visible:ring-offset-2 rounded-2xl">
+                   class="block focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-xl">
                   {# Profile photo #}
-                  <figure class="aspect-square overflow-hidden rounded-t-2xl bg-base-200">
+                  <figure class="aspect-square overflow-hidden bg-base-200 border-b border-base-300">
                     {% if person.photo %}
                       {% image person.photo fill-300x300 as profile_img %}
                       <img src="{{ profile_img.url }}"
@@ -242,7 +240,7 @@
                     {% else %}
                       {# Initials avatar fallback #}
                       <div class="w-full h-full flex items-center justify-center
-                                  bg-primary/10 text-primary font-serif text-4xl font-bold"
+                                  bg-base-200 text-primary font-serif text-3xl font-bold"
                            aria-hidden="true">
                         {{ person.title|slice:":1"|upper }}
                       </div>
@@ -250,7 +248,7 @@
                   </figure>
 
                   <div class="p-3">
-                    <p class="font-semibold text-sm text-primary leading-snug">
+                    <p class="font-serif font-bold text-xs sm:text-sm text-base-content leading-snug">
                       {{ person.title }}
                     </p>
                     {% if person.job_title %}
@@ -272,25 +270,25 @@
       {% if research_projects %}
         <section class="mt-14" aria-labelledby="dept-research-heading">
           <h2 id="dept-research-heading"
-              class="font-serif text-2xl font-bold text-primary mb-6">
+              class="font-serif text-xl sm:text-2xl font-bold text-base-content mb-6">
             Research Projects
           </h2>
 
-          <ul class="divide-y divide-base-300 rounded-2xl border border-base-300 overflow-hidden"
+          <ul class="divide-y divide-base-300 rounded-xl border border-base-300 overflow-hidden"
               role="list"
               aria-label="Related research projects">
             {% for project in research_projects %}
-              <li class="bg-base-100 hover:bg-base-200 transition-colors" role="listitem">
+              <li class="bg-base-100 hover:bg-base-200/50 transition-colors" role="listitem">
                 <a href="{{ project.url }}"
                    class="flex items-start gap-4 px-5 py-4 group
                           focus:outline-none focus-visible:ring-2 focus-visible:ring-inset
-                          focus-visible:ring-secondary">
-                  {# Gold accent bar #}
-                  <span class="mt-1.5 h-5 w-1 shrink-0 rounded-full bg-secondary text-secondary-content"
+                          focus-visible:ring-primary">
+                  {# Accent bar #}
+                  <span class="mt-1.5 h-4 w-1 shrink-0 rounded-full bg-primary"
                         aria-hidden="true"></span>
 
                   <div class="flex-1 min-w-0">
-                    <p class="font-semibold text-primary group-hover:text-secondary transition-colors
+                    <p class="font-serif font-bold text-sm sm:text-base text-base-content group-hover:text-primary transition-colors
                                leading-snug truncate">
                       {{ project.title }}
                     </p>
@@ -315,8 +313,8 @@
 
                   {# Arrow #}
                   <svg xmlns="http://www.w3.org/2000/svg"
-                       class="h-4 w-4 mt-1 shrink-0 text-base-content/30
-                              group-hover:text-secondary group-hover:translate-x-1 transition-all"
+                       class="h-4 w-4 mt-1 shrink-0 text-base-content/40
+                              group-hover:text-primary group-hover:translate-x-0.5 transition-all"
                        fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"
                        aria-hidden="true">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>

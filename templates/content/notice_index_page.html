@@ -2,40 +2,45 @@
 {% load wagtailcore_tags %}
 
 {% block content %}
-<div class="max-w-5xl mx-auto px-4 py-12">
-  <header class="mb-10 pb-6 border-b border-base-200">
-    <h1 class="text-4xl font-serif font-bold text-primary mb-3">Official Notices & Circulars</h1>
+<div class="max-w-5xl mx-auto px-4 py-10">
+  <header class="mb-8 pb-6 border-b border-base-300">
+    <div class="inline-block px-2.5 py-0.5 bg-primary/10 text-primary text-xs font-semibold uppercase tracking-wider rounded mb-3">
+      Statutory Dispatches
+    </div>
+    <h1 class="text-2xl sm:text-4xl font-serif font-bold text-base-content tracking-tight mb-3">Official Notices &amp; Circulars</h1>
     {% if page.intro %}
-      <div class="text-base-content/80 text-lg leading-relaxed">{{ page.intro|richtext }}</div>
+      <div class="text-base text-base-content/80 leading-relaxed">{{ page.intro|richtext }}</div>
+    {% else %}
+      <p class="text-base text-base-content/80 leading-relaxed">Statutory circulars, academic calendar updates, administrative notifications, and gazette records.</p>
     {% endif %}
   </header>
 
   {% if notices %}
-    <div class="bg-base-100 border border-base-200 rounded-xl overflow-hidden shadow-sm">
+    <div class="bg-base-100 border border-base-300 rounded-xl overflow-hidden">
       <div class="overflow-x-auto">
-        <table class="table w-full">
-          <thead class="bg-base-200/60 text-primary font-serif">
+        <table class="table w-full text-xs">
+          <thead class="bg-base-200/80 text-base-content font-serif text-xs border-b border-base-300">
             <tr>
-              <th class="w-28">Date</th>
-              <th class="w-36">Ref No.</th>
-              <th>Notice Title</th>
-              <th class="w-44">Issuing Authority</th>
+              <th class="w-28 font-bold">Date</th>
+              <th class="w-36 font-bold">Ref No.</th>
+              <th class="font-bold">Notice Title</th>
+              <th class="w-44 font-bold">Issuing Authority</th>
             </tr>
           </thead>
-          <tbody class="divide-y divide-base-200 text-sm">
+          <tbody class="divide-y divide-base-300">
             {% for notice in notices %}
               <tr class="hover:bg-base-200/40 transition-colors">
-                <td class="text-xs text-base-content/70 whitespace-nowrap">{{ notice.first_published_at|date:"d M Y" }}</td>
-                <td class="font-mono text-xs text-primary font-semibold">{{ notice.notice_number|default:"—" }}</td>
+                <td class="text-base-content/70 whitespace-nowrap">{{ notice.first_published_at|date:"d M Y" }}</td>
+                <td class="font-mono text-primary font-semibold">{{ notice.notice_number|default:"—" }}</td>
                 <td>
-                  <a href="{{ notice.url }}" class="font-medium text-primary hover:text-primary transition-colors block">
+                  <a href="{{ notice.url }}" class="font-medium text-base-content hover:text-primary transition-colors block">
                     {{ notice.title }}
                   </a>
                   {% if notice.summary %}
-                    <span class="text-xs text-base-content/60 line-clamp-1 mt-0.5">{{ notice.summary }}</span>
+                    <span class="text-base-content/60 line-clamp-1 mt-0.5 leading-relaxed">{{ notice.summary }}</span>
                   {% endif %}
                 </td>
-                <td class="text-xs text-base-content/70">{{ notice.issuing_authority|default:"Administration" }}</td>
+                <td class="text-base-content/70">{{ notice.issuing_authority|default:"Administration" }}</td>
               </tr>
             {% endfor %}
           </tbody>
@@ -45,18 +50,18 @@
 
     <!-- Pagination -->
     {% if notices.has_other_pages %}
-      <div class="flex justify-center mt-10 join">
+      <div class="flex justify-center mt-8 join">
         {% if notices.has_previous %}
           <a href="?page={{ notices.previous_page_number }}" class="join-item btn btn-sm">&laquo;</a>
         {% endif %}
-        <span class="join-item btn btn-sm btn-disabled">Page {{ notices.number }} of {{ notices.paginator.num_pages }}</span>
+        <span class="join-item btn btn-sm btn-disabled text-xs">Page {{ notices.number }} of {{ notices.paginator.num_pages }}</span>
         {% if notices.has_next %}
           <a href="?page={{ notices.next_page_number }}" class="join-item btn btn-sm">&raquo;</a>
         {% endif %}
       </div>
     {% endif %}
   {% else %}
-    <p class="text-base-content/60 italic py-8">No formal notices published yet.</p>
+    <p class="text-base-content/60 italic py-10 text-center">No formal notices published yet.</p>
   {% endif %}
 </div>
 {% endblock %}

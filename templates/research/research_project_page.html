@@ -2,12 +2,12 @@
 {% load wagtailcore_tags wagtailimages_tags %}
 
 {% block content %}
-<div class="max-w-6xl mx-auto px-4 py-12">
+<div class="max-w-6xl mx-auto px-4 py-10">
   <article>
     <!-- Header -->
-    <header class="mb-10 pb-6 border-b border-base-200">
-      <div class="flex items-center gap-2 mb-3">
-        <span class="badge {% if page.status == 'ongoing' %}badge-success{% elif page.status == 'completed' %}badge-neutral{% else %}badge-warning{% endif %} text-xs font-semibold capitalize">
+    <header class="mb-8 pb-6 border-b border-base-300">
+      <div class="flex flex-wrap items-center gap-2 mb-3">
+        <span class="badge {% if page.status == 'ongoing' %}badge-success{% elif page.status == 'completed' %}badge-neutral{% else %}badge-warning{% endif %} text-xs font-medium capitalize">
           {{ page.status }}
         </span>
         {% if page.department %}
@@ -17,26 +17,26 @@
         {% endif %}
       </div>
 
-      <h1 class="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold text-primary mb-6">
+      <h1 class="text-2xl sm:text-4xl lg:text-5xl font-serif font-bold text-base-content tracking-tight mb-4">
         {{ page.title }}
       </h1>
 
       {% if page.summary %}
-        <p class="text-lg text-base-content/90 font-medium leading-relaxed bg-base-100 p-5 rounded-xl border border-base-200">
+        <div class="text-base text-base-content/90 font-medium leading-relaxed bg-base-200 p-4 sm:p-5 rounded-xl border border-base-300">
           {{ page.summary }}
-        </p>
+        </div>
       {% endif %}
     </header>
 
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
       <!-- Main Content (8 cols) -->
       <div class="lg:col-span-8">
         {% if page.project_image %}
           {% image page.project_image width-1200 as p_hero %}
-          <img src="{{ p_hero.url }}" alt="{{ page.title }}" class="w-full h-auto rounded-xl shadow-sm mb-8" />
+          <img src="{{ p_hero.url }}" alt="{{ page.title }}" class="w-full h-auto rounded-xl border border-base-300 mb-8" />
         {% endif %}
 
-        <div class="prose max-w-none text-base-content/90 leading-relaxed mb-10">
+        <div class="prose max-w-none text-base-content/90 leading-relaxed mb-8">
           {% for block in page.description %}
             {% include_block block %}
           {% endfor %}
@@ -45,43 +45,43 @@
 
       <!-- Project Metadata Sidebar (4 cols) -->
       <div class="lg:col-span-4 space-y-6">
-        <div class="bg-base-100 p-6 rounded-xl border border-base-200 shadow-sm space-y-4 text-sm">
-          <h3 class="font-serif font-bold text-lg text-primary border-b border-base-200 pb-2">
+        <div class="bg-base-100 p-6 rounded-xl border border-base-300 space-y-4 text-xs">
+          <h3 class="font-serif font-bold text-base text-base-content border-b border-base-300 pb-2">
             Project Overview
           </h3>
 
           {% if page.principal_investigator %}
             <div>
-              <span class="text-xs text-base-content/60 block uppercase font-semibold">Principal Investigator</span>
-              <span class="font-medium text-primary text-base">{{ page.principal_investigator }}</span>
+              <span class="text-base-content/60 block uppercase font-medium">Principal Investigator</span>
+              <span class="font-medium text-base-content text-sm">{{ page.principal_investigator }}</span>
             </div>
           {% endif %}
 
           {% if page.co_investigators %}
             <div>
-              <span class="text-xs text-base-content/60 block uppercase font-semibold">Co-Investigators</span>
-              <span class="text-base-content/80">{{ page.co_investigators }}</span>
+              <span class="text-base-content/60 block uppercase font-medium">Co-Investigators</span>
+              <span class="text-base-content/85">{{ page.co_investigators }}</span>
             </div>
           {% endif %}
 
           {% if page.funding_agency %}
             <div>
-              <span class="text-xs text-base-content/60 block uppercase font-semibold">Funding Agency</span>
+              <span class="text-base-content/60 block uppercase font-medium">Funding Agency</span>
               <span class="text-base-content/90 font-medium">{{ page.funding_agency }}</span>
             </div>
           {% endif %}
 
           {% if page.funding_amount %}
             <div>
-              <span class="text-xs text-base-content/60 block uppercase font-semibold">Grant Value</span>
+              <span class="text-base-content/60 block uppercase font-medium">Grant Value</span>
               <span class="font-mono text-base-content/90">{{ page.funding_amount }}</span>
             </div>
           {% endif %}
 
           {% if page.start_date %}
             <div>
-              <span class="text-xs text-base-content/60 block uppercase font-semibold">Timeline</span>
-              <span class="text-base-content/80">
+              <span class="text-base-content/60 block uppercase font-medium">Timeline</span>
+              <span class="text-base-content/85">
                 {{ page.start_date|date:"M Y" }} &mdash; {% if page.end_date %}{{ page.end_date|date:"M Y" }}{% else %}Present{% endif %}
               </span>
             </div>
@@ -89,18 +89,18 @@
 
           {% if page.areas.all %}
             <div>
-              <span class="text-xs text-base-content/60 block uppercase font-semibold mb-2">Research Areas</span>
-              <div class="flex flex-wrap gap-1.5">
+              <span class="text-base-content/60 block uppercase font-medium mb-2">Research Areas</span>
+              <div class="flex flex-wrap gap-1">
                 {% for area in page.areas.all %}
-                  <span class="badge badge-sm badge-neutral">{{ area.name }}</span>
+                  <span class="badge badge-sm badge-neutral text-xs">{{ area.name }}</span>
                 {% endfor %}
               </div>
             </div>
           {% endif %}
         </div>
 
-        <div class="p-4 bg-base-200 border border-base-300 rounded-xl text-xs text-primary leading-relaxed">
-          For research partnerships, collaborative grant inquiries, or laboratory visits, contact the PI or the Office of Research at <a href="mailto:research@nakashara.example.org" class="underline font-semibold">research@nakashara.example.org</a>.
+        <div class="p-4 bg-base-200 border border-base-300 rounded-xl text-xs text-base-content/80 leading-relaxed">
+          For research partnerships or laboratory visits, contact the PI or the Office of Research at <a href="mailto:research@nakashara.example.org" class="text-primary font-semibold hover:underline">research@nakashara.example.org</a>.
         </div>
       </div>
     </div>

@@ -114,15 +114,22 @@ Policies and public legal/administrative information.
 
 ### Site settings
 
-Global:
+Global institutional configuration via `SiteSettings` (`apps.site_settings.models.SiteSettings` / `InstitutionSettings`):
 
-- logo
-- contact information
-- social links
-- footer
-- analytics configuration
-- search configuration
-- emergency banner
+- **Identity & Branding**: `institution_name`, `institution_short_name`, `tagline`, `logo`, `logo_alt_text`, `favicon`
+- **General Contact**: `phone_primary`, `phone_secondary`, `phone_toll_free`, `fax_number`, `email_general`, `email_admissions`, `email_media`, `email_reception`, `email_accessibility`
+- **Structured Postal Address**: `building_or_campus`, `address_line_1`, `address_line_2`, `city`, `state`, `postal_code`, `country`
+- **Operations & Visitor Guidance**: `office_hours`, `directions_info`, `directions_url`
+- **Social Media**: `twitter_url`, `linkedin_url`, `youtube_url`, `facebook_url`, `instagram_url`
+- **Footer & Legal**: `footer_description`, `footer_copyright_text`, `footer_note`
+- **Theme & Appearance**: `theme`, `custom_primary_color`, `custom_accent_color`
+- **Analytics**: `google_analytics_id`
+
+**Reusable Partials (`templates/includes/`)**:
+- `institutional_address.html`: Schema.org `PostalAddress` microdata-enabled address block.
+- `contact_details.html`: Structured telephone, email, visiting hours, and direction links with `tel:` and `mailto:` protocols.
+- `social_links.html`: Accessible social media icon links omitting unconfigured platforms.
+- `footer.html`: Modular 4-column institutional footer partial.
 
 ## 4. Wagtail content architecture
 

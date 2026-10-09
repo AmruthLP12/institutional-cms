@@ -117,11 +117,30 @@ class Command(BaseCommand):
         site_settings.institution_name = "Nakashara"
         site_settings.institution_short_name = "NKSR"
         site_settings.tagline = "Advancing Knowledge, Technology, and Public Good"
+        site_settings.footer_description = "Dedicated to the advancement of science, technology, public knowledge, and high-impact scholarship."
+        site_settings.building_or_campus = "Administrative Complex, Block A"
+        site_settings.address_line_1 = "Institutional Enclave, Campus Road"
+        site_settings.address_line_2 = "Sector 4, Innovation District"
         site_settings.city = "Knowledge City"
         site_settings.state = "Karnataka"
+        site_settings.postal_code = "560001"
         site_settings.country = "India"
         site_settings.email_general = "inquiry@nakashara.example.org"
+        site_settings.email_admissions = "admissions@nakashara.example.org"
+        site_settings.email_media = "media@nakashara.example.org"
+        site_settings.email_reception = "reception@nakashara.example.org"
+        site_settings.email_accessibility = "accessibility@nakashara.example.org"
         site_settings.phone_primary = "+91 80 2345 6789"
+        site_settings.phone_secondary = "+91 80 2345 6790"
+        site_settings.phone_toll_free = "1800 123 4567"
+        site_settings.fax_number = "+91 80 2345 6799"
+        site_settings.office_hours = "Monday – Friday: 08:30 AM – 05:30 PM IST"
+        site_settings.directions_info = "Located adjacent to Knowledge Park Metro Station (Gate 2)."
+        site_settings.directions_url = "https://maps.google.com"
+        site_settings.footer_copyright_text = "Recognized by UGC and Ministry of Education."
+        site_settings.twitter_url = "https://twitter.com/nakashara"
+        site_settings.linkedin_url = "https://linkedin.com/company/nakashara"
+        site_settings.youtube_url = "https://youtube.com/@nakashara"
         site_settings.save()
 
         # Seed Legal Pages
@@ -512,7 +531,7 @@ class Command(BaseCommand):
                     slug="contact",
                     intro="<p>Have questions, inquiries, or feedback? Get in touch with our institutional offices or administrative teams.</p>",
                     thank_you_text="<p>Thank you for contacting Nakashara. Your inquiry has been received and our office will follow up shortly.</p>",
-                    address_block="<p><strong>Nakashara Central Administration</strong><br>Administrative Block, Knowledge Park<br>Knowledge City, India — 560001</p>",
+                    address_block="<p><strong>Nakashara Central Administration</strong></p><p>Administrative Block, Knowledge Park</p><p>Knowledge City, India — 560001</p>",
                     phone_primary="+91 80 2345 6789",
                     phone_secondary="+91 80 2345 6790",
                     email_contact="contact@nakashara.example.org",

@@ -2,31 +2,35 @@
 {% load wagtailcore_tags %}
 
 {% block content %}
-<div class="max-w-6xl mx-auto px-4 py-12">
-  <header class="mb-10 pb-6 border-b border-base-200">
-    <div class="inline-block px-3 py-1 bg-secondary/15 text-primary text-xs font-semibold uppercase tracking-wider rounded mb-3">
-      Scholarship
+<div class="max-w-6xl mx-auto px-4 py-10">
+  <header class="mb-8 pb-6 border-b border-base-300">
+    <div class="inline-block px-2.5 py-0.5 bg-primary/10 text-primary text-xs font-semibold uppercase tracking-wider rounded mb-3">
+      Scholarship &amp; Research
     </div>
-    <h1 class="text-4xl font-serif font-bold text-primary mb-4">Institutional Publications & Preprints</h1>
+    <h1 class="text-2xl sm:text-4xl font-serif font-bold text-base-content tracking-tight mb-3">Publications &amp; Research Outputs</h1>
     {% if page.intro %}
-      <div class="text-lg text-base-content/80 max-w-3xl leading-relaxed">{{ page.intro|richtext }}</div>
+      <div class="text-base text-base-content/80 max-w-3xl leading-relaxed">{{ page.intro|richtext }}</div>
+    {% else %}
+      <p class="text-base text-base-content/80 max-w-3xl leading-relaxed">
+        Peer-reviewed journal articles, conference papers, preprints, and academic publications produced by our faculty and scholars.
+      </p>
     {% endif %}
   </header>
 
   {% if publications %}
-    <div class="divide-y divide-base-200">
+    <div class="divide-y divide-base-300">
       {% for pub in publications %}
-        <article class="py-6">
-          <div class="flex items-center gap-2 mb-1.5 text-xs text-base-content/60">
-            <span class="badge badge-sm badge-neutral capitalize">{{ pub.get_publication_type_display|default:pub.publication_type }}</span>
+        <article class="py-6 first:pt-0">
+          <div class="flex flex-wrap items-center gap-2 mb-1.5 text-xs text-base-content/70">
+            <span class="badge badge-sm badge-neutral text-xs capitalize font-medium">{{ pub.get_publication_type_display|default:pub.publication_type }}</span>
             <span class="font-bold text-primary">{{ pub.publication_year }}</span>
-            {% if pub.journal_or_publisher %}<span>&bull; {{ pub.journal_or_publisher }}</span>{% endif %}
+            {% if pub.journal_or_publisher %}<span class="text-base-content/60">&bull; {{ pub.journal_or_publisher }}</span>{% endif %}
           </div>
-          <h2 class="text-lg font-serif font-bold text-primary hover:text-primary transition-colors mb-2">
+          <h2 class="text-base sm:text-lg font-serif font-bold text-base-content hover:text-primary transition-colors mb-1.5">
             <a href="{{ pub.url }}">{{ pub.title }}</a>
           </h2>
           <p class="text-xs text-base-content/80 mb-2">
-            <strong>Authors:</strong> {{ pub.authors }}
+            <strong class="text-base-content font-medium">Authors:</strong> {{ pub.authors }}
           </p>
           {% if pub.abstract %}
             <p class="text-xs text-base-content/70 line-clamp-2 leading-relaxed mb-3">
@@ -43,7 +47,7 @@
       {% endfor %}
     </div>
   {% else %}
-    <p class="text-base-content/60 italic py-12">No publications registered yet.</p>
+    <p class="text-base-content/60 italic py-10 text-center">No publications registered yet.</p>
   {% endif %}
 </div>
 {% endblock %}

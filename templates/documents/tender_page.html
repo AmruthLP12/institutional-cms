@@ -2,11 +2,11 @@
 {% load wagtailcore_tags %}
 
 {% block content %}
-<div class="max-w-4xl mx-auto px-4 py-12">
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
   <article>
-    <header class="mb-8 pb-6 border-b border-base-200">
+    <header class="mb-8 pb-6 border-b border-base-300">
       <div class="flex items-center gap-2 mb-3">
-        <span class="badge {% if page.status == 'open' %}badge-success{% elif page.status == 'awarded' %}badge-info{% else %}badge-ghost{% endif %} text-xs font-semibold capitalize">
+        <span class="badge {% if page.status == 'open' %}badge-success{% elif page.status == 'awarded' %}badge-info{% else %}badge-neutral{% endif %} text-xs font-semibold capitalize">
           {{ page.status }}
         </span>
         {% if page.reference_number %}
@@ -14,9 +14,9 @@
         {% endif %}
       </div>
 
-      <h1 class="text-3xl sm:text-4xl font-serif font-bold text-primary mb-4">{{ page.title }}</h1>
+      <h1 class="text-3xl sm:text-4xl font-serif font-bold text-base-content mb-4">{{ page.title }}</h1>
 
-      <div class="bg-base-200/50 rounded-xl p-4 grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs">
+      <div class="bg-base-200 border border-base-300 rounded-xl p-4 grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs">
         <div>
           <span class="text-base-content/60 block font-semibold">Tender Type</span>
           <span class="font-medium text-base-content capitalize">{{ page.get_tender_type_display|default:page.tender_type }}</span>
@@ -37,30 +37,30 @@
     </header>
 
     {% if page.description %}
-      <div class="prose max-w-none text-base-content/90 leading-relaxed mb-8">
+      <div class="prose max-w-none text-base-content leading-relaxed mb-8 richtext">
         {{ page.description|richtext }}
       </div>
     {% endif %}
 
     {% if page.document_file %}
-      <div class="p-6 bg-primary text-primary-content rounded-xl flex items-center justify-between gap-4 my-8">
+      <div class="p-6 bg-base-200 border border-base-300 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 my-8">
         <div>
-          <h2 class="font-bold text-lg text-secondary">Tender Document & Specifications (NIT)</h2>
-          <p class="text-xs text-white/70">Download full bidding dossier, terms, and submission guidelines.</p>
+          <h2 class="font-bold font-serif text-lg text-base-content">Tender Document &amp; Specifications (NIT)</h2>
+          <p class="text-xs text-base-content/70 mt-0.5">Download full bidding dossier, terms, and submission guidelines.</p>
         </div>
-        <a href="{{ page.document_file.url }}" class="btn btn-warning font-semibold px-6 shadow" download>
+        <a href="{{ page.document_file.url }}" class="btn btn-primary px-6 shrink-0" download>
           Download Tender Dossier
         </a>
       </div>
     {% endif %}
 
     {% if page.contact_email %}
-      <div class="p-4 bg-base-200/40 rounded-lg text-xs text-base-content/70">
+      <div class="p-4 bg-base-200/60 border border-base-300 rounded-lg text-xs text-base-content/75">
         Inquiries regarding this procurement should be directed to: <a href="mailto:{{ page.contact_email }}" class="text-primary underline">{{ page.contact_email }}</a>
       </div>
     {% endif %}
 
-    <div class="pt-6 border-t border-base-200 mt-8">
+    <div class="pt-6 border-t border-base-300 mt-8">
       <a href="/tenders/" class="text-xs font-semibold text-primary hover:underline">&larr; Back to all Tenders</a>
     </div>
   </article>

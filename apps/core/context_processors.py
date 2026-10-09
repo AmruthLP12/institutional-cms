@@ -23,6 +23,7 @@ def site_context(request):
 
         site_settings = SiteSettings.for_request(request)
         context["site_settings"] = site_settings
+        context["institution_settings"] = site_settings
 
         nav_items = (
             NavMenuItem.objects.filter(parent__isnull=True, is_visible=True)
@@ -45,6 +46,7 @@ def site_context(request):
     except Exception:
         # Gracefully degrade if tables do not exist yet (pre-migration)
         context["site_settings"] = None
+        context["institution_settings"] = None
         context["nav_items"] = []
         context["footer_groups"] = []
         context["alert_banner"] = None
