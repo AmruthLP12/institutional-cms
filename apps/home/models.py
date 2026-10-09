@@ -59,12 +59,69 @@ class QuickLinkItem(Orderable):
         return self.link_url or "#"
 
 
+class HomePageHeroSlide(Orderable):
+    """Hero carousel slide for multi-image homepage presentations."""
+
+    page = ParentalKey(
+        "home.HomePage", on_delete=models.CASCADE, related_name="hero_slides"
+    )
+    image = models.ForeignKey(
+        "wagtailimages.Image",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="+",
+        help_text="Slide background image (1920×800 px or wider).",
+    )
+    tag = models.CharField(
+        max_length=100,
+        blank=True,
+        default="Featured Program",
+        help_text="Badge label above headline (e.g. 'Academic Excellence', 'Admissions Open').",
+    )
+    headline = models.CharField(
+        max_length=200,
+        blank=True,
+        help_text="Slide headline (falls back to main hero headline if blank).",
+    )
+    subheadline = models.CharField(
+        max_length=400,
+        blank=True,
+        help_text="Slide subheadline (falls back to main hero subheadline if blank).",
+    )
+    cta_label = models.CharField(max_length=100, blank=True, help_text="CTA button label.")
+    cta_page = models.ForeignKey(
+        Page,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="+",
+        help_text="Link to an internal page.",
+    )
+    cta_url = models.URLField(blank=True, help_text="External URL if no page selected.")
+
+    panels = [
+        FieldPanel("image"),
+        FieldPanel("tag"),
+        FieldPanel("headline"),
+        FieldPanel("subheadline"),
+        FieldPanel("cta_label"),
+        FieldPanel("cta_page"),
+        FieldPanel("cta_url"),
+    ]
+
+    def get_cta_href(self) -> str:
+        if self.cta_page:
+            return self.cta_page.url
+        return self.cta_url or "#"
+
+
 class HomePage(BasePage):
     """
     Institutional homepage.
 
     Composed of structured editorial sections:
-    - Hero (headline, subheadline, image, CTA)
+    - Hero (headline, subheadline, image, CTA, or multiple Carousel Slides)
     - Announcements (auto-fetched from AnnouncementPages)
     - Featured news (auto-fetched from latest NewsPages)
     - Upcoming events (auto-fetched from EventPages)
@@ -74,7 +131,7 @@ class HomePage(BasePage):
     - Notices (auto-fetched)
     """
 
-    # Hero section
+    # Hero section (single image default or fallback)
     hero_headline = models.CharField(
         max_length=200,
         help_text="Main homepage headline.",
@@ -90,7 +147,7 @@ class HomePage(BasePage):
         blank=True,
         on_delete=models.SET_NULL,
         related_name="+",
-        help_text="Hero background image (1920×800 px or wider).",
+        help_text="Hero background image (1920×800 px or wider). Used if no slides are added below.",
     )
     hero_image_alt = models.CharField(
         max_length=300,
@@ -142,7 +199,12 @@ class HomePage(BasePage):
                 FieldPanel("hero_cta_page"),
                 FieldPanel("hero_cta_url"),
             ],
-            heading="Hero section",
+            heading="Primary Hero Information",
+        ),
+        InlinePanel(
+            "hero_slides",
+            label="Hero Carousel Slides (Multiple Images)",
+            help_text="Add 2 or more slides to enable an animated hero carousel.",
         ),
     ]
 

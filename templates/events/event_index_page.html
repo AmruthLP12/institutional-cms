@@ -7,27 +7,18 @@
 
 {% block content %}
 {# ------------------------------------------------------------------ #}
-{# Breadcrumb                                                          #}
-{# ------------------------------------------------------------------ #}
-<nav aria-label="Breadcrumb" class="bg-base-200 border-b border-base-300">
-  <div class="container mx-auto px-4 py-2">
-    <ol class="breadcrumbs text-sm">
-      <li><a href="/" class="hover:text-primary">Home</a></li>
-      <li aria-current="page">{{ page.title }}</li>
-    </ol>
-  </div>
-</nav>
-
-{# ------------------------------------------------------------------ #}
 {# Page header                                                         #}
 {# ------------------------------------------------------------------ #}
-<header class="bg-base-100 border-b border-base-300">
-  <div class="container mx-auto px-4 py-10 md:py-14">
-    <h1 class="text-4xl md:text-5xl font-bold text-primary font-serif leading-tight">
+<header class="bg-base-100 border-b border-base-200 py-12 md:py-16">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold uppercase tracking-wider mb-4">
+      Conferences &amp; Academic Calendar
+    </div>
+    <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-base-content font-serif leading-tight">
       {{ page.title }}
     </h1>
     {% if page.intro %}
-      <div class="mt-4 prose prose-lg max-w-3xl text-base-content/80">
+      <div class="mt-4 prose prose-lg max-w-3xl text-base-content/75 richtext">
         {{ page.intro|richtext }}
       </div>
     {% endif %}
@@ -39,12 +30,7 @@
 {# ------------------------------------------------------------------ #}
 <main id="main-content" class="container mx-auto px-4 py-10">
 
-  {#
-    Alpine.js manages the active tab visual state immediately on click,
-    while HTMX drives the server-side data fetch and URL update.
-    The initial tab is derived from the server-rendered active_tab value
-    so that deep-links and back-button work correctly.
-  #}
+  {#     Alpine.js manages the active tab visual state immediately on click,     while HTMX drives the server-side data fetch and URL update.     The initial tab is derived from the server-rendered active_tab value     so that deep-links and back-button work correctly.   #}
   <div
     x-data="{ activeTab: '{{ active_tab }}' }"
     class="space-y-8"

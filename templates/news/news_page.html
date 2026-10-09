@@ -8,30 +8,11 @@
 {% block og_image %}{% if page.og_image %}{% image page.og_image width-1200 as og %}{{ og.url }}{% elif page.featured_image %}{% image page.featured_image width-1200 as og %}{{ og.url }}{% endif %}{% endblock %}
 
 {% block content %}
-{# ── Breadcrumb ─────────────────────────────────────────────────── #}
-<nav aria-label="Breadcrumb" class="bg-base-200 border-b border-base-300">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
-    <ol class="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-base-content/60">
-      <li>
-        <a href="/" class="hover:text-primary transition-colors">Home</a>
-      </li>
-      <li aria-hidden="true"><span class="mx-1">/</span></li>
-      <li>
-        {% with index=page.get_parent %}
-        <a href="{{ index.url }}" class="hover:text-primary transition-colors">{{ index.title }}</a>
-        {% endwith %}
-      </li>
-      <li aria-hidden="true"><span class="mx-1">/</span></li>
-      <li aria-current="page" class="font-medium text-base-content truncate max-w-xs">{{ page.headline }}</li>
-    </ol>
-  </div>
-</nav>
-
 <article itemscope itemtype="https://schema.org/NewsArticle">
 
   {# ── Featured image ───────────────────────────────────────────── #}
   {% if page.featured_image %}
-  <figure class="w-full bg-primary max-h-[520px] overflow-hidden">
+  <figure class="w-full bg-slate-900 max-h-[520px] overflow-hidden">
     {% image page.featured_image fill-1440x520 as hero_img %}
     <img
       src="{{ hero_img.url }}"

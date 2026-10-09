@@ -1,192 +1,165 @@
 {% load static wagtailimages_tags wagtailcore_tags %}
-{#
-  Partial template: event card grid + pagination.
-  Included by event_index_page.html on initial render AND returned as the
-  HTMX swap target on tab / page changes — so this file must be
-  self-contained (no block tags).
-#}
 
+{#   Partial template: event card grid + pagination.  Included by event_index_page.html on initial render AND returned as the   HTMX swap target on tab / page changes — so this file must be   self-contained (no block tags).#}
 {% if paginated_events.object_list %}
   <ol class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 list-none p-0">
     {% for event in paginated_events %}
-    <li>
-      <article class="card card-bordered bg-base-100 shadow hover:shadow-md transition-shadow h-full">
-
-        {# Event image #}
-        {% if event.event_image %}
-          <figure class="aspect-video overflow-hidden">
-            {% image event.event_image fill-640x360 as img %}
-            <img
-              src="{{ img.url }}"
-              width="{{ img.width }}"
-              height="{{ img.height }}"
-              alt="{{ img.alt }}"
-              class="w-full h-full object-cover"
-              loading="lazy"
-            />
-          </figure>
-        {% else %}
-          <figure class="aspect-video bg-base-200 flex items-center justify-center">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-base-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-            </svg>
-          </figure>
-        {% endif %}
-
-        <div class="card-body gap-3">
-
-          {# Date and time badge #}
-          <div class="flex items-center gap-2 text-sm text-base-content/60 font-medium">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-            </svg>
-            <time datetime="{{ event.start_datetime|date:'c' }}">
-              {{ event.start_datetime|date:"d M Y, H:i" }}
-            </time>
-            {% if event.end_datetime %}
-              <span aria-hidden="true">–</span>
-              <time datetime="{{ event.end_datetime|date:'c' }}">
-                {{ event.end_datetime|date:"H:i" }}
-              </time>
-            {% endif %}
-          </div>
-
-          {# Title #}
-          <h2 class="card-title text-primary text-lg leading-snug">
-            <a href="{{ event.url }}" class="hover:text-secondary focus:outline-none focus-visible:underline">
-              {{ event.title }}
-            </a>
-          </h2>
-
-          {# Summary #}
-          {% if event.summary %}
-            <p class="text-base-content/70 text-sm line-clamp-3">{{ event.summary }}</p>
-          {% endif %}
-
-          {# Location #}
-          {% if event.location_name %}
-            <div class="flex items-start gap-2 text-sm text-base-content/60">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+      <li>
+        <article class="card card-bordered bg-base-100 shadow hover:shadow-md transition-shadow h-full">
+          {# Event image #}
+          {% if event.event_image %}
+            <figure class="aspect-video overflow-hidden">
+              {% image event.event_image fill-640x360 as img %}
+              <img src="{{ img.url }}"
+                   width="{{ img.width }}"
+                   height="{{ img.height }}"
+                   alt="{{ img.alt }}"
+                   class="w-full h-full object-cover"
+                   loading="lazy" />
+            </figure>
+          {% else %}
+            <figure class="aspect-video bg-base-200 flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg"
+                   class="h-16 w-16 text-base-300"
+                   fill="none"
+                   viewBox="0 0 24 24"
+                   stroke="currentColor"
+                   aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
-              <span>{{ event.location_name }}</span>
-            </div>
+            </figure>
           {% endif %}
-
-          {# Category badges #}
-          {% if event.categories.all %}
-            <div class="flex flex-wrap gap-1.5" aria-label="Categories">
-              {% for category in event.categories.all %}
-                <span class="badge badge-outline text-xs font-medium border-secondary text-secondary">
-                  {{ category.name }}
-                </span>
-              {% endfor %}
+          <div class="card-body gap-3">
+            {# Date and time badge #}
+            <div class="flex items-center gap-2 text-sm text-base-content/60 font-medium">
+              <svg xmlns="http://www.w3.org/2000/svg"
+                   class="h-4 w-4 flex-shrink-0"
+                   fill="none"
+                   viewBox="0 0 24 24"
+                   stroke="currentColor"
+                   aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              <time datetime="{{ event.start_datetime|date:'c' }}">
+                {{ event.start_datetime|date:"d M Y, H:i" }}
+              </time>
+              {% if event.end_datetime %}
+                <span aria-hidden="true">–</span>
+                <time datetime="{{ event.end_datetime|date:'c' }}">
+                  {{ event.end_datetime|date:"H:i" }}
+                </time>
+              {% endif %}
             </div>
-          {% endif %}
-
-          {# Registration CTA #}
-          <div class="card-actions mt-auto pt-2">
-            {% if event.registration_url and not event.is_registration_closed %}
-              <a
-                href="{{ event.registration_url }}"
-                class="btn btn-sm btn-primary bg-secondary text-secondary-content border-secondary hover:bg-[#b3842f] text-white"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Register for {{ event.title }} (opens in new tab)"
-              >
-                Register
-              </a>
-            {% elif event.is_registration_closed %}
-              <span class="badge badge-ghost text-base-content/50">Registration closed</span>
+            {# Title #}
+            <h2 class="card-title text-primary text-lg leading-snug">
+              <a href="{{ event.url }}"
+                 class="hover:text-secondary focus:outline-none focus-visible:underline">{{ event.title }}</a>
+            </h2>
+            {# Summary #}
+            {% if event.summary %}
+              <p class="text-base-content/70 text-sm line-clamp-3">{{ event.summary }}</p>
             {% endif %}
-            <a
-              href="{{ event.url }}"
-              class="btn btn-sm btn-ghost text-primary hover:bg-base-200"
-              aria-label="View details for {{ event.title }}"
-            >
-              Details
-            </a>
+            {# Location #}
+            {% if event.location_name %}
+              <div class="flex items-start gap-2 text-sm text-base-content/60">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     class="h-4 w-4 flex-shrink-0 mt-0.5"
+                     fill="none"
+                     viewBox="0 0 24 24"
+                     stroke="currentColor"
+                     aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                <span>{{ event.location_name }}</span>
+              </div>
+            {% endif %}
+            {# Category badges #}
+            {% if event.categories.all %}
+              <div class="flex flex-wrap gap-1.5" aria-label="Categories">
+                {% for category in event.categories.all %}
+                  <span class="badge badge-outline text-xs font-medium border-secondary text-secondary">{{ category.name }}</span>
+                {% endfor %}
+              </div>
+            {% endif %}
+            {# Registration CTA #}
+            <div class="card-actions mt-auto pt-2">
+              {% if event.registration_url and not event.is_registration_closed %}
+                <a href="{{ event.registration_url }}"
+                   class="btn btn-sm btn-primary bg-secondary text-secondary-content border-secondary hover:bg-[#b3842f] text-white"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   aria-label="Register for {{ event.title }} (opens in new tab)">Register</a>
+              {% elif event.is_registration_closed %}
+                <span class="badge badge-ghost text-base-content/50">Registration closed</span>
+              {% endif %}
+              <a href="{{ event.url }}"
+                 class="btn btn-sm btn-ghost text-primary hover:bg-base-200"
+                 aria-label="View details for {{ event.title }}">Details</a>
+            </div>
           </div>
-
-        </div>
-      </article>
-    </li>
+        </article>
+      </li>
     {% endfor %}
   </ol>
-
   {# Pagination #}
   {% if paginated_events.paginator.num_pages > 1 %}
     <nav aria-label="Events pagination" class="flex justify-center mt-10">
       <div class="join">
         {% if paginated_events.has_previous %}
-          <a
-            href="?tab={{ active_tab }}&page={{ paginated_events.previous_page_number }}"
-            class="join-item btn btn-outline btn-sm"
-            hx-get="?tab={{ active_tab }}&page={{ paginated_events.previous_page_number }}"
-            hx-target="#events-panel"
-            hx-push-url="true"
-            aria-label="Previous page"
-          >
-            ‹ Prev
-          </a>
+          <a href="?tab={{ active_tab }}&page={{ paginated_events.previous_page_number }}"
+             class="join-item btn btn-outline btn-sm"
+             hx-get="?tab={{ active_tab }}&page={{ paginated_events.previous_page_number }}"
+             hx-target="#events-panel"
+             hx-push-url="true"
+             aria-label="Previous page">‹ Prev</a>
         {% endif %}
-
         {% for num in paginated_events.paginator.page_range %}
           {% if num == paginated_events.number %}
-            <button class="join-item btn btn-sm btn-active bg-primary text-primary-content border-primary" aria-current="page" aria-label="Page {{ num }}">
-              {{ num }}
-            </button>
+            <button class="join-item btn btn-sm btn-active bg-primary text-primary-content border-primary"
+                    aria-current="page"
+                    aria-label="Page {{ num }}">{{ num }}</button>
           {% elif num >= paginated_events.number|add:"-2" and num <= paginated_events.number|add:"2" %}
-            <a
-              href="?tab={{ active_tab }}&page={{ num }}"
-              class="join-item btn btn-outline btn-sm"
-              hx-get="?tab={{ active_tab }}&page={{ num }}"
-              hx-target="#events-panel"
-              hx-push-url="true"
-              aria-label="Page {{ num }}"
-            >
-              {{ num }}
-            </a>
+            <a href="?tab={{ active_tab }}&page={{ num }}"
+               class="join-item btn btn-outline btn-sm"
+               hx-get="?tab={{ active_tab }}&page={{ num }}"
+               hx-target="#events-panel"
+               hx-push-url="true"
+               aria-label="Page {{ num }}">{{ num }}</a>
           {% endif %}
         {% endfor %}
-
         {% if paginated_events.has_next %}
-          <a
-            href="?tab={{ active_tab }}&page={{ paginated_events.next_page_number }}"
-            class="join-item btn btn-outline btn-sm"
-            hx-get="?tab={{ active_tab }}&page={{ paginated_events.next_page_number }}"
-            hx-target="#events-panel"
-            hx-push-url="true"
-            aria-label="Next page"
-          >
-            Next ›
-          </a>
+          <a href="?tab={{ active_tab }}&page={{ paginated_events.next_page_number }}"
+             class="join-item btn btn-outline btn-sm"
+             hx-get="?tab={{ active_tab }}&page={{ paginated_events.next_page_number }}"
+             hx-target="#events-panel"
+             hx-push-url="true"
+             aria-label="Next page">Next ›</a>
         {% endif %}
       </div>
     </nav>
     <p class="text-center text-sm text-base-content/50 mt-3">
       Page {{ paginated_events.number }} of {{ paginated_events.paginator.num_pages }}
-      &mdash; {{ paginated_events.paginator.count }} event{{ paginated_events.paginator.count|pluralize }}
+      — {{ paginated_events.paginator.count }} event{{ paginated_events.paginator.count|pluralize }}
     </p>
   {% endif %}
-
 {% else %}
   {# Empty state #}
   <div class="flex flex-col items-center justify-center py-20 text-center gap-4">
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-base-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+    <svg xmlns="http://www.w3.org/2000/svg"
+         class="h-16 w-16 text-base-300"
+         fill="none"
+         viewBox="0 0 24 24"
+         stroke="currentColor"
+         aria-hidden="true">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
     </svg>
     {% if active_tab == "upcoming" %}
       <p class="text-xl font-semibold text-base-content/70">No upcoming events scheduled</p>
-      <p class="text-base-content/50 max-w-sm">
-        Check back soon — new events will appear here once they are published.
-      </p>
+      <p class="text-base-content/50 max-w-sm">Check back soon — new events will appear here once they are published.</p>
     {% else %}
       <p class="text-xl font-semibold text-base-content/70">No past events found</p>
-      <p class="text-base-content/50 max-w-sm">
-        Past events will be archived here once they have concluded.
-      </p>
+      <p class="text-base-content/50 max-w-sm">Past events will be archived here once they have concluded.</p>
     {% endif %}
   </div>
 {% endif %}

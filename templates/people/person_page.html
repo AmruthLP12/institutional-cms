@@ -36,56 +36,27 @@
 {% endblock %}
 
 {% block content %}
-
-{# ─────────────────────────────────────────────────────────────────────────── #}
-{#  Breadcrumb                                                                 #}
-{# ─────────────────────────────────────────────────────────────────────────── #}
-<nav aria-label="Breadcrumb" class="bg-base-200 border-b border-base-300">
-  <div class="container mx-auto px-4 py-2">
-    <ol class="breadcrumbs text-sm" itemscope itemtype="https://schema.org/BreadcrumbList">
-      <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-        <a href="/" itemprop="item" class="hover:text-primary transition-colors">
-          <span itemprop="name">Home</span>
-        </a>
-        <meta itemprop="position" content="1" />
-      </li>
-      {% if index_page %}
-      <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-        <a href="{{ index_page.url }}" itemprop="item" class="hover:text-primary transition-colors">
-          <span itemprop="name">{{ index_page.title }}</span>
-        </a>
-        <meta itemprop="position" content="2" />
-      </li>
-      {% endif %}
-      <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-        <span itemprop="name" class="text-base-content/60">{{ page.full_name }}</span>
-        <meta itemprop="position" content="3" />
-      </li>
-    </ol>
-  </div>
-</nav>
-
 {# ─────────────────────────────────────────────────────────────────────────── #}
 {#  Profile hero section                                                       #}
 {# ─────────────────────────────────────────────────────────────────────────── #}
 <section
-  class="bg-primary text-white py-14"
+  class="bg-base-100 text-base-content border-b border-base-200 py-12 md:py-16"
   aria-labelledby="person-name-heading"
 >
-  <div class="container mx-auto px-4 max-w-5xl">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex flex-col md:flex-row gap-8 md:gap-12 items-center md:items-start">
 
       {# ── Profile photo ── #}
-      <div class="flex-shrink-0">
+      <div class="shrink-0">
         {% if page.profile_photo %}
-          {% image page.profile_photo fill-240x240 class="w-44 h-44 md:w-56 md:h-56 rounded-full object-cover ring-4 ring-secondary shadow-xl" alt=page.full_name %}
+          {% image page.profile_photo fill-240x240 class="w-44 h-44 md:w-52 md:h-52 rounded-full object-cover ring-4 ring-base-200 shadow-lg" alt=page.full_name %}
         {% else %}
           <div
-            class="w-44 h-44 md:w-56 md:h-56 rounded-full bg-secondary text-secondary-content/20 border-4 border-secondary flex items-center justify-center shadow-xl"
+            class="w-44 h-44 md:w-52 md:h-52 rounded-full bg-slate-900 text-amber-400 border-4 border-slate-800 flex items-center justify-center shadow-lg"
             aria-label="No photo available for {{ page.full_name }}"
             role="img"
           >
-            <span class="text-secondary text-5xl md:text-6xl font-bold font-['Source_Serif_4'] select-none">
+            <span class="text-4xl md:text-5xl font-bold font-serif select-none">
               {{ page.first_name|first }}{{ page.last_name|first }}
             </span>
           </div>
@@ -93,23 +64,23 @@
       </div>
 
       {# ── Name, role, meta ── #}
-      <div class="flex-1 text-center md:text-left">
+      <div class="grow text-center md:text-left">
         <h1
           id="person-name-heading"
-          class="font-['Source_Serif_4'] text-4xl md:text-5xl font-bold tracking-tight leading-tight"
+          class="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-base-content leading-tight"
         >
           {{ page.full_name }}
         </h1>
 
         {% if page.designation %}
-          <p class="mt-2 text-xl text-secondary font-medium">{{ page.designation }}</p>
+          <p class="mt-2 text-lg md:text-xl text-primary font-medium">{{ page.designation }}</p>
         {% endif %}
 
         {% if page.department %}
-          <p class="mt-1 text-white/70">
+          <p class="mt-1 text-base-content/75">
             <a
               href="{{ page.department.url }}"
-              class="hover:text-secondary transition-colors underline-offset-2 hover:underline"
+              class="hover:text-primary transition-colors underline-offset-2 hover:underline"
               aria-label="Go to {{ page.department.title }} department page"
             >
               {{ page.department.title }}

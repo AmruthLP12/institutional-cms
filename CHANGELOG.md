@@ -7,6 +7,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [Unreleased] - 2026-10-09
+
+### Added
+- **Multi-Image Hero Carousel**:
+  - Added `HomePageHeroSlide` model in `apps/home/models.py` enabling editors to add multiple hero slides with custom images, tags, headlines, subheadlines, and CTAs.
+  - Implemented interactive Alpine.js hero carousel in `templates/home/home_page.html` featuring auto-advance (6.5s interval), pause on mouse hover, keyboard arrow controls, prev/next buttons, and pill dot indicators.
+  - Multi-stop dark gradient scrim overlay (`bg-gradient-to-r from-slate-950/95 via-slate-950/80 to-slate-900/40` and bottom vignette) ensuring 100% crystal-clear text readability over any background image.
+  - Added unit test `test_hero_carousel_slides` in `tests/test_home.py`.
+
+### Changed
+- **Calmed & Modernized Color Palette**:
+  - Redesigned `base.html` header from blinding full-bleed blue to a distinguished two-tone academic aesthetic: dark slate utility bar (`bg-slate-950 text-slate-300`) and crisp clean brand & navigation bar (`bg-base-100 text-base-content border-b border-base-200`).
+  - Redesigned footer to deep institutional slate/charcoal canvas (`bg-slate-950 text-slate-300 border-t-2 border-amber-500/40`) with soft muted text (`text-slate-400`), warm amber heading accents, and dark pill social buttons (`bg-slate-900 text-slate-400 hover:bg-amber-500 hover:text-slate-950`).
+  - Softened page headers across `departments`, `news`, `events`, and `people` index and detail pages with clean, modern styling.
+  - Refined theme tokens in `theme/static_src/src/styles.css` for balanced institutional contrast.
+
+### Fixed
+- **Text Selection Visibility Bug**:
+  - Replaced low-contrast selection class with high-contrast amber/neutral selection (`selection:bg-amber-300 selection:text-slate-950 dark:selection:bg-amber-500/40 dark:selection:text-amber-100` and global `::selection` CSS rule), ensuring highlighted text never disappears on any background.
+- **Duplicate Breadcrumbs Across Templates**:
+  - Removed duplicate `<nav aria-label="Breadcrumb">` bars from `department_index_page.html`, `department_page.html`, `news_index_page.html`, `news_page.html`, `event_index_page.html`, `event_page.html`, `person_index_page.html`, and `person_page.html`. All pages now use `base.html`'s single, accessible, unified Wagtail hierarchy breadcrumb bar.
+
+---
+
 ## [Unreleased] - 2026-09-28
 
 ### Added

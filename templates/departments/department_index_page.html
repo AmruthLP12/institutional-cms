@@ -5,32 +5,18 @@
 
 {% block content %}
 {# ------------------------------------------------------------------ #}
-{# Breadcrumb                                                          #}
+{# Page hero / header                                                 #}
 {# ------------------------------------------------------------------ #}
-<nav aria-label="Breadcrumb" class="bg-base-200 border-b border-base-300">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
-    <ol class="breadcrumbs flex flex-wrap items-center gap-1 text-sm text-base-content/70">
-      <li>
-        <a href="/" class="hover:text-primary transition-colors">Home</a>
-        <span class="mx-1" aria-hidden="true">/</span>
-      </li>
-      <li class="font-medium text-base-content" aria-current="page">
-        {{ page.title }}
-      </li>
-    </ol>
-  </div>
-</nav>
-
-{# ------------------------------------------------------------------ #}
-{# Page hero                                                           #}
-{# ------------------------------------------------------------------ #}
-<header class="bg-primary text-primary-content py-16">
+<header class="bg-base-100 border-b border-base-200 py-12 md:py-16">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <h1 class="font-serif text-4xl lg:text-5xl font-bold tracking-tight">
+    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold uppercase tracking-wider mb-4">
+      Academic Units &amp; Centers
+    </div>
+    <h1 class="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-base-content">
       {{ page.title }}
     </h1>
     {% if page.intro %}
-      <div class="mt-4 text-lg text-primary-content/85 max-w-3xl richtext [&_a]:text-secondary [&_a:hover]:underline">
+      <div class="mt-4 text-base sm:text-lg text-base-content/75 max-w-3xl richtext">
         {{ page.intro|richtext }}
       </div>
     {% endif %}
