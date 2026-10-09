@@ -10,6 +10,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased] - 2026-10-09
 
 ### Added
+- **Shared Content Visibility and Scheduling System**:
+  - Implemented `ScheduledVisibilityModel` abstract model (`apps.core.models.ScheduledVisibilityModel`) with:
+    - `is_active`: boolean flag for manual enable/disable.
+    - `display_start`: datetime from which content becomes eligible for display (defaults to `timezone.now`).
+    - `display_end`: optional datetime after which content is automatically hidden (exclusive).
+    - Validation via `clean()` rejecting `display_end <= display_start`.
+    - Calculated helper properties: `is_currently_visible`, `visibility_status` (`INACTIVE`, `SCHEDULED`, `ACTIVE`, `EXPIRED`, `INVALID_SCHEDULE`), `visibility_status_display`, and `visibility_badge_class`.
+  - Implemented `ScheduledVisibilityQuerySetMixin`, `ScheduledVisibilityQuerySet`, and `ScheduledVisibilityPageQuerySet` providing:
+    - `.visible()` / `.filter_visible()`: filters `is_active=True`, `display_start <= now`, `(display_end IS NULL OR display_end > now)`.
+    - `.active()`, `.inactive()`, `.scheduled()`, `.expired()`.
+  - Integrated into `BasePage` (`apps.core.models.BasePage`) inherited by all 14 Wagtail page models:
+    - `NewsPage`, `EventPage`, `PersonPage`, `DepartmentPage`, `ResearchProjectPage`, `DocumentPage`, `PublicationPage`, `ReportPage`, `TenderPage`, `CareerPage`, `LegalPage`, `StandardPage`, `AnnouncementPage`, `NoticePage`, `ContactPage`, `HomePage`, and all Index pages.
+    - Overrode `serve()` to raise `Http404` for non-visible direct URL requests.
+    - Overrode `get_sitemap_urls()` to exclude non-visible pages from sitemaps.
+    - Integrated Wagtail admin `MultiFieldPanel` for Visibility & Scheduling.
+  - Integrated into `AlertBanner` (`apps.site_settings.models.AlertBanner`) and updated global context processor.
+  - Updated public view and context queries across all index pages, related content, and homepage aggregations.
+  - Updated search view (`apps.search.views.search`) to filter out non-visible pages.
+  - Added comprehensive test suite `tests/test_content_visibility.py` (50/50 total tests passing).
 - **Centralized Institutional Contact Information & Site Settings Architecture**:
   - Enriched Wagtail `SiteSettings` (`apps.site_settings.models.SiteSettings` / `InstitutionSettings`) with comprehensive institutional fields:
     - Structured Postal Address: `building_or_campus`, `address_line_1`, `address_line_2`, `city`, `state`, `postal_code`, `country`.

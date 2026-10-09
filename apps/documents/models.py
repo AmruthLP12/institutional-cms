@@ -89,6 +89,7 @@ class DocumentIndexPage(BasePage):
         docs_qs = (
             DocumentPage.objects.live()
             .public()
+            .visible()
             .descendant_of(self)
             .filter(is_public=True)
             .order_by("-publication_date", "-first_published_at")
@@ -310,6 +311,7 @@ class PublicationIndexPage(BasePage):
         publications_qs = (
             PublicationPage.objects.live()
             .public()
+            .visible()
             .descendant_of(self)
             .order_by("-publication_year", "-first_published_at")
             .select_related("document_file")
@@ -467,6 +469,7 @@ class ReportIndexPage(BasePage):
         context["reports"] = (
             ReportPage.objects.live()
             .public()
+            .visible()
             .descendant_of(self)
             .order_by("-report_year", "-first_published_at")
             .select_related("document_file", "report_image")
@@ -573,6 +576,7 @@ class TenderIndexPage(BasePage):
         base_qs = (
             TenderPage.objects.live()
             .public()
+            .visible()
             .descendant_of(self)
             .select_related("document_file")
         )
@@ -749,6 +753,7 @@ class CareerIndexPage(BasePage):
         base_qs = (
             CareerPage.objects.live()
             .public()
+            .visible()
             .descendant_of(self)
             .select_related("document_file")
         )

@@ -84,6 +84,8 @@ class EventIndexPage(BasePage):
 
         upcoming_qs = (
             EventPage.objects.live()
+            .public()
+            .visible()
             .child_of(self)
             .filter(start_datetime__gte=now)
             .select_related("event_image")
@@ -92,6 +94,8 @@ class EventIndexPage(BasePage):
         )
         past_qs = (
             EventPage.objects.live()
+            .public()
+            .visible()
             .child_of(self)
             .filter(start_datetime__lt=now)
             .select_related("event_image")

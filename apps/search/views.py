@@ -10,23 +10,26 @@ def search(request):
 
     # Search
     if search_query:
-        # Search live, public pages, excluding private ones
-        search_results = Page.objects.live().public().search(search_query)
+        # Search live, public pages, then filter by scheduled visibility
+        raw_results = list(Page.objects.live().public().search(search_query))
+        search_results = [
+            r for r in raw_results if getattr(r.specific, "is_currently_visible", True)
+        ]
         query = Query.get(search_query)
 
         # Record hit
         query.add_hit()
     else:
-        search_results = Page.objects.none()
+        search_results = []
 
     # Pagination
     paginator = Paginator(search_results, 10)
     try:
-        search_results = paginator.page(page)
+        paginated_results = paginator.page(page)
     except PageNotAnInteger:
-        search_results = paginator.page(1)
+        paginated_results = paginator.page(1)
     except EmptyPage:
-        search_results = paginator.page(paginator.num_pages)
+        paginated_results = paginator.page(paginator.num_pages)
 
     template = "search/search.html"
     if request.headers.get("HX-Request"):
@@ -37,6 +40,6 @@ def search(request):
         template,
         {
             "search_query": search_query,
-            "search_results": search_results,
+            "search_results": paginated_results,
         },
     )

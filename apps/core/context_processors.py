@@ -40,7 +40,7 @@ def site_context(request):
         )
         context["footer_groups"] = footer_groups
 
-        banner = AlertBanner.objects.filter(is_active=True).first()
+        banner = AlertBanner.objects.visible().first()
         context["alert_banner"] = banner
 
     except Exception:

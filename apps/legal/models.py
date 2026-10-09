@@ -45,10 +45,11 @@ class LegalIndexPage(BasePage):
     def get_context(self, request, *args, **kwargs):
         context = super().get_context(request, *args, **kwargs)
 
-        # Only pages that are live in Wagtail AND institutionally approved
+        # Only pages that are live in Wagtail, visible, AND institutionally approved
         approved_pages = (
             LegalPage.objects.live()
             .public()
+            .visible()
             .filter(approval_status=LegalPage.ApprovalStatus.PUBLISHED)
             .order_by("policy_type", "title")
         )

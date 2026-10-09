@@ -63,6 +63,7 @@ class DepartmentIndexPage(BasePage):
         departments = (
             DepartmentPage.objects.live()
             .public()
+            .visible()
             .child_of(self)
             .order_by("title")
             .only(
@@ -234,6 +235,7 @@ class DepartmentPage(BasePage):
             people = (
                 PersonPage.objects.live()
                 .public()
+                .visible()
                 .filter(department=self)
                 .order_by("last_name", "first_name")
                 .select_related("profile_photo")[:10]
@@ -249,6 +251,7 @@ class DepartmentPage(BasePage):
             research_projects = (
                 ResearchProjectPage.objects.live()
                 .public()
+                .visible()
                 .filter(department=self)
                 .order_by("-start_date", "title")
             )

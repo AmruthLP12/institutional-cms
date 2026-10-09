@@ -209,6 +209,7 @@ class AnnouncementIndexPage(BasePage):
         announcements = (
             AnnouncementPage.objects.live()
             .public()
+            .visible()
             .order_by("-is_pinned", "-first_published_at")
         )
         paginator = Paginator(announcements, 15)
@@ -281,6 +282,7 @@ class NoticeIndexPage(BasePage):
         notices = (
             NoticePage.objects.live()
             .public()
+            .visible()
             .order_by("-notice_date", "-first_published_at")
         )
         paginator = Paginator(notices, 15)

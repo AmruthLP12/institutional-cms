@@ -131,7 +131,41 @@ Global institutional configuration via `SiteSettings` (`apps.site_settings.model
 - `social_links.html`: Accessible social media icon links omitting unconfigured platforms.
 - `footer.html`: Modular 4-column institutional footer partial.
 
-## 4. Wagtail content architecture
+## 4. Content Visibility and Scheduling System
+
+All institutional content models (including all `BasePage` subclasses and `AlertBanner`) inherit from `ScheduledVisibilityModel` (`apps.core.models.ScheduledVisibilityModel`).
+
+### Central Visibility Rule
+
+Content is eligible for public display if and only if:
+
+```python
+is_active = True
+AND display_start <= timezone.now()
+AND (display_end IS NULL OR display_end > timezone.now())
+```
+
+- **`is_active`** (BooleanField, default `True`): Allows administrators to manually enable or disable content.
+- **`display_start`** (DateTimeField, default `timezone.now`): Timestamp from which content becomes eligible for display.
+- **`display_end`** (DateTimeField, optional `null=True`, `blank=True`): Timestamp after which content automatically expires (exclusive).
+
+### QuerySet API
+
+- `Model.objects.visible()` / `Model.objects.filter_visible()`: Filters currently eligible public content at runtime query execution.
+- `Model.objects.active()`: Returns records where `is_active=True`.
+- `Model.objects.inactive()`: Returns records where `is_active=False`.
+- `Model.objects.scheduled()`: Returns records scheduled for future display (`display_start > now`).
+- `Model.objects.expired()`: Returns records whose `display_end` has passed (`display_end <= now`).
+- `Model.objects.all()`: Full unfiltered administrative access.
+
+### Protection & Integration
+
+- **Direct URL Access**: `BasePage.serve(request)` raises `Http404` when `not self.is_currently_visible`.
+- **Sitemaps**: `BasePage.get_sitemap_urls()` returns `[]` when `not self.is_currently_visible`.
+- **Search**: `apps.search.views.search` filters search results to omit non-visible pages.
+- **Wagtail Revisions & Workflows**: Independent of Wagtail publication states; scheduled visibility acts as an additional runtime eligibility condition.
+
+## 5. Wagtail content architecture
 
 Use Wagtail page hierarchy.
 

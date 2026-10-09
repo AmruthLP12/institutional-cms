@@ -8,12 +8,15 @@ from modelcluster.fields import ParentalKey
 from modelcluster.models import ClusterableModel
 from wagtail.admin.panels import (
     FieldPanel,
+    FieldRowPanel,
     InlinePanel,
     MultiFieldPanel,
 )
 from wagtail.contrib.settings.models import BaseSiteSetting, register_setting
 from wagtail.models import Orderable, Page
 from wagtail.snippets.models import register_snippet
+
+from apps.core.models import ScheduledVisibilityModel
 
 HEX_COLOR_VALIDATOR = RegexValidator(
     regex=r"^#(?:[0-9a-fA-F]{3}){1,2}$",
@@ -506,10 +509,10 @@ class NavMenuItem(ClusterableModel, Orderable):
 
 
 @register_snippet
-class AlertBanner(models.Model):
+class AlertBanner(ScheduledVisibilityModel):
     """
     Site-wide alert banner shown at the top of every page.
-    Only one banner should be active at a time.
+    Supports manual activation as well as scheduled visibility windows.
     """
 
     BANNER_TYPES = [
@@ -527,7 +530,6 @@ class AlertBanner(models.Model):
         max_length=100, blank=True, help_text="Optional link label."
     )
     link_url = models.URLField(blank=True, help_text="Optional link URL.")
-    is_active = models.BooleanField(default=False, db_index=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     panels = [
@@ -536,7 +538,18 @@ class AlertBanner(models.Model):
         FieldPanel("message"),
         FieldPanel("link_text"),
         FieldPanel("link_url"),
-        FieldPanel("is_active"),
+        MultiFieldPanel(
+            [
+                FieldPanel("is_active"),
+                FieldRowPanel(
+                    [
+                        FieldPanel("display_start"),
+                        FieldPanel("display_end"),
+                    ]
+                ),
+            ],
+            heading="Visibility & Scheduling",
+        ),
     ]
 
     def __str__(self):

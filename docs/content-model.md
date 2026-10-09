@@ -6,7 +6,25 @@ Use structured content where the institution has structured information.
 
 Use flexible StreamField blocks where editors need page composition.
 
-Do not use StreamField as a substitute for relational data.
+## Shared Visibility and Scheduling Model
+
+All institutional public content types inherit from `ScheduledVisibilityModel` (`apps.core.models.ScheduledVisibilityModel` / `BasePage`):
+
+```text
+is_active: BooleanField (default=True)
+display_start: DateTimeField (default=timezone.now)
+display_end: DateTimeField (null=True, blank=True)
+```
+
+Public query condition:
+`is_active=True AND display_start <= now AND (display_end IS NULL OR display_end > now)`
+
+Calculated statuses:
+- `Active`: currently within the scheduled visibility window.
+- `Scheduled`: start time is in the future.
+- `Inactive`: manually disabled.
+- `Expired`: end time has passed.
+- `Invalid Schedule`: end time is not strictly later than start time.
 
 ## Core page types
 

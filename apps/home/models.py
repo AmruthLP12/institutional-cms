@@ -244,6 +244,7 @@ class HomePage(BasePage):
             context["featured_news"] = (
                 NewsPage.objects.live()
                 .public()
+                .visible()
                 .order_by("-publication_date")
                 .select_related("featured_image")
                 .prefetch_related("categories")[:3]
@@ -258,6 +259,7 @@ class HomePage(BasePage):
             context["upcoming_events"] = (
                 EventPage.objects.live()
                 .public()
+                .visible()
                 .filter(start_datetime__gte=now)
                 .order_by("start_datetime")
                 .select_related("event_image")[:3]
@@ -272,6 +274,7 @@ class HomePage(BasePage):
             context["announcements"] = (
                 AnnouncementPage.objects.live()
                 .public()
+                .visible()
                 .order_by("-first_published_at")[:5]
             )
         except Exception:
@@ -282,7 +285,10 @@ class HomePage(BasePage):
             from apps.content.models import NoticePage
 
             context["notices"] = (
-                NoticePage.objects.live().public().order_by("-first_published_at")[:3]
+                NoticePage.objects.live()
+                .public()
+                .visible()
+                .order_by("-first_published_at")[:3]
             )
         except Exception:
             context["notices"] = []

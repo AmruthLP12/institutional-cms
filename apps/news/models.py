@@ -95,6 +95,7 @@ class NewsIndexPage(BasePage):
         news_qs = (
             NewsPage.objects.live()
             .public()
+            .visible()
             .descendant_of(self)
             .order_by("-publication_date", "-first_published_at")
             .select_related("featured_image", "owner")
@@ -245,6 +246,7 @@ class NewsPage(BasePage):
         related_posts = (
             NewsPage.objects.live()
             .public()
+            .visible()
             .filter(categories__in=category_pks)
             .exclude(pk=self.pk)
             .order_by("-publication_date", "-first_published_at")

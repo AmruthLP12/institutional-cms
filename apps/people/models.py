@@ -127,10 +127,11 @@ class PersonIndexPage(BasePage):
         category_slug = request.GET.get("category", "").strip()
         page_number = request.GET.get("page", 1)
 
-        # Base queryset — only live, published PersonPages that are children.
+        # Base queryset — only live, published, visible PersonPages that are children.
         people_qs = (
             PersonPage.objects.live()
             .public()
+            .visible()
             .descendant_of(self)
             .select_related("department", "profile_photo")
             .prefetch_related("categories")

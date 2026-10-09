@@ -91,10 +91,11 @@ class ResearchIndexPage(BasePage):
     def get_context(self, request, *args, **kwargs):
         context = super().get_context(request, *args, **kwargs)
 
-        # Base queryset — live, public children ordered by start_date desc.
+        # Base queryset — live, public, visible children ordered by start_date desc.
         projects = (
             ResearchProjectPage.objects.live()
             .public()
+            .visible()
             .child_of(self)
             .order_by("-start_date")
             .select_related("project_image", "department")
