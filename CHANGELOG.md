@@ -10,6 +10,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased] - 2026-10-09
 
 ### Added
+- **Multilingual Content and Translation Management System**:
+  - Implemented `apps.translation` application leveraging Wagtail's native internationalization (`Locale`, `TranslatableMixin`, `wagtail.contrib.simple_translation`).
+  - Added `LanguageSettings` and `ManagedLanguage` models for managing enabled public languages (English, Kannada, Hindi), default locale, and RTL display flags.
+  - Implemented pluggable translation provider architecture with `BaseTranslationProvider`:
+    - `GoogleCloudTranslationProvider` for live automated translations.
+    - Zero-dependency, offline `MockTranslationProvider` for deterministic testing and local development.
+  - Created `TranslationEngine` with safe recursive StreamField parsing that translates text while preserving block structure, block IDs, images, documents, and link choosers.
+  - Created `TranslationRecord` tracking translation workflow statuses (`DRAFT`, `IN_REVIEW`, `APPROVED`, `OUTDATED`) and detecting outdated translations via SHA-256 source content hashes.
+  - Draft-by-default workflow ensuring machine translations require human editorial review prior to publication.
+  - Added one-click "Translate" page listing actions in Wagtail Admin via `wagtail_hooks.py`.
+  - Added CLI management command `translate_site` for batch translating pages across locales.
+  - Configured multi-locale routing with `i18n_patterns` supporting `/en/`, `/kn/`, and `/hi/`.
+  - Added accessible, responsive language switcher to utility bar and mobile drawer.
+  - Added dynamic `<html lang="..." dir="...">` attributes and `<link rel="alternate" hreflang="..." />` tags.
+  - Added `tests/test_translation.py` (6 tests, all passing; full regression suite 56/56 tests passing).
 - **Shared Content Visibility and Scheduling System**:
   - Implemented `ScheduledVisibilityModel` abstract model (`apps.core.models.ScheduledVisibilityModel`) with:
     - `is_active`: boolean flag for manual enable/disable.

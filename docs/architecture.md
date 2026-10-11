@@ -53,7 +53,8 @@ project/
 │   ├── documents/
 │   ├── legal/
 │   ├── search/
-│   └── site_settings/
+│   ├── site_settings/
+│   └── translation/
 │
 ├── theme/
 ├── templates/
@@ -438,3 +439,17 @@ Options considered
 Decision
 Consequences
 ```
+
+## 19. Multilingual Content and Translation Management
+
+The multilingual system is implemented via `apps.translation` in coordination with Wagtail's native internationalization features (`wagtail.models.Locale`, `TranslatableMixin`, and `wagtail.contrib.simple_translation`):
+
+- **Supported Languages**: Configured dynamically in `LanguageSettings` (default English `en`, Kannada `kn`, Hindi `hi`).
+- **Translation Workflows**:
+  - **Manual**: Editors directly translate or refine pages in target locales.
+  - **Machine Translation**: Pluggable provider architecture (`BaseTranslationProvider`) supporting `GoogleCloudTranslationProvider` with an offline, zero-dependency `MockTranslationProvider`.
+  - **Hybrid Translation**: Automated translations are saved as draft revisions (`TranslationWorkflowStatus.DRAFT`) and must be reviewed by editors before publication.
+- **StreamField Preservation**: The translation engine recursively parses text fields within supported blocks (`HeadingBlock`, `RichBodyBlock`, `QuoteBlock`, `CallToActionBlock`, `NoticeBlock`, `AccordionBlock`, `StatisticsBlock`) without corrupting block IDs, choices, or media references.
+- **Freshness Tracking**: `TranslationRecord` tracks SHA-256 hashes of translatable source content and detects outdated translations when source pages are modified.
+- **Public UI & SEO**: Accessible language switcher in the utility bar and mobile drawer, dynamic `<html lang="..." dir="...">`, and automatic `<link rel="alternate" hreflang="..." />` generation.
+

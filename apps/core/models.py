@@ -295,6 +295,19 @@ class BasePage(ScheduledVisibilityModel, Page):
             return request.build_absolute_uri(self.url)
         return self.full_url or ""
 
+    def get_hreflang_urls(self, request=None) -> dict[str, str]:
+        """
+        Return dict of {lang_code: url} for this page and all its live, visible translations.
+        """
+        urls = {self.locale.language_code: self.get_canonical_url(request=request)}
+        try:
+            for trans in self.get_translations().live():
+                if getattr(trans, "is_currently_visible", True):
+                    urls[trans.locale.language_code] = trans.get_canonical_url(request=request)
+        except Exception:
+            pass
+        return urls
+
     class Meta:
         abstract = True
 

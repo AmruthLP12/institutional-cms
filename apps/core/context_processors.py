@@ -43,6 +43,10 @@ def site_context(request):
         banner = AlertBanner.objects.visible().first()
         context["alert_banner"] = banner
 
+        from django.utils.translation import get_language, get_language_bidi
+        context["LANGUAGE_CODE"] = get_language() or "en"
+        context["LANGUAGE_BIDI"] = get_language_bidi()
+
     except Exception:
         # Gracefully degrade if tables do not exist yet (pre-migration)
         context["site_settings"] = None
@@ -50,5 +54,7 @@ def site_context(request):
         context["nav_items"] = []
         context["footer_groups"] = []
         context["alert_banner"] = None
+        context["LANGUAGE_CODE"] = "en"
+        context["LANGUAGE_BIDI"] = False
 
     return context

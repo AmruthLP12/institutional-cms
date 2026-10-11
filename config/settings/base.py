@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "wagtail.contrib.redirects",
     "wagtail.contrib.search_promotions",
     "wagtail.contrib.settings",
+    "wagtail.contrib.simple_translation",
     "wagtail.contrib.table_block",
     "wagtail.embeds",
     "wagtail.sites",
@@ -63,6 +64,7 @@ INSTALLED_APPS = [
     # Project apps
     "apps.core",
     "apps.site_settings",
+    "apps.translation",
     "apps.home",
     "apps.content",
     "apps.news",
@@ -82,6 +84,7 @@ MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.locale.LocaleMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -157,10 +160,21 @@ LOGOUT_REDIRECT_URL = "/"
 # ---------------------------------------------------------------------------
 # Internationalisation
 # ---------------------------------------------------------------------------
-LANGUAGE_CODE = "en-us"
+LANGUAGE_CODE = "en"
 TIME_ZONE = "Asia/Kolkata"
 USE_I18N = True
 USE_TZ = True
+
+WAGTAIL_I18N_ENABLED = True
+WAGTAIL_CONTENT_LANGUAGES = LANGUAGES = [
+    ("en", "English"),
+    ("kn", "Kannada (ಕನ್ನಡ)"),
+    ("hi", "Hindi (हिन्दी)"),
+]
+
+# Translation provider settings
+TRANSLATION_DEFAULT_PROVIDER = config("TRANSLATION_DEFAULT_PROVIDER", default="mock")
+GOOGLE_TRANSLATE_API_KEY = config("GOOGLE_TRANSLATE_API_KEY", default="")
 
 
 # ---------------------------------------------------------------------------

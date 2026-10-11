@@ -36,16 +36,19 @@ urlpatterns = [
     path("test-500/", custom_500, name="test_500"),
 ]
 
+from django.conf.urls.i18n import i18n_patterns
+
 # Development-only additions (media files)
 if settings.DEBUG:
     from django.conf.urls.static import static
 
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
-# Wagtail pages catch-all (MUST be the last route in urlpatterns)
-urlpatterns += [
+# Wagtail pages with i18n prefix support
+urlpatterns += i18n_patterns(
     path("", include(wagtail_urls)),
-]
+    prefix_default_language=False,
+)
 
 # Custom error handlers for production and 404/500 exception handling
 handler404 = "apps.core.views.custom_404"

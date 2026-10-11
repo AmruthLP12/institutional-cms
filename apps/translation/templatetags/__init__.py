@@ -1,0 +1,3 @@
+"""
+Translation template tags init.
+"""
