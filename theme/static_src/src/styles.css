@@ -1,6 +1,6 @@
 @import "tailwindcss";
 @plugin "daisyui" {
-  themes: all;
+  themes: false;
 }
 
 @source "../../../templates/**/*.html";
@@ -9,123 +9,465 @@
 
 /* =========================================================================
    1. Theme Tokens & Semantic Palettes — Nakashara Institutional CMS
-   Restrained, accessible, WCAG 2.2 AA compliant institutional color schemes.
+   Calm, restrained, accessible, WCAG 2.2 AA compliant institutional themes.
    ========================================================================= */
 
 /* Global text selection */
 ::selection {
-  background-color: rgba(181, 138, 72, 0.35); /* Restrained Antique Gold Tint */
-  color: #172b3a;
+  background-color: color-mix(in srgb, var(--color-accent) 30%, transparent);
+  color: var(--color-text-main);
 }
 
-/* Default / Corporate Institutional Theme (Oxford Navy, Academic Sage & Antique Gold) */
-[data-theme="corporate"] {
-  --color-primary: #24466b;          /* Institutional Oxford Navy */
-  --color-primary-content: #ffffff;
-  --color-secondary: #52766f;        /* Muted Academic Sage / Teal */
-  --color-secondary-content: #ffffff;
-  --color-accent: #b58a48;           /* Restrained Antique Gold */
-  --color-accent-content: #172b3a;
-  --color-base-100: #ffffff;         /* Main White Surface */
-  --color-base-200: #f5f4ef;         /* Warm Off-White Canvas */
-  --color-base-300: #e2e4e1;         /* Dividers & Borders */
-  --color-base-content: #202b36;     /* High-Contrast Body Text */
-  --color-success: #2d6a4f;          /* Muted Forest Emerald */
-  --color-success-content: #ffffff;
-  --color-warning: #b45309;          /* Readable Amber */
-  --color-warning-content: #ffffff;
-  --color-error: #991b1b;            /* Deep Crimson */
-  --color-error-content: #ffffff;
-  --color-info: #1d4ed8;             /* Deep Academic Blue */
-  --color-info-content: #ffffff;
+/* -------------------------------------------------------------------------
+   Theme 1: Academic Blue — DEFAULT
+   Oxford Navy, Muted Steel & Antique Gold
+   ------------------------------------------------------------------------- */
+:root,
+[data-theme="academic-blue"] {
+  /* Core colors */
+  --color-primary: #17365D;
+  --color-primary-hover: #0F243E;
+  --color-primary-content: #FFFFFF;
+  --color-primary-fg: #FFFFFF;
+  --color-secondary: #52749A;
+  --color-secondary-hover: #3D5A7A;
+  --color-secondary-content: #FFFFFF;
+  --color-secondary-fg: #FFFFFF;
+  --color-accent: #D6A75D;
+  --color-accent-hover: #C29348;
+  --color-accent-content: #172635;
+  --color-accent-fg: #172635;
+
+  /* Backgrounds & surfaces */
+  --color-page-bg: #F7F8FA;
+  --color-surface: #FFFFFF;
+  --color-surface-secondary: #EEF2F6;
+  --color-surface-elevated: #FFFFFF;
+  --color-base-100: #FFFFFF;
+  --color-base-200: #F7F8FA;
+  --color-base-300: #E2E8F0;
+  --color-nav-bg: #FFFFFF;
+  --color-header-bg: #FFFFFF;
+  --color-header-utility-bg: #0E1B2D;
+  --color-header-utility-text: #CBD5E1;
+  --color-footer-bg: #0E1B2D;
+  --color-footer-text: #CBD5E1;
+  --color-footer-border: #D6A75D;
+
+  /* Typography */
+  --color-base-content: #202C3A;
+  --color-text-main: #202C3A;
+  --color-text-secondary: #364558;
+  --color-text-muted: #566579;
+  --color-text-heading: #17365D;
+  --color-link: #17365D;
+  --color-link-hover: #52749A;
+
+  /* Borders & states */
+  --color-border-default: #E2E8F0;
+  --color-border-strong: #CBD5E1;
+  --color-divider: #EDF2F7;
+  --color-focus-ring: #17365D;
+  --color-hover-bg: #F1F5F9;
+  --color-selected-bg: #E2E8F0;
+
+  /* Feedback colors (WCAG 2.2 AA compliant) */
+  --color-success: #1E6B43;
+  --color-success-content: #FFFFFF;
+  --color-success-fg: #FFFFFF;
+  --color-success-bg: #F0FDF4;
+  --color-success-border: #BBF7D0;
+
+  --color-warning: #92400E;
+  --color-warning-content: #FFFFFF;
+  --color-warning-fg: #FFFFFF;
+  --color-warning-bg: #FEFCE8;
+  --color-warning-border: #FEF08A;
+
+  --color-error: #991B1B;
+  --color-error-content: #FFFFFF;
+  --color-error-fg: #FFFFFF;
+  --color-error-bg: #FEF2F2;
+  --color-error-border: #FECACA;
+
+  --color-info: #1D4ED8;
+  --color-info-content: #FFFFFF;
+  --color-info-fg: #FFFFFF;
+  --color-info-bg: #EFF6FF;
+  --color-info-border: #BFDBFE;
 }
 
-/* Emerald Theme (Academic Forest & Sage) */
-[data-theme="emerald"] {
-  --color-primary: #1b4332;
-  --color-primary-content: #ffffff;
-  --color-secondary: #40916c;
-  --color-secondary-content: #ffffff;
-  --color-accent: #b58a48;
-  --color-accent-content: #172b3a;
-  --color-base-100: #ffffff;
-  --color-base-200: #f4f7f4;
-  --color-base-300: #d8e2dc;
-  --color-base-content: #1b261d;
+/* -------------------------------------------------------------------------
+   Theme 2: Sage & Ivory
+   Academic Forest, Muted Sage & Warm Sand
+   ------------------------------------------------------------------------- */
+[data-theme="sage-ivory"] {
+  /* Core colors */
+  --color-primary: #344B40;
+  --color-primary-hover: #23342C;
+  --color-primary-content: #FFFFFF;
+  --color-primary-fg: #FFFFFF;
+  --color-secondary: #718878;
+  --color-secondary-hover: #556B5C;
+  --color-secondary-content: #FFFFFF;
+  --color-secondary-fg: #FFFFFF;
+  --color-accent: #C6AD7A;
+  --color-accent-hover: #B39761;
+  --color-accent-content: #202A24;
+  --color-accent-fg: #202A24;
+
+  /* Backgrounds & surfaces */
+  --color-page-bg: #F5F6F0;
+  --color-surface: #FFFFFF;
+  --color-surface-secondary: #EAECE2;
+  --color-surface-elevated: #FFFFFF;
+  --color-base-100: #FFFFFF;
+  --color-base-200: #F5F6F0;
+  --color-base-300: #E1E5DC;
+  --color-nav-bg: #FFFFFF;
+  --color-header-bg: #FFFFFF;
+  --color-header-utility-bg: #15221B;
+  --color-header-utility-text: #CBD5CF;
+  --color-footer-bg: #15221B;
+  --color-footer-text: #CBD5CF;
+  --color-footer-border: #C6AD7A;
+
+  /* Typography */
+  --color-base-content: #28342D;
+  --color-text-main: #28342D;
+  --color-text-secondary: #3D4F45;
+  --color-text-muted: #5C6F64;
+  --color-text-heading: #344B40;
+  --color-link: #344B40;
+  --color-link-hover: #718878;
+
+  /* Borders & states */
+  --color-border-default: #E1E5DC;
+  --color-border-strong: #C8D0C2;
+  --color-divider: #ECEFE8;
+  --color-focus-ring: #344B40;
+  --color-hover-bg: #ECEFE8;
+  --color-selected-bg: #DFE4D8;
+
+  /* Feedback colors */
+  --color-success: #1E6B43;
+  --color-success-content: #FFFFFF;
+  --color-success-fg: #FFFFFF;
+  --color-success-bg: #F0FDF4;
+  --color-success-border: #BBF7D0;
+
+  --color-warning: #92400E;
+  --color-warning-content: #FFFFFF;
+  --color-warning-fg: #FFFFFF;
+  --color-warning-bg: #FEFCE8;
+  --color-warning-border: #FEF08A;
+
+  --color-error: #991B1B;
+  --color-error-content: #FFFFFF;
+  --color-error-fg: #FFFFFF;
+  --color-error-bg: #FEF2F2;
+  --color-error-border: #FECACA;
+
+  --color-info: #1D4ED8;
+  --color-info-content: #FFFFFF;
+  --color-info-fg: #FFFFFF;
+  --color-info-bg: #EFF6FF;
+  --color-info-border: #BFDBFE;
 }
 
-/* Nord Theme (Arctic Slate & Frost) */
-[data-theme="nord"] {
-  --color-primary: #2e3440;
-  --color-primary-content: #eceff4;
-  --color-secondary: #4c566a;
-  --color-secondary-content: #eceff4;
-  --color-accent: #5e81ac;
-  --color-accent-content: #ffffff;
-  --color-base-100: #ffffff;
-  --color-base-200: #eceff4;
-  --color-base-300: #d8dee9;
-  --color-base-content: #2e3440;
+/* -------------------------------------------------------------------------
+   Theme 3: Slate & Steel
+   Intellectual Slate, Cool Steel & Warm Bronze
+   ------------------------------------------------------------------------- */
+[data-theme="slate-steel"] {
+  /* Core colors */
+  --color-primary: #334155;
+  --color-primary-hover: #1E293B;
+  --color-primary-content: #FFFFFF;
+  --color-primary-fg: #FFFFFF;
+  --color-secondary: #647C91;
+  --color-secondary-hover: #4D6377;
+  --color-secondary-content: #FFFFFF;
+  --color-secondary-fg: #FFFFFF;
+  --color-accent: #B68D58;
+  --color-accent-hover: #A17743;
+  --color-accent-content: #18222E;
+  --color-accent-fg: #18222E;
+
+  /* Backgrounds & surfaces */
+  --color-page-bg: #F3F5F7;
+  --color-surface: #FFFFFF;
+  --color-surface-secondary: #E7ECF0;
+  --color-surface-elevated: #FFFFFF;
+  --color-base-100: #FFFFFF;
+  --color-base-200: #F3F5F7;
+  --color-base-300: #E2E8F0;
+  --color-nav-bg: #FFFFFF;
+  --color-header-bg: #FFFFFF;
+  --color-header-utility-bg: #16202C;
+  --color-header-utility-text: #CCD5DE;
+  --color-footer-bg: #16202C;
+  --color-footer-text: #CCD5DE;
+  --color-footer-border: #B68D58;
+
+  /* Typography */
+  --color-base-content: #273444;
+  --color-text-main: #273444;
+  --color-text-secondary: #3C4E61;
+  --color-text-muted: #596A7C;
+  --color-text-heading: #334155;
+  --color-link: #334155;
+  --color-link-hover: #647C91;
+
+  /* Borders & states */
+  --color-border-default: #E2E8F0;
+  --color-border-strong: #CBD5E1;
+  --color-divider: #EDF1F5;
+  --color-focus-ring: #334155;
+  --color-hover-bg: #EAEFF4;
+  --color-selected-bg: #DFE5EB;
+
+  /* Feedback colors */
+  --color-success: #1E6B43;
+  --color-success-content: #FFFFFF;
+  --color-success-fg: #FFFFFF;
+  --color-success-bg: #F0FDF4;
+  --color-success-border: #BBF7D0;
+
+  --color-warning: #92400E;
+  --color-warning-content: #FFFFFF;
+  --color-warning-fg: #FFFFFF;
+  --color-warning-bg: #FEFCE8;
+  --color-warning-border: #FEF08A;
+
+  --color-error: #991B1B;
+  --color-error-content: #FFFFFF;
+  --color-error-fg: #FFFFFF;
+  --color-error-bg: #FEF2F2;
+  --color-error-border: #FECACA;
+
+  --color-info: #1D4ED8;
+  --color-info-content: #FFFFFF;
+  --color-info-fg: #FFFFFF;
+  --color-info-bg: #EFF6FF;
+  --color-info-border: #BFDBFE;
 }
 
-/* Autumn Theme (Warm Terracotta, Bronze & Cream) */
-[data-theme="autumn"] {
-  --color-primary: #7c2d12;
-  --color-primary-content: #ffffff;
-  --color-secondary: #9a3412;
-  --color-secondary-content: #ffffff;
-  --color-accent: #c2410c;
-  --color-accent-content: #ffffff;
-  --color-base-100: #ffffff;
-  --color-base-200: #fbf7f4;
-  --color-base-300: #ebd9cf;
-  --color-base-content: #291811;
+/* -------------------------------------------------------------------------
+   Theme 4: Burgundy & Cream
+   Deep Wine Burgundy, Rose Muted & Burnished Ochre
+   ------------------------------------------------------------------------- */
+[data-theme="burgundy-cream"] {
+  /* Core colors */
+  --color-primary: #633B43;
+  --color-primary-hover: #47292F;
+  --color-primary-content: #FFFFFF;
+  --color-primary-fg: #FFFFFF;
+  --color-secondary: #987078;
+  --color-secondary-hover: #7E565E;
+  --color-secondary-content: #FFFFFF;
+  --color-secondary-fg: #FFFFFF;
+  --color-accent: #B99A66;
+  --color-accent-hover: #A3834F;
+  --color-accent-content: #261C1E;
+  --color-accent-fg: #261C1E;
+
+  /* Backgrounds & surfaces */
+  --color-page-bg: #FAF7F2;
+  --color-surface: #FFFFFF;
+  --color-surface-secondary: #F2EAE0;
+  --color-surface-elevated: #FFFFFF;
+  --color-base-100: #FFFFFF;
+  --color-base-200: #FAF7F2;
+  --color-base-300: #EBE2D8;
+  --color-nav-bg: #FFFFFF;
+  --color-header-bg: #FFFFFF;
+  --color-header-utility-bg: #221417;
+  --color-header-utility-text: #D8CFD1;
+  --color-footer-bg: #221417;
+  --color-footer-text: #D8CFD1;
+  --color-footer-border: #B99A66;
+
+  /* Typography */
+  --color-base-content: #382D30;
+  --color-text-main: #382D30;
+  --color-text-secondary: #524045;
+  --color-text-muted: #735D63;
+  --color-text-heading: #633B43;
+  --color-link: #633B43;
+  --color-link-hover: #987078;
+
+  /* Borders & states */
+  --color-border-default: #EBE2D8;
+  --color-border-strong: #D7CABE;
+  --color-divider: #F4ECE3;
+  --color-focus-ring: #633B43;
+  --color-hover-bg: #F4ECE3;
+  --color-selected-bg: #E8DDD2;
+
+  /* Feedback colors */
+  --color-success: #1E6B43;
+  --color-success-content: #FFFFFF;
+  --color-success-fg: #FFFFFF;
+  --color-success-bg: #F0FDF4;
+  --color-success-border: #BBF7D0;
+
+  --color-warning: #92400E;
+  --color-warning-content: #FFFFFF;
+  --color-warning-fg: #FFFFFF;
+  --color-warning-bg: #FEFCE8;
+  --color-warning-border: #FEF08A;
+
+  --color-error: #991B1B;
+  --color-error-content: #FFFFFF;
+  --color-error-fg: #FFFFFF;
+  --color-error-bg: #FEF2F2;
+  --color-error-border: #FECACA;
+
+  --color-info: #1D4ED8;
+  --color-info-content: #FFFFFF;
+  --color-info-fg: #FFFFFF;
+  --color-info-bg: #EFF6FF;
+  --color-info-border: #BFDBFE;
 }
 
-/* Luxury Theme (Distinguished Obsidian & Burnished Gold) */
-[data-theme="luxury"] {
-  --color-primary: #1e293b;
-  --color-primary-content: #f8fafc;
-  --color-secondary: #b58a48;
-  --color-secondary-content: #0f172a;
-  --color-accent: #d97706;
-  --color-accent-content: #ffffff;
-  --color-base-100: #0f172a;
-  --color-base-200: #1e293b;
-  --color-base-300: #334155;
-  --color-base-content: #f1f5f9;
-}
+/* -------------------------------------------------------------------------
+   Theme 5: Teal & Stone
+   Deep Ocean Teal, Muted Verdigris & Soft Ochre
+   ------------------------------------------------------------------------- */
+[data-theme="teal-stone"] {
+  /* Core colors */
+  --color-primary: #244B4B;
+  --color-primary-hover: #163232;
+  --color-primary-content: #FFFFFF;
+  --color-primary-fg: #FFFFFF;
+  --color-secondary: #588481;
+  --color-secondary-hover: #426B68;
+  --color-secondary-content: #FFFFFF;
+  --color-secondary-fg: #FFFFFF;
+  --color-accent: #C5A46A;
+  --color-accent-hover: #AF8E53;
+  --color-accent-content: #182525;
+  --color-accent-fg: #182525;
 
-/* Business Dark Theme */
-[data-theme="business"] {
-  --color-primary: #3b82f6;
-  --color-primary-content: #ffffff;
-  --color-secondary: #64748b;
-  --color-secondary-content: #ffffff;
-  --color-accent: #f59e0b;
-  --color-accent-content: #0f172a;
-  --color-base-100: #1e232a;
-  --color-base-200: #15191e;
-  --color-base-300: #2b3038;
-  --color-base-content: #e2e8f0;
-}
+  /* Backgrounds & surfaces */
+  --color-page-bg: #F5F7F6;
+  --color-surface: #FFFFFF;
+  --color-surface-secondary: #E7ECEB;
+  --color-surface-elevated: #FFFFFF;
+  --color-base-100: #FFFFFF;
+  --color-base-200: #F5F7F6;
+  --color-base-300: #E0E7E6;
+  --color-nav-bg: #FFFFFF;
+  --color-header-bg: #FFFFFF;
+  --color-header-utility-bg: #112323;
+  --color-header-utility-text: #CDD7D6;
+  --color-footer-bg: #112323;
+  --color-footer-text: #CDD7D6;
+  --color-footer-border: #C5A46A;
 
-/* Night Theme */
-[data-theme="night"] {
-  --color-primary: #38bdf8;
-  --color-primary-content: #0f172a;
-  --color-secondary: #818cf8;
-  --color-secondary-content: #0f172a;
-  --color-accent: #f472b6;
-  --color-accent-content: #0f172a;
-  --color-base-100: #0f172a;
-  --color-base-200: #090e17;
-  --color-base-300: #1e293b;
-  --color-base-content: #e2e8f0;
+  /* Typography */
+  --color-base-content: #293838;
+  --color-text-main: #293838;
+  --color-text-secondary: #3E5252;
+  --color-text-muted: #587070;
+  --color-text-heading: #244B4B;
+  --color-link: #244B4B;
+  --color-link-hover: #588481;
+
+  /* Borders & states */
+  --color-border-default: #E0E7E6;
+  --color-border-strong: #C6D4D2;
+  --color-divider: #EDF3F2;
+  --color-focus-ring: #244B4B;
+  --color-hover-bg: #EBF0EF;
+  --color-selected-bg: #DCE4E3;
+
+  /* Feedback colors */
+  --color-success: #1E6B43;
+  --color-success-content: #FFFFFF;
+  --color-success-fg: #FFFFFF;
+  --color-success-bg: #F0FDF4;
+  --color-success-border: #BBF7D0;
+
+  --color-warning: #92400E;
+  --color-warning-content: #FFFFFF;
+  --color-warning-fg: #FFFFFF;
+  --color-warning-bg: #FEFCE8;
+  --color-warning-border: #FEF08A;
+
+  --color-error: #991B1B;
+  --color-error-content: #FFFFFF;
+  --color-error-fg: #FFFFFF;
+  --color-error-bg: #FEF2F2;
+  --color-error-border: #FECACA;
+
+  --color-info: #1D4ED8;
+  --color-info-content: #FFFFFF;
+  --color-info-fg: #FFFFFF;
+  --color-info-bg: #EFF6FF;
+  --color-info-border: #BFDBFE;
 }
 
 /* =========================================================================
-   2. Global Component Overrides — Nakashara Institutional CMS
+   2. Tailwind CSS v4 Theme Token Bindings
+   ========================================================================= */
+
+@theme {
+  --color-primary: var(--color-primary);
+  --color-primary-hover: var(--color-primary-hover);
+  --color-primary-content: var(--color-primary-content);
+  --color-primary-fg: var(--color-primary-fg);
+  --color-secondary: var(--color-secondary);
+  --color-secondary-hover: var(--color-secondary-hover);
+  --color-secondary-content: var(--color-secondary-content);
+  --color-secondary-fg: var(--color-secondary-fg);
+  --color-accent: var(--color-accent);
+  --color-accent-hover: var(--color-accent-hover);
+  --color-accent-content: var(--color-accent-content);
+  --color-accent-fg: var(--color-accent-fg);
+
+  --color-base-100: var(--color-base-100);
+  --color-base-200: var(--color-base-200);
+  --color-base-300: var(--color-base-300);
+  --color-base-content: var(--color-base-content);
+
+  --color-surface: var(--color-surface);
+  --color-surface-secondary: var(--color-surface-secondary);
+  --color-surface-elevated: var(--color-surface-elevated);
+  --color-page-bg: var(--color-page-bg);
+  --color-nav-bg: var(--color-nav-bg);
+  --color-header-bg: var(--color-header-bg);
+  --color-footer-bg: var(--color-footer-bg);
+  --color-footer-text: var(--color-footer-text);
+  --color-footer-border: var(--color-footer-border);
+
+  --color-text-main: var(--color-text-main);
+  --color-text-secondary: var(--color-text-secondary);
+  --color-text-muted: var(--color-text-muted);
+  --color-text-heading: var(--color-text-heading);
+  --color-link: var(--color-link);
+  --color-link-hover: var(--color-link-hover);
+
+  --color-border-default: var(--color-border-default);
+  --color-border-strong: var(--color-border-strong);
+  --color-divider: var(--color-divider);
+  --color-focus-ring: var(--color-focus-ring);
+  --color-hover-bg: var(--color-hover-bg);
+  --color-selected-bg: var(--color-selected-bg);
+
+  --color-success: var(--color-success);
+  --color-success-content: var(--color-success-content);
+  --color-warning: var(--color-warning);
+  --color-warning-content: var(--color-warning-content);
+  --color-error: var(--color-error);
+  --color-error-content: var(--color-error-content);
+  --color-info: var(--color-info);
+  --color-info-content: var(--color-info-content);
+}
+
+/* =========================================================================
+   3. Global Component Overrides — Nakashara Institutional CMS
    Restrained radii, subtle borders, high-contrast states, zero jumpy motion.
    ========================================================================= */
 
@@ -146,6 +488,39 @@
 
   .btn:active {
     box-shadow: none;
+  }
+
+  .btn-primary {
+    background-color: var(--color-primary);
+    color: var(--color-primary-content);
+    border-color: var(--color-primary);
+  }
+
+  .btn-primary:hover {
+    background-color: var(--color-primary-hover);
+    border-color: var(--color-primary-hover);
+  }
+
+  .btn-secondary {
+    background-color: var(--color-secondary);
+    color: var(--color-secondary-content);
+    border-color: var(--color-secondary);
+  }
+
+  .btn-secondary:hover {
+    background-color: var(--color-secondary-hover);
+    border-color: var(--color-secondary-hover);
+  }
+
+  .btn-accent {
+    background-color: var(--color-accent);
+    color: var(--color-accent-content);
+    border-color: var(--color-accent);
+  }
+
+  .btn-accent:hover {
+    background-color: var(--color-accent-hover);
+    border-color: var(--color-accent-hover);
   }
 
   .btn-lg {
@@ -171,25 +546,25 @@
   select:focus-visible,
   textarea:focus-visible,
   .btn:focus-visible {
-    outline: 2px solid var(--color-primary);
+    outline: 2px solid var(--color-focus-ring);
     outline-offset: 2px;
   }
 
   /* Ghost buttons */
   .btn-ghost:hover {
-    background-color: color-mix(in oklab, var(--color-base-content) 7%, transparent);
+    background-color: var(--color-hover-bg);
   }
 
   /* --- Cards --------------------------------------------------------------- */
   .card {
     border-radius: 0.75rem; /* rounded-xl */
-    border: 1px solid var(--color-base-300);
-    background-color: var(--color-base-100);
+    border: 1px solid var(--color-border-default);
+    background-color: var(--color-surface);
     transition: border-color 0.15s ease, box-shadow 0.15s ease;
   }
 
   .card:hover {
-    border-color: color-mix(in oklab, var(--color-primary) 30%, var(--color-base-300));
+    border-color: var(--color-border-strong);
     box-shadow: 0 4px 12px -2px rgb(0 0 0 / 0.06);
   }
 
@@ -201,6 +576,24 @@
     letter-spacing: 0.025em;
     padding-left: 0.625rem;
     padding-right: 0.625rem;
+  }
+
+  .badge-primary {
+    background-color: var(--color-primary);
+    color: var(--color-primary-content);
+    border-color: var(--color-primary);
+  }
+
+  .badge-secondary {
+    background-color: var(--color-secondary);
+    color: var(--color-secondary-content);
+    border-color: var(--color-secondary);
+  }
+
+  .badge-accent {
+    background-color: var(--color-accent);
+    color: var(--color-accent-content);
+    border-color: var(--color-accent);
   }
 
   /* --- Form Inputs -------------------------------------------------------- */
@@ -218,9 +611,9 @@
   .textarea {
     width: 100%;
     border-radius: 0.5rem;
-    border: 1px solid var(--color-base-300);
-    background-color: var(--color-base-100);
-    color: var(--color-base-content);
+    border: 1px solid var(--color-border-default);
+    background-color: var(--color-surface);
+    color: var(--color-text-main);
     padding: 0.625rem 0.875rem;
     font-size: 0.875rem;
     line-height: 1.25rem;
@@ -239,22 +632,23 @@
   .input:focus,
   .select:focus,
   .textarea:focus {
-    border-color: var(--color-primary);
-    box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-primary) 15%, transparent);
+    border-color: var(--color-focus-ring);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-focus-ring) 15%, transparent);
     outline: none;
   }
 
   /* --- Dropdowns & Menus -------------------------------------------------- */
   .dropdown-content {
     border-radius: 0.75rem;
-    border: 1px solid var(--color-base-300);
-    background-color: var(--color-base-100);
+    border: 1px solid var(--color-border-default);
+    background-color: var(--color-surface-elevated);
     box-shadow: 0 10px 25px -5px rgb(0 0 0 / 0.10);
   }
 
   /* --- Alerts ------------------------------------------------------------- */
   .alert {
     border-radius: 0.5rem;
+    border: 1px solid transparent;
   }
 
   /* --- Tables ------------------------------------------------------------- */
@@ -265,23 +659,37 @@
   .table th {
     font-family: var(--font-serif, Georgia, serif);
     font-weight: 600;
-    color: var(--color-base-content);
-    background-color: var(--color-base-200);
-    border-bottom: 2px solid var(--color-base-300);
+    color: var(--color-text-heading);
+    background-color: var(--color-surface-secondary);
+    border-bottom: 2px solid var(--color-border-default);
   }
 
   .table td {
-    border-bottom: 1px solid var(--color-base-300);
+    border-bottom: 1px solid var(--color-border-default);
+  }
+
+  /* --- Tabs --------------------------------------------------------------- */
+  .tabs-bordered .tab-active,
+  .tabs-bordered .tab[aria-selected="true"] {
+    border-bottom-color: var(--color-primary);
+    color: var(--color-primary);
+    font-weight: 600;
+  }
+
+  /* --- Institutional Footer & Utility Styles ------------------------------ */
+  .institutional-footer {
+    background-color: var(--color-footer-bg);
+    color: var(--color-footer-text);
   }
 }
 
 /* =========================================================================
-   3. Prose & Rich Text Typography (.richtext)
+   4. Prose & Rich Text Typography (.richtext)
    Editorial layout for long-form policies, articles, and research pages.
    ========================================================================= */
 
 .richtext {
-  color: var(--color-base-content);
+  color: var(--color-text-main);
   line-height: 1.75;
 }
 
@@ -289,7 +697,7 @@
   font-family: var(--font-serif, Georgia, serif);
   font-size: 2rem;
   font-weight: 700;
-  color: var(--color-base-content);
+  color: var(--color-text-heading);
   margin-top: 2rem;
   margin-bottom: 1rem;
   line-height: 1.25;
@@ -299,7 +707,7 @@
   font-family: var(--font-serif, Georgia, serif);
   font-size: 1.5rem;
   font-weight: 700;
-  color: var(--color-base-content);
+  color: var(--color-text-heading);
   margin-top: 2rem;
   margin-bottom: 0.75rem;
   line-height: 1.3;
@@ -309,7 +717,7 @@
   font-family: var(--font-serif, Georgia, serif);
   font-size: 1.25rem;
   font-weight: 600;
-  color: var(--color-base-content);
+  color: var(--color-text-heading);
   margin-top: 1.5rem;
   margin-bottom: 0.5rem;
 }
@@ -318,7 +726,7 @@
   font-family: var(--font-serif, Georgia, serif);
   font-size: 1.125rem;
   font-weight: 600;
-  color: var(--color-base-content);
+  color: var(--color-text-heading);
   margin-top: 1.25rem;
   margin-bottom: 0.5rem;
 }
@@ -326,18 +734,18 @@
 .richtext p {
   margin-bottom: 1.125rem;
   line-height: 1.75;
-  color: color-mix(in oklab, var(--color-base-content) 85%, transparent);
+  color: var(--color-text-secondary);
 }
 
 .richtext a {
-  color: var(--color-primary);
+  color: var(--color-link);
   text-decoration: underline;
   text-underline-offset: 3px;
   font-weight: 500;
 }
 
 .richtext a:hover {
-  color: var(--color-secondary);
+  color: var(--color-link-hover);
 }
 
 .richtext ul {
@@ -360,13 +768,13 @@
 .richtext blockquote {
   border-left: 3px solid var(--color-accent);
   padding-left: 1.25rem;
-  color: color-mix(in oklab, var(--color-base-content) 75%, transparent);
+  color: var(--color-text-muted);
   font-style: italic;
   margin: 1.75rem 0;
 }
 
 .richtext hr {
-  border-top: 1px solid var(--color-base-300);
+  border-top: 1px solid var(--color-border-default);
   margin: 2rem 0;
 }
 
@@ -378,20 +786,21 @@
 }
 
 .richtext th {
-  background-color: var(--color-base-200);
+  background-color: var(--color-surface-secondary);
   padding: 0.75rem 1rem;
   text-align: left;
   font-weight: 600;
-  border-bottom: 2px solid var(--color-base-300);
+  color: var(--color-text-heading);
+  border-bottom: 2px solid var(--color-border-default);
 }
 
 .richtext td {
   padding: 0.75rem 1rem;
-  border-bottom: 1px solid var(--color-base-300);
+  border-bottom: 1px solid var(--color-border-default);
 }
 
 /* =========================================================================
-   4. Section Markers & Utility Classes
+   5. Section Markers & Utility Classes
    ========================================================================= */
 
 .section-accent-rule {
@@ -404,7 +813,7 @@
 }
 
 /* =========================================================================
-   5. Print Stylesheet
+   6. Print Stylesheet
    ========================================================================= */
 
 @media print {
@@ -443,7 +852,7 @@
 }
 
 /* =========================================================================
-   6. Reduced Motion Accessibility Support
+   7. Reduced Motion Accessibility Support
    ========================================================================= */
 
 @media (prefers-reduced-motion: reduce) {

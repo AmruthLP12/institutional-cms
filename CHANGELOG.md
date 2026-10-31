@@ -7,6 +7,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [Unreleased] - 2026-10-31
+
+### Added
+- **Institutional Design Themes & Admin-Managed Dynamic Theme Selection**:
+  - Implemented 5 calm, accessible institutional design themes compliant with WCAG 2.2 AA:
+    - `academic-blue` (Default): Authoritative scholarly navy with antique gold highlights.
+    - `sage-ivory`: Organic botanical green with soft ivory and wheat accents.
+    - `slate-steel`: Disciplined modern architectural slate with warm bronze highlights.
+    - `burgundy-cream`: Distinguished editorial burgundy with cream surfaces and gold accents.
+    - `teal-stone`: Refined intellectual teal with warm sandstone accents.
+  - Centralized theme architecture in `apps.site_settings.themes` with metadata, palette definitions, and choice validators.
+  - Interactive Wagtail Admin widget `ThemeRadioSelect` (`apps.site_settings.widgets`) with visual selection cards, color swatches, active indicator badges, and compact live component previews (Headings, Body text, Primary/Secondary CTA buttons, Badges, Links, Form Inputs).
+  - Multi-site theme isolation ensuring individual Wagtail sites maintain independent active themes.
+  - Database migration (`0008_alter_sitesettings_theme`) migrating legacy records from `corporate` to `academic-blue`.
+  - Comprehensive automated test suite `tests/test_institutional_themes.py` (8/8 tests passing; 64/64 total regression suite passing).
+
+### Changed
+- **DaisyUI Theme System Deprecation & Optimization**:
+  - Replaced `@plugin "daisyui" { themes: all; }` with `themes: false;` in `theme/static_src/src/styles.css`, eliminating all 35+ built-in themes and palettes while retaining accessible structural component utilities (`.btn`, `.card`, `.badge`, `.table`, `.tabs`, `.alert`).
+  - Reduced compiled CSS bundle from 284 KB to 196 KB.
+  - Removed arbitrary inline CSS hex style injection from `templates/base.html`, switching strictly to server-rendered `<html data-theme="...">` with safe default fallback.
+  - Replaced hardcoded amber utility classes (`text-amber-*`, `bg-amber-*`, `border-amber-*`) across `footer.html`, `home_page.html`, `social_links.html`, `contact_details.html`, and `person_page.html` with semantic design tokens (`text-accent`, `bg-accent`, `border-accent`).
+  - Updated `docs/theming.md` with complete documentation of the five institutional palettes, Wagtail admin selection, CSS tokens, and future theme extension guide.
+
 ## [Unreleased] - 2026-10-09
 
 ### Added

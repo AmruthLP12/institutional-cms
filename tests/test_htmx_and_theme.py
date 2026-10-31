@@ -86,12 +86,12 @@ class TestHtmxAndTheme:
 
     def test_site_settings_theme_selection(self, client: Client, seeded_site):
         settings = SiteSettings.for_site(seeded_site)
-        settings.theme = "emerald"
+        settings.theme = "sage-ivory"
         settings.save()
 
         resp = client.get(seeded_site.root_page.url)
         assert resp.status_code == 200
-        assert b'data-theme="emerald"' in resp.content
+        assert b'data-theme="sage-ivory"' in resp.content
 
     def test_quick_links_internal_pages(self, seeded_site):
         home = HomePage.objects.first()

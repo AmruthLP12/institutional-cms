@@ -17,6 +17,14 @@ from wagtail.models import Orderable, Page
 from wagtail.snippets.models import register_snippet
 
 from apps.core.models import ScheduledVisibilityModel
+from apps.site_settings.themes import (
+    DEFAULT_THEME,
+    THEME_CHOICES,
+    VALID_THEMES,
+    get_active_theme_identifier,
+    get_theme,
+)
+from apps.site_settings.widgets import ThemeRadioSelect
 
 HEX_COLOR_VALIDATOR = RegexValidator(
     regex=r"^#(?:[0-9a-fA-F]{3}){1,2}$",
@@ -52,22 +60,12 @@ class SiteSettings(BaseSiteSetting):
     )
 
     # Appearance & Theme
-    THEME_CHOICES = [
-        ("corporate", "Nakashara Oxford (Institutional Navy, Sage & Gold)"),
-        ("emerald", "Emerald (Academic Forest Green & Mint)"),
-        ("nord", "Nord (Modern Arctic Slate & Frost)"),
-        ("winter", "Winter (Crisp Professional Cyan & Ice)"),
-        ("autumn", "Autumn (Warm Terracotta, Bronze & Cream)"),
-        ("luxury", "Luxury (Distinguished Obsidian & Burnished Gold)"),
-        ("business", "Business (High-Contrast Corporate Dark)"),
-        ("night", "Night (Deep Modern Academic Dark)"),
-        ("light", "Light (Clean Editorial Minimalist)"),
-    ]
+    THEME_CHOICES = THEME_CHOICES
     theme = models.CharField(
         max_length=50,
         choices=THEME_CHOICES,
-        default="corporate",
-        help_text="Color palette and theme for the entire website.",
+        default=DEFAULT_THEME,
+        help_text="Active color palette and visual design theme for the public website.",
     )
     custom_primary_color = models.CharField(
         max_length=30,
@@ -306,11 +304,10 @@ class SiteSettings(BaseSiteSetting):
     theme_panels = [
         MultiFieldPanel(
             [
-                FieldPanel("theme"),
-                FieldPanel("custom_primary_color"),
-                FieldPanel("custom_accent_color"),
+                FieldPanel("theme", widget=ThemeRadioSelect),
             ],
-            heading="Theme & Appearance",
+            heading="Website Design Theme",
+            help_text="Select one of the five calm, accessible institutional themes. Changes apply immediately to all public pages upon saving.",
         ),
     ]
 
@@ -440,6 +437,26 @@ class SiteSettings(BaseSiteSetting):
         if self.instagram_url:
             links.append({"name": "Instagram", "url": self.instagram_url, "platform": "instagram"})
         return links
+
+    @property
+    def active_theme(self) -> str:
+        """
+        Return validated active theme identifier ('academic-blue', 'sage-ivory', etc.).
+        Safely falls back to DEFAULT_THEME ('academic-blue') if missing, empty, or invalid.
+        """
+        return get_active_theme_identifier(self.theme)
+
+    @property
+    def theme_meta(self) -> dict:
+        """
+        Return the centralized theme metadata dictionary for the currently active theme.
+        """
+        return get_theme(self.active_theme)
+
+    def clean(self):
+        super().clean()
+        if not self.theme or self.theme not in VALID_THEMES:
+            self.theme = DEFAULT_THEME
 
     class Meta:
         verbose_name = "Site Settings"

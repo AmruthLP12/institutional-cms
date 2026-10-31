@@ -81,8 +81,8 @@
                  class="max-w-3xl">
 
               <!-- Badge Tag -->
-              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-400/15 border border-amber-400/30 text-amber-300 text-xs font-semibold uppercase tracking-wider mb-5 backdrop-blur-xs">
-                <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent/20 border border-accent/40 text-accent text-xs font-semibold uppercase tracking-wider mb-5 backdrop-blur-xs">
+                <span class="w-2 h-2 rounded-full bg-accent animate-pulse"></span>
                 {{ slide.tag|default:"Featured Program" }}
               </div>
 
@@ -102,7 +102,7 @@
               <div class="flex flex-wrap items-center gap-4">
                 {% if slide.cta_label or page.hero_cta_label %}
                   <a href="{{ slide.get_cta_href|default:page.hero_cta_href }}"
-                     class="btn bg-amber-500 hover:bg-amber-400 text-slate-950 border-none font-semibold px-6 shadow-lg hover:shadow-amber-500/20 transition-all rounded-xl">
+                     class="btn bg-accent hover:bg-accent/90 text-accent-content border-none font-semibold px-6 shadow-lg transition-all rounded-xl">
                     {{ slide.cta_label|default:page.hero_cta_label|default:"Explore Institutional Programs" }} &rarr;
                   </a>
                 {% endif %}
@@ -132,7 +132,7 @@
           {% for slide in slides %}
             <button @click="goTo({{ forloop.counter0 }})"
                     class="h-2 rounded-full transition-all"
-                    :class="current === {{ forloop.counter0 }} ? 'w-6 bg-amber-400' : 'w-2 bg-white/40 hover:bg-white/70'"
+                    :class="current === {{ forloop.counter0 }} ? 'w-6 bg-accent' : 'w-2 bg-white/40 hover:bg-white/70'"
                     aria-label="Go to slide {{ forloop.counter }}">
             </button>
           {% endfor %}
@@ -169,8 +169,8 @@
       {% endif %}
 
       <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28 lg:py-32 flex flex-col items-start justify-center">
-        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-400/15 border border-amber-400/30 text-amber-300 text-xs font-semibold uppercase tracking-wider mb-6 backdrop-blur-xs">
-          <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent/20 border border-accent/40 text-accent text-xs font-semibold uppercase tracking-wider mb-6 backdrop-blur-xs">
+          <span class="w-2 h-2 rounded-full bg-accent animate-pulse"></span>
           Official Institutional Portal
         </div>
 
@@ -186,7 +186,7 @@
 
         <div class="flex flex-wrap items-center gap-4">
           <a href="{{ page.hero_cta_href }}"
-             class="btn bg-amber-500 hover:bg-amber-400 text-slate-950 border-none font-semibold px-6 shadow-lg hover:shadow-amber-500/20 transition-all rounded-xl">
+             class="btn bg-accent hover:bg-accent/90 text-accent-content border-none font-semibold px-6 shadow-lg transition-all rounded-xl">
             {{ page.hero_cta_label|default:"Explore Institutional Programs" }} &rarr;
           </a>
           <a href="/about/"
@@ -352,7 +352,7 @@
             <article class="p-4 bg-base-100 border border-base-200 rounded-2xl shadow-xs hover:border-secondary/50 hover:shadow-sm transition-all flex gap-4 items-start">
               <!-- Date Badge -->
               <div class="shrink-0 w-12 h-14 bg-slate-900 text-white rounded-xl flex flex-col items-center justify-center text-center shadow-xs">
-                <span class="text-[10px] uppercase font-bold tracking-wider text-amber-400 leading-none mb-1">{{ ev.start_datetime|date:"M" }}</span>
+                <span class="text-[10px] uppercase font-bold tracking-wider text-accent leading-none mb-1">{{ ev.start_datetime|date:"M" }}</span>
                 <span class="text-lg font-bold font-serif leading-none">{{ ev.start_datetime|date:"d" }}</span>
               </div>
               <div class="grow min-w-0">
@@ -378,7 +378,7 @@
 
       <!-- Work & Collaborate Card (Deep Slate) -->
       <div class="mt-8 p-6 bg-slate-900 text-slate-100 rounded-2xl shadow-md border border-slate-800">
-        <div class="w-8 h-8 rounded-xl bg-amber-400/20 text-amber-400 flex items-center justify-center mb-3">
+        <div class="w-8 h-8 rounded-xl bg-accent/20 text-accent flex items-center justify-center mb-3">
           <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
           </svg>

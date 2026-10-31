@@ -1,339 +1,295 @@
-# Theme & Styling Guide
+# Institutional Theming & Styling Guide
 
-This guide explains how the dynamic theming and styling architecture works in the Nakashara Institutional CMS, and provides step-by-step instructions for developers to add, remove, or customize themes and component styles.
+This guide explains the institutional theming architecture in the Nakashara Institutional CMS, detailing the five calm, accessible design themes, admin-managed theme selection, CSS design tokens, and instructions for developers to extend or customize themes.
 
 ---
 
 ## 1. Architecture Overview
 
-Nakashara CMS uses a modern, token-driven theming architecture combining **Wagtail Site Settings**, **Tailwind CSS v4**, and **DaisyUI v5**.
+Nakashara CMS uses a server-rendered, token-driven theming architecture combining **Wagtail Site Settings**, **Tailwind CSS v4 (CSS-first configuration)**, and **DaisyUI v5 component primitives** (with built-in themes disabled).
 
-The core design principle is **authoritative institutional elegance with zero hardcoded brand colors in templates**. All UI components consume semantic CSS variables and tokens (`primary`, `secondary`, `accent`, `base-100`, `base-200`, `base-300`, `base-content`, etc.). When a theme changes in the Wagtail Admin, the entire site instantly reflects the new color palette without recompiling CSS or redeploying code.
+The core design principle is **authoritative institutional elegance with zero hardcoded brand colors in templates**. All UI components consume semantic design tokens (`primary`, `secondary`, `accent`, `page-bg`, `base-100`, `base-200`, `base-300`, `base-content`, `heading`, `link`, etc.). When an administrator selects a theme in Wagtail Admin, the public website immediately reflects the selected theme server-side without rebuilding static assets or causing client-side theme flash.
 
 ```mermaid
 flowchart TD
-    Admin["Wagtail Admin (Settings > Site Settings)"] -->|"Selects curated institutional theme or validated hex override"| DB[("Database (SiteSettings)")]
+    Admin["Wagtail Admin (Settings > Site Settings)"] -->|"Selects institutional theme via visual cards"| DB[("Database (SiteSettings.theme)")]
     DB -->|"Injected via Wagtail context"| BaseTpl["templates/base.html"]
-    BaseTpl -->|"Sets data-theme='...' & validated CSS variables on <html>"| RootHTML["<html data-theme='corporate' style='...'>"]
-    RootHTML -->|"Binds CSS variables (--color-primary, --color-secondary, etc.)"| DaisyUI["DaisyUI v5 CSS Engine"]
-    DaisyUI -->|"Applies semantic tokens to utilities"| Components["UI Components (.btn-primary, .bg-base-100, .border-base-300)"]
+    BaseTpl -->|"Sets validated data-theme on <html>"| RootHTML["<html data-theme='academic-blue'>"]
+    RootHTML -->|"Activates semantic tokens in styles.css"| CSSTokens["CSS Custom Properties (:root / [data-theme])"]
+    CSSTokens -->|"Mapped into Tailwind v4 @theme & components"| Components["UI Components (.btn-primary, .card, tables, forms, etc.)"]
     Components -->|"WCAG 2.2 AA compliant rendering"| Browser["End-User Browser"]
 ```
 
 ### Key Architectural Pillars
 
-1. **Institutional Color Palette & 50–900 Tonal Scale**:
-   - **Primary** (`#24466B` / Oxford Navy): Anchor color for identity, navigation accents, primary buttons, and key headings.
-   - **Secondary** (`#52766F` / Academic Sage): Calm complementary tone for status tags, secondary badges, and subtle section accents.
-   - **Accent** (`#B58A48` / Antique Gold): Distinctive highlight for award labels, quote borders, and featured badges.
-   - **Surfaces**:
-     - `base-100` (`#FFFFFF`): Pure crisp background for reading clarity.
-     - `base-200` (`#F5F4EF`): Warm off-white surface for callout blocks, table headers, and alternating rows.
-     - `base-300` (`#E2E4E1`): Restrained light gray-green divider border ensuring sharp structure without harsh lines.
-   - **Typography Content**:
-     - `base-content` (`#202B36`): High-contrast charcoal slate ensuring WCAG 2.2 AAA contrast ratio against white surfaces.
-     - Muted text: `text-base-content/75` and `text-base-content/60` (minimum 4.8:1 contrast).
+1. **DaisyUI Built-in Theme System Removed**:
+   - DaisyUI v5 plugin is configured with `themes: false;`.
+   - All 35+ built-in DaisyUI palettes (`corporate`, `emerald`, `nord`, `dracula`, `luxury`, etc.) are completely excluded.
+   - DaisyUI component utilities (`.btn`, `.card`, `.badge`, `.table`, `.tabs`, `.alert`) are retained because they provide clean, accessible structural primitives while delegating all color resolution to project-owned semantic design tokens.
 
-2. **Typography System**:
-   - **Display / Headings**: Editorial serif typography (`font-serif`, Source Serif 4 / Georgia fallback) with tracking-tight and restrained weights.
-   - **Body / Interface**: Clean grotesque sans-serif (`font-sans`, Inter / Plus Jakarta Sans / system-ui fallback) with optimized line heights (`leading-relaxed`).
-   - **Code / Identifiers**: Precise monospace (`font-mono`) for document numbers, policy codes, and tender IDs.
+2. **Centralized Python Theme Definitions (`apps/site_settings/themes.py`)**:
+   - Single source of truth for theme identifiers, human-readable names, descriptions, and color swatches.
+   - Provides `VALID_THEMES`, `DEFAULT_THEME = "academic-blue"`, and validation helper `is_valid_theme(theme_id)`.
 
-3. **`apps.site_settings.models.SiteSettings`**:
-   A Wagtail `BaseSiteSetting` registered model providing administrative controls:
-   - `theme`: A dropdown selection from curated institutional palettes (e.g., `corporate`, `emerald`, `nord`, `autumn`, `luxury`, etc.).
-   - `custom_primary_color`: Regex-validated hex code string (e.g., `#24466B`) with server-side validation against `^#(?:[0-9a-fA-F]{3}){1,2}$`.
-   - `custom_accent_color`: Regex-validated hex code string (e.g., `#B58A48`).
+3. **Visual Wagtail Admin Selector (`apps/site_settings/widgets.py`)**:
+   - `ThemeRadioSelect` renders interactive theme selection cards in the admin panel.
+   - Displays human-readable titles, descriptions, horizontal color swatches, active theme badge, and a compact live component preview (heading, body, primary button, secondary button, badge, link, input field) styled directly with each theme's CSS tokens.
 
-4. **Root HTML Injection (`templates/base.html`)**:
-   The root `<html>` element dynamically receives the `data-theme` attribute and any validated inline CSS variable overrides:
-   ```html
-   <html lang="en" data-theme="{{ site_settings.theme|default:'corporate' }}" class="h-full"
-     {% if site_settings.custom_primary_color or site_settings.custom_accent_color %}
-       style="{% if site_settings.custom_primary_color %}--color-primary: {{ site_settings.custom_primary_color }}; --p: {{ site_settings.custom_primary_color }};{% endif %}{% if site_settings.custom_accent_color %}--color-secondary: {{ site_settings.custom_accent_color }}; --s: {{ site_settings.custom_accent_color }}; --color-accent: {{ site_settings.custom_accent_color }}; --a: {{ site_settings.custom_accent_color }};{% endif %}"
-     {% endif %}>
-   ```
+4. **Safe Server-Side Rendering (`templates/base.html`)**:
+   - Renders `<html lang="{{ page.locale.language_code|default:'en' }}" data-theme="{{ site_settings.active_theme|default:'academic-blue' }}" ...>`.
+   - Never injects unvalidated or arbitrary CSS into the DOM.
+   - Invalid or missing theme values safely fall back to `academic-blue`.
 
-5. **DaisyUI v5 Plugin Configuration (`theme/static_src/src/styles.css`)**:
-   Uses the Tailwind v4 `@plugin` directive and explicit theme color rules:
-   ```css
-   @import "tailwindcss";
-   @plugin "daisyui" {
-     themes: all;
-   }
-
-   @source "../../../templates/**/*.html";
-   @source "../../../apps/**/*.py";
-   @source "../../templates/**/*.html";
-   ```
-
-6. **Semantic Token Consumption in Templates**:
-   Templates rely exclusively on semantic classes:
-   - `bg-primary`, `text-primary`, `text-primary-content`
-   - `bg-secondary`, `text-secondary`, `badge-secondary`
-   - `bg-base-100` (main surface), `bg-base-200` (cards/sub-surfaces), `bg-base-300` (borders/dividers)
-   - `text-base-content` (main text), `text-base-content/80` (body text), `text-base-content/60` (subtle captions)
-   - `btn-primary`, `btn-outline btn-primary`, `btn-ghost`
+5. **Multi-Site Theme Isolation**:
+   - Wagtail `SiteSettings` operates per `Site`. In a multi-tenant institutional setup, each domain or campus site selects its own active theme independently.
 
 ---
 
-## 2. Pre-configured Themes
+## 2. The Five Institutional Themes
 
-The system ships with 9 curated themes suited for institutional and academic use:
+The CMS provides five curated institutional color palettes designed specifically for academic, research, and governance institutions. All themes adhere strictly to **WCAG 2.2 AA contrast standards** (minimum 4.5:1 for body text and 3:1 for large headings and interface controls).
 
-| Theme Name | Style Description | Primary / Base Tone | Best For |
-|---|---|---|---|
-| `corporate` *(Default)* | Nakashara Oxford Navy, Sage & Antique Gold | Oxford Navy (`#24466B`) / Warm Off-White (`#F5F4EF`) | General institutional portals, university headquarters |
-| `emerald` | Academic forest green, mint accents | Deep Emerald (`#1B4D3E`) / Light Cream | Sciences, agriculture, ecological & forestry institutes |
-| `nord` | Arctic slate, muted frost blues | Nord Slate (`#2E3440`) / Snow Flurry | Technology, medical research, northern institutes |
-| `winter` | Crisp cyan, bright icy highlights | Crisp Indigo / Ice White | Clinical institutions, hospitals, labs |
-| `business` | High-contrast corporate dark mode | Deep Charcoal / Warm Amber | Executive boards, business schools, foundation offices |
-| `night` | Ultra-deep dark blue palette | Deep Cobalt / Dark Indigo | Developer docs, astronomy, physics departments |
-| `autumn` | Warm terracotta, bronze, cream | Earth Rust (`#8C3B24`) / Warm Cream | Humanities, historical archives, arts faculties |
-| `luxury` | Deep obsidian, champagne gold | Obsidian / Burnished Gold | Law faculties, distinguished honors, endowments |
-| `light` | Bright, clean minimalist palette | Slate Blue / Crisp White | Standard high-readability public information |
+| Theme Identifier | Name | Visual Direction | Primary Tone | Page Background | Surface | Contrast Ratio |
+|---|---|---|---|---|---|---|
+| `academic-blue` *(Default)* | Academic Blue | Authoritative, scholarly, and timeless institutional navy | `#17365D` (Navy) | `#F7F8FA` | `#FFFFFF` | 14.6:1 (text:surface)<br>12.2:1 (primary fg:bg) |
+| `sage-ivory` | Sage & Ivory | Organic, grounded, calm botanical tones for environmental and life sciences | `#344B40` (Deep Sage) | `#F5F6F0` | `#FFFFFF` | 13.8:1 (text:surface)<br>10.6:1 (primary fg:bg) |
+| `slate-steel` | Slate & Steel | Disciplined, modern architectural slate for engineering, technology, and governance | `#334155` (Slate) | `#F3F5F7` | `#FFFFFF` | 14.6:1 (text:surface)<br>11.8:1 (primary fg:bg) |
+| `burgundy-cream` | Burgundy & Cream | Rich, distinguished, editorial warmth for arts, law, humanities, and heritage collections | `#633B43` (Burgundy) | `#FAF7F2` | `#FFFFFF` | 15.3:1 (text:surface)<br>10.9:1 (primary fg:bg) |
+| `teal-stone` | Teal & Stone | Refreshing, composed, intellectual teal for public policy, economics, and interdisciplinary institutes | `#244B4B` (Teal) | `#F5F7F6` | `#FFFFFF` | 14.2:1 (text:surface)<br>11.3:1 (primary fg:bg) |
+
+### Color Token Specifications
+
+Each theme implements complete semantic token sets:
+
+- **Core Colors**: `primary`, `primary-hover`, `primary-foreground`, `secondary`, `secondary-hover`, `secondary-foreground`, `accent`, `accent-hover`, `accent-foreground`.
+- **Surfaces**: `page-bg` (main canvas), `surface` / `base-100` (cards, dialogs), `surface-secondary` / `base-200` (subtle panels, table headers), `base-300` (borders, dividers), `surface-elevated` (popovers, dropdowns), `header-bg`, `footer-bg`.
+- **Typography**: `text-main` / `base-content`, `text-secondary`, `text-muted`, `heading`, `link`, `link-hover`.
+- **Borders & Interactive States**: `border-default`, `border-strong`, `divider`, `focus-ring`, `hover-bg`, `selected-bg`.
+- **Feedback Alerts**: `success` (`#1B4D3E`), `warning` (`#92400E`), `error` (`#991B1B`), `info` (`#1E3A8A`).
 
 ---
 
-## 3. How to Add a New Theme
+## 3. How Administrators Change the Active Theme
 
-Follow these steps to add a new theme to the CMS.
+Site administrators change the website theme in real time from the Wagtail Admin:
 
-### Step 1: Choose or Define Your Theme
+1. Log into the Wagtail Admin (`/admin/`).
+2. In the navigation sidebar, go to **Settings** > **Site Settings**.
+3. Under the **Appearance & Theme** tab, locate the **Active Website Theme** section.
+4. Review the visual theme cards. Each card displays:
+   - Radio button for selection
+   - Human-readable theme title and description
+   - Color swatch bar previewing page background, surface, primary, secondary, and accent colors
+   - An "Active Theme" indicator badge on the currently saved theme
+   - A compact component preview demonstrating real typography, primary CTA button, secondary button, badge, link, and input field styled with that theme's palette
+5. Click the radio card of the desired theme.
+6. Click **Save** at the bottom of the page.
+7. Open the public website in your browser. The new theme is immediately applied across all public pages, headers, footers, StreamField blocks, forms, and listings.
 
-#### Option A: Using a Built-in DaisyUI Theme
-DaisyUI v5 provides built-in themes including:
-`light`, `dark`, `cupcake`, `bumblebee`, `emerald`, `corporate`, `synthwave`, `retro`, `cyberpunk`, `valentine`, `halloween`, `garden`, `forest`, `aqua`, `lofi`, `pastel`, `fantasy`, `wireframe`, `black`, `luxury`, `dracula`, `cmyk`, `autumn`, `business`, `acid`, `lemonade`, `night`, `coffee`, `winter`, `dim`, `nord`, `sunset`, `caramellatte`, `abyssal`, `silk`.
+---
 
-If you select an existing DaisyUI theme (e.g. `dracula` or `dim`), proceed directly to Step 2.
+## 4. How Theme Identifiers and CSS Tokens Work
 
-#### Option B: Defining a Custom Institutional Theme
-To define a custom theme with specific brand colors, open `theme/static_src/src/styles.css` and define the custom theme in CSS:
+### Centralized Definitions (`apps/site_settings/themes.py`)
 
-```css
-@import "tailwindcss";
-@plugin "daisyui" {
-  themes: all;
-}
+Theme configuration is defined centrally in Python:
 
-/* Custom Institutional Theme */
-[data-theme="nakashara-custom"] {
-  --color-primary: #1a365d;
-  --color-primary-content: #ffffff;
-  --color-secondary: #c53030;
-  --color-secondary-content: #ffffff;
-  --color-accent: #d69e2e;
-  --color-accent-content: #1a202c;
-  --color-base-100: #ffffff;
-  --color-base-200: #f7fafc;
-  --color-base-300: #e2e8f0;
-  --color-base-content: #2d3748;
+```python
+THEMES: dict[str, ThemeMeta] = {
+    "academic-blue": ThemeMeta(
+        id="academic-blue",
+        name="Academic Blue",
+        description="Authoritative, scholarly, and timeless institutional navy with antique gold accents.",
+        page_bg="#F7F8FA",
+        surface="#FFFFFF",
+        primary="#17365D",
+        secondary="#52749A",
+        accent="#D6A75D",
+        text="#202C3A",
+    ),
+    # ... other themes
 }
 ```
 
-### Step 2: Register the Theme in `apps/site_settings/models.py`
+### CSS Token Declarations (`theme/static_src/src/styles.css`)
 
-Open `apps/site_settings/models.py` and locate `THEME_CHOICES` inside the `SiteSettings` model:
+Themes are defined as CSS custom properties keyed by `[data-theme="<id>"]`:
+
+```css
+:root,
+[data-theme="academic-blue"] {
+  --color-primary: #17365d;
+  --color-primary-hover: #102642;
+  --color-primary-content: #ffffff;
+  --color-secondary: #52749a;
+  --color-secondary-hover: #405d7d;
+  --color-secondary-content: #ffffff;
+  --color-accent: #d6a75d;
+  --color-accent-hover: #c49448;
+  --color-accent-content: #1e2631;
+  --color-page-bg: #f7f8fa;
+  --color-base-100: #ffffff;
+  --color-base-200: #eef2f6;
+  --color-base-300: #d8e0e9;
+  --color-base-content: #202c3a;
+  --color-heading: #17365d;
+  --color-link: #17365d;
+  --color-link-hover: #0f233d;
+  /* ... border, feedback, and surface tokens */
+}
+
+[data-theme="sage-ivory"] {
+  --color-primary: #344b40;
+  /* ... */
+}
+```
+
+### Tailwind CSS v4 `@theme` Binding
+
+Tokens are mapped into Tailwind v4's CSS-first `@theme` block:
+
+```css
+@theme {
+  --color-primary: var(--color-primary);
+  --color-primary-hover: var(--color-primary-hover);
+  --color-primary-content: var(--color-primary-content);
+  --color-secondary: var(--color-secondary);
+  --color-accent: var(--color-accent);
+  --color-page-bg: var(--color-page-bg);
+  --color-base-100: var(--color-base-100);
+  --color-base-200: var(--color-base-200);
+  --color-base-300: var(--color-base-300);
+  --color-base-content: var(--color-base-content);
+  --color-heading: var(--color-heading);
+  --color-link: var(--color-link);
+  --color-link-hover: var(--color-link-hover);
+  --color-border-default: var(--color-border-default);
+  --color-border-strong: var(--color-border-strong);
+}
+```
+
+Components in templates consume these semantic utilities:
+- `bg-page-bg text-base-content` on `<body>`
+- `bg-base-100 border border-base-300` on content cards
+- `btn btn-primary` / `btn btn-secondary` on CTAs
+- `badge badge-accent` on featured highlights
+- `text-heading font-serif` on titles
+
+---
+
+## 5. How to Add a Sixth Theme in the Future
+
+Adding a new institutional theme requires four straightforward steps:
+
+### Step 1: Register in `apps/site_settings/themes.py`
+
+Add the new theme definition to `THEMES`:
 
 ```python
-    THEME_CHOICES = [
-        ("corporate", "Corporate (Clean Modern Blue & Slate)"),
-        ("emerald", "Emerald (Academic Deep Green & Mint)"),
-        ("nord", "Nord (Modern Arctic Slate & Frost)"),
-        ("winter", "Winter (Crisp Professional Cyan & Ice)"),
-        ("business", "Business (High-Contrast Corporate Dark)"),
-        ("night", "Night (Deep Modern Dark)"),
-        ("autumn", "Autumn (Warm Rust, Bronze & Cream)"),
-        ("luxury", "Luxury (Dark Gold & Deep Obsidian)"),
-        ("light", "Light (Default Clean Bright)"),
-        # Add your new theme here:
-        ("nakashara-custom", "Nakashara Custom (Navy, Crimson & Gold)"),
-    ]
+"emerald-sand": ThemeMeta(
+    id="emerald-sand",
+    name="Emerald & Sand",
+    description="Refined botanical green with warm sandstone accents for natural sciences.",
+    page_bg="#F6F7F5",
+    surface="#FFFFFF",
+    primary="#224838",
+    secondary="#557565",
+    accent="#C2A46C",
+    text="#26332C",
+    border="#DFE5E0",
+    hover="#EBEFEA",
+),
+```
+
+### Step 2: Define CSS Tokens in `theme/static_src/src/styles.css`
+
+Add the CSS token block under the matching `[data-theme="emerald-sand"]` selector:
+
+```css
+[data-theme="emerald-sand"] {
+  --color-primary: #224838;
+  --color-primary-hover: #183327;
+  --color-primary-content: #ffffff;
+  --color-secondary: #557565;
+  --color-secondary-hover: #435e50;
+  --color-secondary-content: #ffffff;
+  --color-accent: #c2a46c;
+  --color-accent-hover: #ae9056;
+  --color-accent-content: #1e2922;
+  --color-page-bg: #f6f7f5;
+  --color-base-100: #ffffff;
+  --color-base-200: #edf1ee;
+  --color-base-300: #dfe5e0;
+  --color-base-content: #26332c;
+  --color-heading: #224838;
+  --color-link: #224838;
+  --color-link-hover: #162e24;
+  --color-border-default: #dfe5e0;
+  --color-border-strong: #c4cdc6;
+  --color-focus-ring: #224838;
+  --color-hover-bg: #edf1ee;
+  --color-selected-bg: #e2e8e4;
+  --color-header-bg: #ffffff;
+  --color-footer-bg: #183327;
+}
 ```
 
 ### Step 3: Run Database Migrations
 
-Generate and apply the Django migration to record the updated field choices:
+Generate and apply the Django migration to update the model field choices:
 
 ```bash
 uv run python manage.py makemigrations site_settings
 uv run python manage.py migrate site_settings
 ```
 
-### Step 4: Recompile Tailwind CSS
+### Step 4: Rebuild Tailwind CSS
 
-Build the minified production stylesheet:
-
-```bash
-npm --prefix theme/static_src run build
-```
-
-Or for active development with hot-reload:
+Compile the updated stylesheet:
 
 ```bash
-npm --prefix theme/static_src run dev
+uv run python manage.py tailwind build
 ```
 
-### Step 5: Select the Theme in Wagtail Admin
-
-1. Log into the Wagtail Admin (`http://localhost:8000/admin/`).
-2. Navigate to **Settings** > **Site Settings**.
-3. Under **Appearance & Theme**, choose your new theme from the **Theme** dropdown.
-4. Click **Save**.
-5. Refresh the public website to verify that all components adapt to the new theme.
+The new theme immediately appears in Wagtail Admin with its swatches and live component preview.
 
 ---
 
-## 4. How to Remove a Theme
+## 6. Removed DaisyUI Dependencies & Deprecated Features
 
-If you want to deprecate or remove a theme from the selection menu:
+The following items were removed or deprecated as part of the design system overhaul:
 
-### Step 1: Migrate Existing Site Settings (Safety Check)
-
-Verify that active sites in the database are not currently using the theme you intend to remove. If any site uses it, change its theme to `corporate` or your desired fallback in the admin or via shell:
-
-```bash
-uv run python manage.py shell -c "
-from apps.site_settings.models import SiteSettings
-for s in SiteSettings.objects.filter(theme='theme-to-remove'):
-    s.theme = 'corporate'
-    s.save()
-"
-```
-
-### Step 2: Remove from `THEME_CHOICES`
-
-In `apps/site_settings/models.py`, delete the corresponding tuple from `THEME_CHOICES`.
-
-### Step 3: Create and Apply Migration
-
-```bash
-uv run python manage.py makemigrations site_settings
-uv run python manage.py migrate site_settings
-```
-
-### Step 4: (Optional) Restrict DaisyUI Themes to Optimize Bundle Size
-
-By default, `themes: all;` includes all DaisyUI themes. If you want to bundle **only** your specific approved institutional themes for smaller CSS file size, update `theme/static_src/src/styles.css`:
-
-```css
-@import "tailwindcss";
-@plugin "daisyui" {
-  themes: corporate, emerald, nord, winter, business, night, autumn, luxury, light;
-}
-```
-
-Then rebuild CSS:
-
-```bash
-npm --prefix theme/static_src run build
-```
+1. **`themes: all;` Removed**:
+   DaisyUI's `@plugin "daisyui" { themes: all; }` was replaced with `themes: false;`. No built-in DaisyUI theme CSS or opinionated palette rules are generated.
+2. **Old Theme Identifiers Deprecated**:
+   Old themes (`corporate`, `emerald`, `nord`, `winter`, `business`, `night`, `autumn`, `luxury`, `light`) were superseded by the 5 institutional themes. Migration `0008_alter_sitesettings_theme.py` safely migrated existing database rows to `academic-blue`.
+3. **Inline CSS Injection Removed**:
+   Removed inline `style="--color-primary: ..."` attributes from `templates/base.html`. All colors are strictly managed through validated `data-theme` attributes and pre-compiled CSS design tokens.
+4. **Hardcoded Accent Classes Cleaned**:
+   Hardcoded classes such as `text-amber-500`, `bg-amber-500`, and `border-amber-500` were replaced across public templates (`footer.html`, `home_page.html`, `social_links.html`, `contact_details.html`, `person_page.html`) with semantic tokens (`text-accent`, `bg-accent`, `border-accent`).
 
 ---
 
-## 5. How to Update Existing Theme Styles
+## 7. Testing & Verification
 
-### Customizing CSS Tokens Globally
-
-To override specific variables across an existing theme (e.g. changing the `corporate` theme's primary color to a specific university blue):
-
-Edit `theme/static_src/src/styles.css`:
-
-```css
-[data-theme="corporate"] {
-  --color-primary: #003366;           /* Institutional Oxford Blue */
-  --color-primary-content: #ffffff;
-  --color-secondary: #a6192e;         /* Institutional Crimson */
-  --color-secondary-content: #ffffff;
-  --radius-selector: 0.375rem;        /* Crisper borders */
-}
-```
-
-Rebuild the CSS:
-```bash
-npm --prefix theme/static_src run build
-```
-
-### Live Development with `django-browser-reload`
-
-The project has `django-browser-reload` configured:
-1. In one terminal, run the Tailwind watch compiler:
-   ```bash
-   npm --prefix theme/static_src run dev
-   ```
-2. In a second terminal, run the Django development server:
-   ```bash
-   uv run python manage.py runserver
-   ```
-Whenever you edit CSS files or HTML templates, your browser will automatically refresh with the new styles.
-
----
-
-## 6. How Dynamic Hex Color Overrides Work
-
-The Wagtail `SiteSettings` model includes two optional override fields:
-- `custom_primary_color` (e.g., `#1A365D`)
-- `custom_accent_color` (e.g., `#E53E3E`)
-
-### Mechanism
-
-When a non-empty value is saved in either field, `templates/base.html` automatically injects inline CSS custom properties on the root `<html>` element:
-
-```html
-<html data-theme="corporate" style="--color-primary: #1A365D; --p: #1A365D; --color-secondary: #E53E3E; --s: #E53E3E; --color-accent: #E53E3E; --a: #E53E3E;">
-```
-
-- `--color-primary` and `--color-secondary` target Tailwind CSS v4 and DaisyUI v5 modern color engine.
-- `--p`, `--s`, and `--a` target DaisyUI fallback and internal color calculations.
-- Because inline styles take specificity precedence over stylesheet rules, this overrides the primary/accent colors across all buttons, badges, links, active states, and highlights **instantly without recompiling CSS**.
-
-To reset back to the theme default, clear the custom color fields in Wagtail Admin and save.
-
----
-
-## 7. Developer Template Rules & Best Practices
-
-When writing or modifying Django templates in Nakashara CMS, adhere to the following rules:
-
-### 1. Always Use Semantic DaisyUI Tokens
-
-| Instead of Hardcoded Colors: | Use Semantic Tokens: |
-|---|---|
-| `bg-blue-900`, `bg-[#1A2B4A]` | `bg-primary` |
-| `text-blue-900`, `text-[#1A2B4A]` | `text-primary` |
-| `text-white` on primary buttons | `text-primary-content` |
-| `bg-amber-600`, `bg-[#C8963E]` | `bg-secondary` or `bg-accent` |
-| `text-amber-600`, `text-[#C8963E]` | `text-secondary` or `text-accent` |
-| `bg-white`, `bg-gray-50` | `bg-base-100`, `bg-base-200` |
-| `border-gray-200`, `border-gray-300` | `border-base-200`, `border-base-300` |
-| `text-gray-900` | `text-base-content` |
-| `text-gray-500`, `text-gray-600` | `text-base-content/70` |
-
-### 2. Button and Badge Components
-
-- Primary CTA: `<button class="btn btn-primary">Submit</button>`
-- Secondary Action: `<button class="btn btn-secondary">Learn More</button>`
-- Ghost / Outline: `<button class="btn btn-outline btn-primary">View Details</button>`
-- Status Badges: `<span class="badge badge-primary">Featured</span>`, `<span class="badge badge-secondary">Event</span>`
-
-### 3. Surface & Card Contrast
-
-- Main background: `<body class="bg-base-100 text-base-content">`
-- Card background: `<div class="card bg-base-100 border border-base-200 shadow-sm">`
-- Alternating rows / sub-panels: `<div class="bg-base-200 rounded-lg p-6">`
-
-### 4. Zero CDN Policy
-
-All static files (CSS, JS, fonts) must be served from local static assets. Do not link external CDNs (such as Google Fonts or cdnjs).
-
-### 5. Template Verification
-
-After updating templates, run the linter and test suite:
+Comprehensive automated test coverage ensures the integrity of the theme system:
 
 ```bash
-# Run djlint across all templates
-uv run djlint templates/ --lint
+# Run institutional theme tests
+uv run pytest tests/test_institutional_themes.py
 
-# Run tests
+# Run all project tests
 uv run pytest
+
+# Run Django system checks
+uv run python manage.py check
 ```
+
+Key test scenarios verified:
+- Default theme fallback when no setting exists (`academic-blue`).
+- All 5 valid theme identifiers activate correctly.
+- Invalid or unrecognized theme strings safely fall back to `academic-blue`.
+- Multi-site theme isolation ensures different sites maintain independent active themes.
+- Public templates receive and render the active theme in `<html data-theme="...">`.
+- Permission enforcement prevents non-administrators from altering site themes.
+- Built CSS output contains zero built-in DaisyUI themes.

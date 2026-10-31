@@ -1,6 +1,6 @@
 {% load static tailwind_tags wagtailcore_tags wagtailimages_tags translation_tags %}
 <!DOCTYPE html>
-<html lang="{{ LANGUAGE_CODE|default:'en' }}" dir="{% if LANGUAGE_BIDI %}rtl{% else %}ltr{% endif %}" data-theme="{{ site_settings.theme|default:'corporate' }}" class="h-full scroll-smooth">
+<html lang="{{ LANGUAGE_CODE|default:'en' }}" dir="{% if LANGUAGE_BIDI %}rtl{% else %}ltr{% endif %}" data-theme="{{ site_settings.active_theme|default:'academic-blue' }}" class="h-full scroll-smooth">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -50,30 +50,13 @@
   <link rel="stylesheet" href="{% static 'css/fonts.css' %}" />
   {% tailwind_css %}
 
-  {% if site_settings.custom_primary_color or site_settings.custom_accent_color %}
-  <style>
-    [data-theme="{{ site_settings.theme|default:'corporate' }}"] {
-      {% if site_settings.custom_primary_color %}
-      --color-primary: {{ site_settings.custom_primary_color }};
-      --p: {{ site_settings.custom_primary_color }};
-      {% endif %}
-      {% if site_settings.custom_accent_color %}
-      --color-secondary: {{ site_settings.custom_accent_color }};
-      --s: {{ site_settings.custom_accent_color }};
-      --color-accent: {{ site_settings.custom_accent_color }};
-      --a: {{ site_settings.custom_accent_color }};
-      {% endif %}
-    }
-  </style>
-  {% endif %}
-
   <!-- Local Alpine.js and HTMX (No CDN) -->
   <script defer src="{% static 'js/alpine.min.js' %}"></script>
   <script defer src="{% static 'js/htmx.min.js' %}"></script>
 
   {% block extra_head %}{% endblock %}
 </head>
-<body class="min-h-full flex flex-col bg-base-100 text-base-content font-sans antialiased">
+<body class="min-h-full flex flex-col bg-page-bg text-base-content font-sans antialiased">
   <!-- Accessibility Skip Link -->
   <a href="#main-content"
      class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-content focus:rounded-lg focus:shadow-md focus:ring-2 focus:ring-accent">
@@ -108,20 +91,20 @@
   <!-- ─── Institutional Header ──────────────────────────────────────── -->
   <header class="bg-base-100 border-b border-base-300" x-data="{ mobileMenuOpen: false }">
 
-    <!-- Top Utility Bar (Refined Dark Slate) -->
-    <div class="bg-slate-950 text-slate-300 text-xs py-1.5 px-4 sm:px-6 lg:px-8 border-b border-slate-900">
+    <!-- Top Utility Bar (Refined Institutional Tone) -->
+    <div class="bg-[var(--color-header-utility-bg)] text-[var(--color-header-utility-text)] text-xs py-1.5 px-4 sm:px-6 lg:px-8 border-b border-white/10">
       <div class="max-w-7xl mx-auto flex justify-between items-center gap-4">
-        <span class="text-slate-400 truncate hidden sm:block">
+        <span class="opacity-80 truncate hidden sm:block">
           {{ site_settings.tagline|default:"Advancing Research, Learning, and Institutional Excellence" }}
         </span>
         <nav class="flex items-center gap-3 ml-auto shrink-0" aria-label="Utility navigation">
-          <a href="/legal/" class="text-slate-400 hover:text-white hover:underline transition-colors">Policies</a>
-          <span class="text-slate-700" aria-hidden="true">&bull;</span>
-          <a href="/documents/" class="text-slate-400 hover:text-white hover:underline transition-colors">Documents</a>
-          <span class="text-slate-700" aria-hidden="true">&bull;</span>
-          <a href="/contact/" class="text-slate-400 hover:text-white hover:underline transition-colors">Contact</a>
-          <span class="text-slate-700" aria-hidden="true">&bull;</span>
-          <a href="/admin/" class="inline-flex items-center gap-1 text-slate-400 hover:text-amber-300 transition-colors" title="CMS Admin Portal">
+          <a href="/legal/" class="opacity-80 hover:opacity-100 hover:underline transition-opacity">Policies</a>
+          <span class="opacity-40" aria-hidden="true">&bull;</span>
+          <a href="/documents/" class="opacity-80 hover:opacity-100 hover:underline transition-opacity">Documents</a>
+          <span class="opacity-40" aria-hidden="true">&bull;</span>
+          <a href="/contact/" class="opacity-80 hover:opacity-100 hover:underline transition-opacity">Contact</a>
+          <span class="opacity-40" aria-hidden="true">&bull;</span>
+          <a href="/admin/" class="inline-flex items-center gap-1 opacity-80 hover:opacity-100 hover:text-accent transition-all" title="CMS Admin Portal">
             <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
             </svg>
@@ -129,21 +112,21 @@
           </a>
 
           <!-- Language Selector -->
-          <span class="text-slate-700" aria-hidden="true">&bull;</span>
+          <span class="opacity-40" aria-hidden="true">&bull;</span>
           {% get_site_languages as site_languages %}
           <div class="relative inline-block text-left" x-data="{ langOpen: false }">
-            <button @click="langOpen = !langOpen" @click.away="langOpen = false" type="button" class="inline-flex items-center gap-1.5 text-slate-300 hover:text-white font-medium focus:outline-hidden transition-colors" aria-expanded="false" aria-haspopup="true">
-              <svg class="w-3.5 h-3.5 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <button @click="langOpen = !langOpen" @click.away="langOpen = false" type="button" class="inline-flex items-center gap-1.5 opacity-90 hover:opacity-100 font-medium focus:outline-hidden transition-opacity" aria-expanded="false" aria-haspopup="true">
+              <svg class="w-3.5 h-3.5 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10m-.1-3h-4.8" />
               </svg>
               <span>{{ LANGUAGE_CODE|upper }}</span>
-              <svg class="w-3 h-3 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg class="w-3 h-3 opacity-60" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
               </svg>
             </button>
-            <div x-show="langOpen" x-transition class="origin-top-right absolute right-0 mt-2 w-40 rounded-md shadow-lg bg-slate-900 border border-slate-800 ring-1 ring-black ring-opacity-5 z-50 py-1" role="menu">
+            <div x-show="langOpen" x-transition class="origin-top-right absolute right-0 mt-2 w-40 rounded-md shadow-lg bg-[var(--color-header-utility-bg)] border border-white/10 ring-1 ring-black ring-opacity-5 z-50 py-1" role="menu">
               {% for l in site_languages %}
-                <a href="{% page_alternate_url l.code %}" class="block px-4 py-1.5 text-xs {% if l.code == LANGUAGE_CODE %}text-amber-400 font-semibold bg-slate-800/80{% else %}text-slate-300 hover:bg-slate-800 hover:text-white{% endif %} transition-colors" role="menuitem">
+                <a href="{% page_alternate_url l.code %}" class="block px-4 py-1.5 text-xs {% if l.code == LANGUAGE_CODE %}text-accent font-semibold bg-white/10{% else %}text-[var(--color-header-utility-text)] opacity-80 hover:bg-white/10 hover:opacity-100{% endif %} transition-colors" role="menuitem">
                   {{ l.name }}
                 </a>
               {% endfor %}

@@ -1,0 +1,317 @@
+{% comment %}
+Visual, accessible theme selection widget for Wagtail Admin Site Settings.
+Renders 5 institutional themes with palettes and compact component previews.
+{% endcomment %}
+
+<div class="nakashara-theme-selector" id="nakashara-theme-selector-root">
+  <style>
+    .nakashara-theme-selector {
+      margin-top: 0.5rem;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    .nakashara-theme-active-banner {
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      border-left: 4px solid #17365D;
+      border-radius: 6px;
+      padding: 0.875rem 1rem;
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .nakashara-theme-active-title {
+      font-weight: 700;
+      font-size: 0.9375rem;
+      color: #0F172A;
+      margin: 0 0 0.25rem 0;
+    }
+    .nakashara-theme-active-desc {
+      font-size: 0.8125rem;
+      color: #475569;
+      margin: 0;
+      line-height: 1.4;
+    }
+    .nakashara-theme-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.25rem;
+    }
+    .nakashara-theme-card {
+      position: relative;
+      background: #FFFFFF;
+      border: 2px solid #E2E8F0;
+      border-radius: 8px;
+      padding: 1.25rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+    }
+    .nakashara-theme-card:hover {
+      border-color: #94A3B8;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    }
+    .nakashara-theme-card.is-selected {
+      border-color: #17365D;
+      box-shadow: 0 0 0 2px rgba(23, 54, 93, 0.2), 0 4px 14px rgba(0, 0, 0, 0.08);
+      background: #FCFDFE;
+    }
+    .nakashara-theme-card-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+    .nakashara-theme-radio {
+      margin-top: 0.25rem;
+      cursor: pointer;
+      accent-color: #17365D;
+      width: 1.125rem;
+      height: 1.125rem;
+    }
+    .nakashara-theme-title-wrap {
+      flex: 1;
+    }
+    .nakashara-theme-name {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #0F172A;
+      margin: 0 0 0.25rem 0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .nakashara-theme-badge {
+      display: inline-block;
+      font-size: 0.6875rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 0.15rem 0.5rem;
+      border-radius: 9999px;
+    }
+    .nakashara-theme-badge-default {
+      background: #EEF2F6;
+      color: #17365D;
+      border: 1px solid #CBD5E1;
+    }
+    .nakashara-theme-badge-active {
+      background: #ECFDF5;
+      color: #065F46;
+      border: 1px solid #A7F3D0;
+    }
+    .nakashara-theme-desc {
+      font-size: 0.8125rem;
+      color: #475569;
+      line-height: 1.45;
+      margin: 0 0 1rem 0;
+    }
+    /* Color Swatch Strip */
+    .nakashara-swatch-row {
+      display: flex;
+      gap: 0.375rem;
+      margin-bottom: 1rem;
+      padding: 0.375rem;
+      background: #F8FAFC;
+      border: 1px solid #EDF2F7;
+      border-radius: 6px;
+    }
+    .nakashara-swatch {
+      flex: 1;
+      height: 24px;
+      border-radius: 4px;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      position: relative;
+    }
+    /* Compact Live Preview Surface */
+    .nakashara-preview-surface {
+      margin-top: auto;
+      border-radius: 6px;
+      padding: 1rem;
+      border-width: 1px;
+      border-style: solid;
+      font-size: 0.8125rem;
+    }
+    .nakashara-preview-heading {
+      font-weight: 700;
+      font-size: 0.9375rem;
+      margin: 0 0 0.375rem 0;
+      line-height: 1.3;
+    }
+    .nakashara-preview-body {
+      margin: 0 0 0.75rem 0;
+      line-height: 1.45;
+      font-size: 0.78125rem;
+    }
+    .nakashara-preview-controls {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+    .nakashara-preview-btn-primary {
+      display: inline-block;
+      font-size: 0.6875rem;
+      font-weight: 600;
+      padding: 0.35rem 0.65rem;
+      border-radius: 4px;
+      border: none;
+      text-decoration: none;
+    }
+    .nakashara-preview-btn-secondary {
+      display: inline-block;
+      font-size: 0.6875rem;
+      font-weight: 600;
+      padding: 0.35rem 0.65rem;
+      border-radius: 4px;
+      border-width: 1px;
+      border-style: solid;
+      text-decoration: none;
+    }
+    .nakashara-preview-badge {
+      display: inline-block;
+      font-size: 0.6875rem;
+      font-weight: 600;
+      padding: 0.2rem 0.5rem;
+      border-radius: 9999px;
+    }
+    .nakashara-preview-link {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-decoration: underline;
+    }
+    .nakashara-preview-input {
+      width: 100%;
+      box-sizing: border-box;
+      font-size: 0.75rem;
+      padding: 0.35rem 0.5rem;
+      border-radius: 4px;
+      outline: none;
+      pointer-events: none;
+    }
+  </style>
+
+  <!-- Active Theme Summary Banner -->
+  <div class="nakashara-theme-active-banner">
+    <div>
+      <div class="nakashara-theme-active-title">
+        Current Public Website Theme: <strong>{{ active_theme_meta.name }}</strong>
+      </div>
+      <p class="nakashara-theme-active-desc">
+        {{ active_theme_meta.description }}
+      </p>
+    </div>
+    <span class="nakashara-theme-badge nakashara-theme-badge-active" style="white-space: nowrap;">
+      Live on Public Website
+    </span>
+  </div>
+
+  <!-- Theme Radio Grid -->
+  <div class="nakashara-theme-grid" role="radiogroup" aria-label="Available Institutional Website Themes">
+    {% for group_name, group_options, group_index in widget.optgroups %}
+      {% for opt in group_options %}
+        {% with meta=opt.theme_meta colors=opt.theme_meta.colors %}
+        <label
+          class="nakashara-theme-card {% if opt.attrs.checked or opt.is_currently_active %}is-selected{% endif %}"
+          for="{{ opt.attrs.id }}"
+          id="card-{{ opt.attrs.id }}"
+        >
+          <div class="nakashara-theme-card-header">
+            <input
+              type="radio"
+              name="{{ opt.name }}"
+              value="{{ opt.value }}"
+              id="{{ opt.attrs.id }}"
+              class="nakashara-theme-radio"
+              {% if opt.attrs.checked %}checked{% endif %}
+              onchange="handleThemeCardSelect(this)"
+            />
+            <div class="nakashara-theme-title-wrap">
+              <div class="nakashara-theme-name">
+                <span>{{ meta.name }}</span>
+                {% if opt.value == default_theme_id %}
+                  <span class="nakashara-theme-badge nakashara-theme-badge-default">Default</span>
+                {% endif %}
+                {% if opt.is_currently_active %}
+                  <span class="nakashara-theme-badge nakashara-theme-badge-active">Active</span>
+                {% endif %}
+              </div>
+              <p class="nakashara-theme-desc">{{ meta.description }}</p>
+            </div>
+          </div>
+
+          <!-- Color Swatch Strip -->
+          <div class="nakashara-swatch-row" title="Palette Swatches (Primary, Secondary, Accent, Surface, Canvas, Text)">
+            <div class="nakashara-swatch" style="background-color: {{ colors.primary }};" title="Primary: {{ colors.primary }}"></div>
+            <div class="nakashara-swatch" style="background-color: {{ colors.secondary }};" title="Secondary: {{ colors.secondary }}"></div>
+            <div class="nakashara-swatch" style="background-color: {{ colors.accent }};" title="Accent: {{ colors.accent }}"></div>
+            <div class="nakashara-swatch" style="background-color: {{ colors.surface }}; border: 1px solid #CBD5E1;" title="Surface: {{ colors.surface }}"></div>
+            <div class="nakashara-swatch" style="background-color: {{ colors.page_bg }};" title="Page BG: {{ colors.page_bg }}"></div>
+            <div class="nakashara-swatch" style="background-color: {{ colors.text_main }};" title="Main Text: {{ colors.text_main }}"></div>
+          </div>
+
+          <!-- Compact Live Component Preview (Tokens applied directly) -->
+          <div class="nakashara-preview-surface" style="background-color: {{ colors.surface }}; border-color: {{ colors.border_default }}; color: {{ colors.text_main }};">
+            <div class="nakashara-preview-heading" style="color: {{ colors.text_heading }};">
+              {{ meta.name }}
+            </div>
+            <p class="nakashara-preview-body" style="color: {{ colors.text_muted }};">
+              Accessible typography &amp; components for institutional scholarship.
+            </p>
+
+            <div class="nakashara-preview-controls">
+              <!-- Primary Button -->
+              <span class="nakashara-preview-btn-primary" style="background-color: {{ colors.primary }}; color: {{ colors.primary_fg }};">
+                Primary Action
+              </span>
+
+              <!-- Secondary Button -->
+              <span class="nakashara-preview-btn-secondary" style="background-color: {{ colors.surface_secondary }}; color: {{ colors.secondary }}; border-color: {{ colors.secondary }};">
+                Secondary
+              </span>
+
+              <!-- Badge -->
+              <span class="nakashara-preview-badge" style="background-color: {{ colors.accent }}; color: {{ colors.accent_fg }};">
+                Accredited
+              </span>
+
+              <!-- Link -->
+              <span class="nakashara-preview-link" style="color: {{ colors.link }};">
+                Read policy &rarr;
+              </span>
+            </div>
+
+            <!-- Form Field -->
+            <input
+              type="text"
+              readonly
+              value="Sample institutional search…"
+              class="nakashara-preview-input"
+              style="background-color: {{ colors.surface }}; border: 1px solid {{ colors.border_default }}; color: {{ colors.text_main }};"
+              tabindex="-1"
+            />
+          </div>
+        </label>
+        {% endwith %}
+      {% endfor %}
+    {% endfor %}
+  </div>
+
+  <script>
+    function handleThemeCardSelect(radioInput) {
+      const root = document.getElementById("nakashara-theme-selector-root");
+      if (!root) return;
+      const allCards = root.querySelectorAll(".nakashara-theme-card");
+      allCards.forEach(card => card.classList.remove("is-selected"));
+      const selectedCard = radioInput.closest(".nakashara-theme-card");
+      if (selectedCard) {
+        selectedCard.classList.add("is-selected");
+      }
+    }
+  </script>
+</div>
+
