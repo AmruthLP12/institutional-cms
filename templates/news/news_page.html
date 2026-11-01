@@ -12,7 +12,7 @@
 
   {# ── Featured image ───────────────────────────────────────────── #}
   {% if page.featured_image %}
-  <figure class="w-full bg-slate-900 max-h-[520px] overflow-hidden">
+  <figure class="w-full bg-base-200 max-h-[520px] overflow-hidden">
     {% image page.featured_image fill-1440x520 as hero_img %}
     <img
       src="{{ hero_img.url }}"
@@ -36,7 +36,7 @@
     <div class="flex flex-wrap gap-2 mb-5" aria-label="Article categories">
       {% for cat in categories %}
       <a href="{{ page.get_parent.url }}?category={{ cat.slug }}"
-         class="badge badge-lg bg-secondary text-secondary-content/10 text-secondary border-secondary/30 hover:bg-secondary text-secondary-content hover:text-white transition-colors">
+         class="badge badge-secondary badge-md">
         {{ cat.name }}
       </a>
       {% endfor %}
@@ -160,7 +160,7 @@
           {# Categories #}
           <div class="flex flex-wrap gap-1.5 mb-2">
             {% for cat in post.categories.all %}
-            <span class="badge badge-sm bg-secondary text-secondary-content/10 text-secondary border-secondary/30">{{ cat.name }}</span>
+            <span class="badge badge-secondary badge-sm">{{ cat.name }}</span>
             {% endfor %}
           </div>
 

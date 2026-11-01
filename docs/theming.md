@@ -177,7 +177,67 @@ Components in templates consume these semantic utilities:
 
 ---
 
-## 5. How to Add a Sixth Theme in the Future
+## 5. Authoritative Institutional Badge System
+
+To prevent conflicting utility classes (`text-secondary-content/10`, `text-secondary`, `bg-secondary`, `text-base-content`) and ensure visual consistency across all public templates, the CMS provides a centralized, authoritative badge system defined in `theme/static_src/src/styles.css`.
+
+### Badge Anatomy & Defaults
+- **Shape**: Always pill-shaped with `border-radius: 9999px !important;` (overriding any DaisyUI square/rounded-box defaults).
+- **Background**: Subtle tinted background derived from the active theme's palette.
+- **Border**: Thin 1px border matching the variant's border token for crisp definition on both pure white surfaces and tinted page backgrounds.
+- **Typography**: Semibold 600 weight, uppercase/small caps tracking (`0.025em`), with high-contrast text guaranteed to exceed WCAG 2.2 AA (minimum 4.5:1, typical > 7:1).
+- **Interactive State**: Links (`a.badge`) and buttons (`button.badge`) have dedicated hover and `:focus-visible` states with theme-aware focus rings (`outline: 2px solid var(--color-focus-ring)`).
+
+### Size Variants
+- `.badge-xs`: Compact metadata tag (font size 0.6875rem, min-height 1.125rem) used on index cards and dense listings.
+- `.badge-sm`: Standard listing badge (font size 0.6875rem, min-height 1.25rem) used in news grids, event listings, and department summaries.
+- `.badge-md`: Default badge size (font size 0.75rem, min-height 1.5rem) used on detail pages and article hero headers.
+- `.badge-lg`: Prominent status tag (font size 0.8125rem, min-height 1.75rem).
+
+### Semantic Variants & Tokens
+Each theme defines complete, accessible tokens for badge variants:
+- `.badge-primary`: Tinted primary background (`--color-badge-primary-bg`), primary text (`--color-badge-primary-text`), and border (`--color-badge-primary-border`).
+- `.badge-secondary`: Tinted secondary background, secondary text, and border (used for categories across news, events, and publications).
+- `.badge-accent`: Tinted accent background and dark text (used for featured items and key notices).
+- `.badge-neutral` / `.badge-ghost`: Subtle muted neutral background and text (used for closed statuses, archived content, and general metadata).
+- `.badge-outline`: Transparent background with theme border (`--color-border-strong`) and main text (`--color-text-main`).
+- `.badge-success`, `.badge-warning`, `.badge-error`, `.badge-info`: Dedicated feedback tokens.
+
+### Standard Template Usage
+```django
+{# Category Badge (Pill-shaped, theme-aware, accessible) #}
+<a href="{{ page.get_parent.url }}?category={{ cat.slug }}"
+   class="badge badge-secondary badge-md"
+   aria-label="Category: {{ cat.name }}">
+  {{ cat.name }}
+</a>
+
+{# Status Badge #}
+<span class="badge badge-neutral badge-sm">{{ page.get_status_display }}</span>
+```
+
+---
+
+## 6. Homepage Architecture & Theme Integration
+
+### Hero Carousel Architecture
+The homepage multi-slide hero carousel (`templates/home/home_page.html`) is engineered with CSS grid stacking to eliminate layout shifts, overlapping text, and navigation collisions:
+- **Grid-Stacked Coordinate System**: The carousel container uses CSS Grid with `[&>*]:col-start-1 [&>*]:row-start-1`. All slides occupy the exact same coordinate cell, allowing smooth cross-fading during transitions without displacing height or jumping.
+- **Full Viewport Fill**: Hero images utilize `w-full h-full object-cover object-center` within a fixed height container (`min-h-[520px] md:min-h-[600px] lg:min-h-[660px]`).
+- **Dual Protective Scrims**:
+  1. Horizontal Scrim (`.hero-carousel-scrim`): Gradient overlay from dark utility header color (`--color-header-utility-bg`) to transparent, providing optimal legibility on wide screens while showing imagery on the right.
+  2. Vertical Scrim (`.hero-carousel-scrim-vertical`): Radial gradient overlay from the bottom up, ensuring text and buttons remain legible on mobile portrait screens.
+- **Safe Navigation Area**: Slide content containers include safe bottom padding (`pb-28 sm:pb-24 lg:pb-24`), guaranteeing that slide text, badges, and CTA buttons never collide with pagination dots or next/previous arrows.
+- **Accessible Navigation**: Dot indicators and arrow controls use theme-aware interactive states with high contrast and minimum 44×44px tap targets.
+
+### News, Events & Circulars Theme Integration
+- **News Section**: Category badges use `.badge-secondary.badge-xs`. Empty or placeholder images use `bg-base-200 text-primary` instead of hardcoded `slate-900`.
+- **Events Section**: Date cards use theme primary canvas (`bg-primary text-primary-content`) with antique gold/accent month headers (`text-accent`), ensuring high contrast across all 5 themes. Event category badges follow the unified pill badge component.
+- **Collaborate & Quick Links**: Cards and banners use `bg-primary text-primary-content border-primary/20` and theme button variants instead of hardcoded slate utilities.
+
+---
+
+## 7. How to Add a Sixth Theme in the Future
 
 Adding a new institutional theme requires four straightforward steps:
 
@@ -255,7 +315,7 @@ The new theme immediately appears in Wagtail Admin with its swatches and live co
 
 ---
 
-## 6. Removed DaisyUI Dependencies & Deprecated Features
+## 8. Removed DaisyUI Dependencies & Deprecated Features
 
 The following items were removed or deprecated as part of the design system overhaul:
 
@@ -267,10 +327,12 @@ The following items were removed or deprecated as part of the design system over
    Removed inline `style="--color-primary: ..."` attributes from `templates/base.html`. All colors are strictly managed through validated `data-theme` attributes and pre-compiled CSS design tokens.
 4. **Hardcoded Accent Classes Cleaned**:
    Hardcoded classes such as `text-amber-500`, `bg-amber-500`, and `border-amber-500` were replaced across public templates (`footer.html`, `home_page.html`, `social_links.html`, `contact_details.html`, `person_page.html`) with semantic tokens (`text-accent`, `bg-accent`, `border-accent`).
+5. **Conflicting Badge Classes Eliminated**:
+   Eliminated compound conflicting classes such as `text-secondary-content/10 text-secondary bg-secondary text-secondary-content hover:text-white` across news, events, people, departments, and search templates, replacing them with authoritative, single-definition `.badge` classes.
 
 ---
 
-## 7. Testing & Verification
+## 9. Testing & Verification
 
 Comprehensive automated test coverage ensures the integrity of the theme system:
 

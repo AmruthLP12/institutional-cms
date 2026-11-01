@@ -49,7 +49,7 @@
 {# Hero image                                                          #}
 {# ------------------------------------------------------------------ #}
 {% if page.event_image %}
-  <div class="w-full bg-slate-900 max-h-[480px] overflow-hidden" aria-hidden="false">
+  <div class="w-full bg-base-200 max-h-[480px] overflow-hidden" aria-hidden="false">
     {% image page.event_image width-1600 as hero_img %}
     <img
       src="{{ hero_img.url }}"
@@ -80,7 +80,7 @@
       {% if page.categories.all %}
         <div class="flex flex-wrap gap-2 mb-4" aria-label="Event categories">
           {% for category in page.categories.all %}
-            <span class="badge badge-outline font-medium border-secondary text-secondary">
+            <span class="badge badge-secondary badge-md">
               {{ category.name }}
             </span>
           {% endfor %}
@@ -211,13 +211,13 @@
                 </dt>
                 <dd>
                   {% if page.is_registration_closed %}
-                    <span class="badge badge-ghost text-base-content/60 text-sm py-3 px-4 w-full justify-center">
+                    <span class="badge badge-neutral text-sm py-2 px-4 w-full justify-center">
                       Registration is closed
                     </span>
                   {% elif page.registration_url %}
                     <a
                       href="{{ page.registration_url }}"
-                      class="btn btn-primary w-full bg-secondary text-secondary-content border-secondary hover:bg-[#b3842f] text-white"
+                      class="btn btn-primary w-full"
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label="Register for {{ page.title }} (opens in new tab)"

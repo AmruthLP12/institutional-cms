@@ -10,7 +10,7 @@
         {% if page.department %}
           <span class="badge badge-outline text-xs">{{ page.department }}</span>
         {% endif %}
-        <span class="badge {% if page.status == 'open' %}badge-success{% else %}badge-ghost{% endif %} text-xs capitalize font-semibold">
+        <span class="badge {% if page.status == 'open' %}badge-success{% else %}badge-neutral{% endif %} text-xs capitalize font-semibold">
           {{ page.status }}
         </span>
       </div>

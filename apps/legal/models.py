@@ -299,6 +299,6 @@ class LegalPage(BasePage):
             self.ApprovalStatus.UNDER_REVIEW: "badge-warning",
             self.ApprovalStatus.APPROVED: "badge-info",
             self.ApprovalStatus.PUBLISHED: "badge-success",
-            self.ApprovalStatus.ARCHIVED: "badge-ghost",
+            self.ApprovalStatus.ARCHIVED: "badge-neutral",
         }
         return mapping.get(self.approval_status, "badge-neutral")

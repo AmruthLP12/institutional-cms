@@ -35,8 +35,8 @@
         {# "All" pill #}
         <a href="{{ page.url }}"
            role="listitem"
-           class="badge badge-lg transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2
-                  {% if not active_category %}bg-primary text-primary-content border-primary{% else %}badge-outline hover:bg-primary hover:text-primary-content hover:border-primary{% endif %}"
+           class="badge badge-lg transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2
+                  {% if not active_category %}badge-primary{% else %}badge-outline{% endif %}"
            hx-get="{{ page.url }}"
            hx-target="#news-grid"
            hx-push-url="true"
@@ -49,7 +49,7 @@
         <a href="{{ page.url }}?category={{ category.slug }}"
            role="listitem"
            class="badge badge-lg transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2
-                  {% if active_category.slug == category.slug %}bg-secondary text-secondary-content text-white border-secondary{% else %}badge-outline hover:bg-secondary text-secondary-content hover:text-white hover:border-secondary{% endif %}"
+                  {% if active_category.slug == category.slug %}badge-secondary{% else %}badge-outline{% endif %}"
            hx-get="{{ page.url }}?category={{ category.slug }}"
            hx-target="#news-grid"
            hx-push-url="true"

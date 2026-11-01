@@ -78,7 +78,7 @@
             {% if event.categories.all %}
               <div class="flex flex-wrap gap-1.5" aria-label="Categories">
                 {% for category in event.categories.all %}
-                  <span class="badge badge-outline text-xs font-medium border-secondary text-secondary">{{ category.name }}</span>
+                  <span class="badge badge-secondary badge-sm">{{ category.name }}</span>
                 {% endfor %}
               </div>
             {% endif %}
@@ -86,12 +86,12 @@
             <div class="card-actions mt-auto pt-2">
               {% if event.registration_url and not event.is_registration_closed %}
                 <a href="{{ event.registration_url }}"
-                   class="btn btn-sm btn-primary bg-secondary text-secondary-content border-secondary hover:bg-[#b3842f] text-white"
+                   class="btn btn-sm btn-primary"
                    target="_blank"
                    rel="noopener noreferrer"
                    aria-label="Register for {{ event.title }} (opens in new tab)">Register</a>
               {% elif event.is_registration_closed %}
-                <span class="badge badge-ghost text-base-content/50">Registration closed</span>
+                <span class="badge badge-neutral badge-sm">Registration closed</span>
               {% endif %}
               <a href="{{ event.url }}"
                  class="btn btn-sm btn-ghost text-primary hover:bg-base-200"

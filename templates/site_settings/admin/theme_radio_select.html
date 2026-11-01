@@ -126,13 +126,21 @@ Renders 5 institutional themes with palettes and compact component previews.
       border: 1px solid rgba(0, 0, 0, 0.1);
       position: relative;
     }
+    .nakashara-swatch-primary { background-color: var(--preview-primary); }
+    .nakashara-swatch-secondary { background-color: var(--preview-secondary); }
+    .nakashara-swatch-accent { background-color: var(--preview-accent); }
+    .nakashara-swatch-surface { background-color: var(--preview-surface); border: 1px solid #CBD5E1; }
+    .nakashara-swatch-page-bg { background-color: var(--preview-page-bg); }
+    .nakashara-swatch-text { background-color: var(--preview-text-main); }
+
     /* Compact Live Preview Surface */
     .nakashara-preview-surface {
       margin-top: auto;
       border-radius: 6px;
       padding: 1rem;
-      border-width: 1px;
-      border-style: solid;
+      border: 1px solid var(--preview-border-default);
+      background-color: var(--preview-surface);
+      color: var(--preview-text-main);
       font-size: 0.8125rem;
     }
     .nakashara-preview-heading {
@@ -140,11 +148,13 @@ Renders 5 institutional themes with palettes and compact component previews.
       font-size: 0.9375rem;
       margin: 0 0 0.375rem 0;
       line-height: 1.3;
+      color: var(--preview-text-heading);
     }
     .nakashara-preview-body {
       margin: 0 0 0.75rem 0;
       line-height: 1.45;
       font-size: 0.78125rem;
+      color: var(--preview-text-muted);
     }
     .nakashara-preview-controls {
       display: flex;
@@ -161,6 +171,8 @@ Renders 5 institutional themes with palettes and compact component previews.
       border-radius: 4px;
       border: none;
       text-decoration: none;
+      background-color: var(--preview-primary);
+      color: var(--preview-primary-fg);
     }
     .nakashara-preview-btn-secondary {
       display: inline-block;
@@ -168,8 +180,9 @@ Renders 5 institutional themes with palettes and compact component previews.
       font-weight: 600;
       padding: 0.35rem 0.65rem;
       border-radius: 4px;
-      border-width: 1px;
-      border-style: solid;
+      border: 1px solid var(--preview-secondary);
+      background-color: var(--preview-surface-secondary);
+      color: var(--preview-secondary);
       text-decoration: none;
     }
     .nakashara-preview-badge {
@@ -178,11 +191,15 @@ Renders 5 institutional themes with palettes and compact component previews.
       font-weight: 600;
       padding: 0.2rem 0.5rem;
       border-radius: 9999px;
+      background-color: var(--preview-badge-secondary-bg);
+      color: var(--preview-badge-secondary-text);
+      border: 1px solid var(--preview-badge-secondary-border);
     }
     .nakashara-preview-link {
       font-size: 0.75rem;
       font-weight: 600;
       text-decoration: underline;
+      color: var(--preview-link);
     }
     .nakashara-preview-input {
       width: 100%;
@@ -192,6 +209,96 @@ Renders 5 institutional themes with palettes and compact component previews.
       border-radius: 4px;
       outline: none;
       pointer-events: none;
+      background-color: var(--preview-surface);
+      border: 1px solid var(--preview-border-default);
+      color: var(--preview-text-main);
+    }
+
+    /* Scoped Theme Preview Tokens */
+    .nakashara-theme-card[data-theme-choice="academic-blue"] {
+      --preview-primary: #17365D;
+      --preview-primary-fg: #FFFFFF;
+      --preview-secondary: #52749A;
+      --preview-surface-secondary: #EEF2F6;
+      --preview-accent: #D6A75D;
+      --preview-surface: #FFFFFF;
+      --preview-page-bg: #F7F8FA;
+      --preview-text-main: #202C3A;
+      --preview-text-heading: #17365D;
+      --preview-text-muted: #566579;
+      --preview-link: #17365D;
+      --preview-border-default: #E2E8F0;
+      --preview-badge-secondary-bg: #EEF3F8;
+      --preview-badge-secondary-text: #264361;
+      --preview-badge-secondary-border: #CADAE8;
+    }
+    .nakashara-theme-card[data-theme-choice="sage-ivory"] {
+      --preview-primary: #344B40;
+      --preview-primary-fg: #FFFFFF;
+      --preview-secondary: #718878;
+      --preview-surface-secondary: #EAECE2;
+      --preview-accent: #C6AD7A;
+      --preview-surface: #FFFFFF;
+      --preview-page-bg: #F5F6F0;
+      --preview-text-main: #28342D;
+      --preview-text-heading: #344B40;
+      --preview-text-muted: #5C6F64;
+      --preview-link: #344B40;
+      --preview-border-default: #E1E5DC;
+      --preview-badge-secondary-bg: #EFF4F0;
+      --preview-badge-secondary-text: #304638;
+      --preview-badge-secondary-border: #CAD7CE;
+    }
+    .nakashara-theme-card[data-theme-choice="slate-steel"] {
+      --preview-primary: #334155;
+      --preview-primary-fg: #FFFFFF;
+      --preview-secondary: #647C91;
+      --preview-surface-secondary: #E7ECF0;
+      --preview-accent: #B68D58;
+      --preview-surface: #FFFFFF;
+      --preview-page-bg: #F3F5F7;
+      --preview-text-main: #273444;
+      --preview-text-heading: #334155;
+      --preview-text-muted: #596A7C;
+      --preview-link: #334155;
+      --preview-border-default: #E2E8F0;
+      --preview-badge-secondary-bg: #EFF3F7;
+      --preview-badge-secondary-text: #304150;
+      --preview-badge-secondary-border: #CAD5E0;
+    }
+    .nakashara-theme-card[data-theme-choice="burgundy-cream"] {
+      --preview-primary: #633B43;
+      --preview-primary-fg: #FFFFFF;
+      --preview-secondary: #987078;
+      --preview-surface-secondary: #F2EAE0;
+      --preview-accent: #B99A66;
+      --preview-surface: #FFFFFF;
+      --preview-page-bg: #FAF7F2;
+      --preview-text-main: #382D30;
+      --preview-text-heading: #633B43;
+      --preview-text-muted: #735D63;
+      --preview-link: #633B43;
+      --preview-border-default: #EBE2D8;
+      --preview-badge-secondary-bg: #F8F0F2;
+      --preview-badge-secondary-text: #57373D;
+      --preview-badge-secondary-border: #E3CCD1;
+    }
+    .nakashara-theme-card[data-theme-choice="teal-stone"] {
+      --preview-primary: #244B4B;
+      --preview-primary-fg: #FFFFFF;
+      --preview-secondary: #588481;
+      --preview-surface-secondary: #E7ECEB;
+      --preview-accent: #C5A46A;
+      --preview-surface: #FFFFFF;
+      --preview-page-bg: #F5F7F6;
+      --preview-text-main: #293838;
+      --preview-text-heading: #244B4B;
+      --preview-text-muted: #587070;
+      --preview-link: #244B4B;
+      --preview-border-default: #E0E7E6;
+      --preview-badge-secondary-bg: #EEF5F4;
+      --preview-badge-secondary-text: #254442;
+      --preview-badge-secondary-border: #C7DDD9;
     }
   </style>
 
@@ -217,6 +324,7 @@ Renders 5 institutional themes with palettes and compact component previews.
         {% with meta=opt.theme_meta colors=opt.theme_meta.colors %}
         <label
           class="nakashara-theme-card {% if opt.attrs.checked or opt.is_currently_active %}is-selected{% endif %}"
+          data-theme-choice="{{ opt.value }}"
           for="{{ opt.attrs.id }}"
           id="card-{{ opt.attrs.id }}"
         >
@@ -246,41 +354,41 @@ Renders 5 institutional themes with palettes and compact component previews.
 
           <!-- Color Swatch Strip -->
           <div class="nakashara-swatch-row" title="Palette Swatches (Primary, Secondary, Accent, Surface, Canvas, Text)">
-            <div class="nakashara-swatch" style="background-color: {{ colors.primary }};" title="Primary: {{ colors.primary }}"></div>
-            <div class="nakashara-swatch" style="background-color: {{ colors.secondary }};" title="Secondary: {{ colors.secondary }}"></div>
-            <div class="nakashara-swatch" style="background-color: {{ colors.accent }};" title="Accent: {{ colors.accent }}"></div>
-            <div class="nakashara-swatch" style="background-color: {{ colors.surface }}; border: 1px solid #CBD5E1;" title="Surface: {{ colors.surface }}"></div>
-            <div class="nakashara-swatch" style="background-color: {{ colors.page_bg }};" title="Page BG: {{ colors.page_bg }}"></div>
-            <div class="nakashara-swatch" style="background-color: {{ colors.text_main }};" title="Main Text: {{ colors.text_main }}"></div>
+            <div class="nakashara-swatch nakashara-swatch-primary" title="Primary: {{ colors.primary }}"></div>
+            <div class="nakashara-swatch nakashara-swatch-secondary" title="Secondary: {{ colors.secondary }}"></div>
+            <div class="nakashara-swatch nakashara-swatch-accent" title="Accent: {{ colors.accent }}"></div>
+            <div class="nakashara-swatch nakashara-swatch-surface" title="Surface: {{ colors.surface }}"></div>
+            <div class="nakashara-swatch nakashara-swatch-page-bg" title="Page BG: {{ colors.page_bg }}"></div>
+            <div class="nakashara-swatch nakashara-swatch-text" title="Main Text: {{ colors.text_main }}"></div>
           </div>
 
-          <!-- Compact Live Component Preview (Tokens applied directly) -->
-          <div class="nakashara-preview-surface" style="background-color: {{ colors.surface }}; border-color: {{ colors.border_default }}; color: {{ colors.text_main }};">
-            <div class="nakashara-preview-heading" style="color: {{ colors.text_heading }};">
+          <!-- Compact Live Component Preview (Tokens applied directly via CSS custom properties) -->
+          <div class="nakashara-preview-surface">
+            <div class="nakashara-preview-heading">
               {{ meta.name }}
             </div>
-            <p class="nakashara-preview-body" style="color: {{ colors.text_muted }};">
+            <p class="nakashara-preview-body">
               Accessible typography &amp; components for institutional scholarship.
             </p>
 
             <div class="nakashara-preview-controls">
               <!-- Primary Button -->
-              <span class="nakashara-preview-btn-primary" style="background-color: {{ colors.primary }}; color: {{ colors.primary_fg }};">
+              <span class="nakashara-preview-btn-primary">
                 Primary Action
               </span>
 
               <!-- Secondary Button -->
-              <span class="nakashara-preview-btn-secondary" style="background-color: {{ colors.surface_secondary }}; color: {{ colors.secondary }}; border-color: {{ colors.secondary }};">
+              <span class="nakashara-preview-btn-secondary">
                 Secondary
               </span>
 
               <!-- Badge -->
-              <span class="nakashara-preview-badge" style="background-color: {{ colors.accent }}; color: {{ colors.accent_fg }};">
+              <span class="nakashara-preview-badge">
                 Accredited
               </span>
 
               <!-- Link -->
-              <span class="nakashara-preview-link" style="color: {{ colors.link }};">
+              <span class="nakashara-preview-link">
                 Read policy &rarr;
               </span>
             </div>
@@ -291,7 +399,6 @@ Renders 5 institutional themes with palettes and compact component previews.
               readonly
               value="Sample institutional search…"
               class="nakashara-preview-input"
-              style="background-color: {{ colors.surface }}; border: 1px solid {{ colors.border_default }}; color: {{ colors.text_main }};"
               tabindex="-1"
             />
           </div>

@@ -95,7 +95,7 @@
               {% for cat in cats %}
                 <a
                   href="{% if index_page %}{{ index_page.url }}?category={{ cat.slug }}{% else %}#{% endif %}"
-                  class="badge badge-outline border-secondary text-secondary hover:bg-secondary text-secondary-content hover:text-white transition-colors"
+                  class="badge badge-secondary badge-md"
                   aria-label="Browse all {{ cat.name }}"
                 >
                   {{ cat.name }}

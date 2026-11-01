@@ -30,6 +30,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Removed arbitrary inline CSS hex style injection from `templates/base.html`, switching strictly to server-rendered `<html data-theme="...">` with safe default fallback.
   - Replaced hardcoded amber utility classes (`text-amber-*`, `bg-amber-*`, `border-amber-*`) across `footer.html`, `home_page.html`, `social_links.html`, `contact_details.html`, and `person_page.html` with semantic design tokens (`text-accent`, `bg-accent`, `border-accent`).
   - Updated `docs/theming.md` with complete documentation of the five institutional palettes, Wagtail admin selection, CSS tokens, and future theme extension guide.
+- **Authoritative Institutional Badge System**:
+  - Implemented centralized, pill-shaped badge system (`.badge`, `border-radius: 9999px !important;`) across all public templates, completely replacing DaisyUI default boxy badges.
+  - Created theme-aware semantic variants (`.badge-primary`, `.badge-secondary`, `.badge-accent`, `.badge-neutral`, `.badge-ghost`, `.badge-outline`, `.badge-success`, `.badge-warning`, `.badge-error`, `.badge-info`) and size utilities (`.badge-xs`, `.badge-sm`, `.badge-md`, `.badge-lg`).
+  - Configured WCAG 2.2 AA compliant token sets (`--color-badge-*`) for all 5 themes with subtle tinted backgrounds, crisp borders, and dark readable foregrounds (> 7:1 contrast on white and tinted surfaces).
+  - Eliminated conflicting color combinations (`text-secondary-content/10`, `text-secondary`, `bg-secondary`, `hover:text-white`) across news, events, departments, people, search, documents, and content templates.
+- **Homepage Carousel & Component Theme Integration**:
+  - Re-architected homepage hero carousel using CSS grid stacking (`[&>*]:col-start-1 [&>*]:row-start-1`), eliminating slide displacement and layout shifts during Alpine.js transitions.
+  - Added dual protective scrims (`.hero-carousel-scrim` and `.hero-carousel-scrim-vertical`) using theme tokens (`--color-header-utility-bg`) to guarantee high-contrast text legibility against bright slide imagery on both desktop and mobile.
+  - Added safe bottom navigation spacing (`pb-28 sm:pb-24 lg:pb-24`) preventing slide text and CTA buttons from colliding with pagination dots and navigation arrows.
+  - Harmonized homepage news cards, event calendar date badges (`bg-primary text-primary-content` with `text-accent`), notice cards, and collaboration banners to dynamically adhere to the active administrator-selected theme without hardcoded slate/amber hex values.
 
 ## [Unreleased] - 2026-10-09
 

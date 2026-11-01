@@ -1,49 +1,57 @@
 {% load static tailwind_tags wagtailcore_tags wagtailimages_tags translation_tags %}
 <!DOCTYPE html>
-<html lang="{{ LANGUAGE_CODE|default:'en' }}" dir="{% if LANGUAGE_BIDI %}rtl{% else %}ltr{% endif %}" data-theme="{{ site_settings.active_theme|default:'academic-blue' }}" class="h-full scroll-smooth">
+<html lang="{{ LANGUAGE_CODE|default:'en' }}" dir="{% if LANGUAGE_BIDI %}rtl{% else %}ltr{% endif %}"
+  data-theme="{{ site_settings.active_theme|default:'academic-blue' }}" class="h-full scroll-smooth">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>{% block title %}{% if page.seo_title %}{{ page.seo_title }}{% elif page.title %}{{ page.title }}{% else %}Home{% endif %}{% endblock %} — {{ site_settings.institution_name|default:"Nakashara" }}</title>
+  <title>{% block title %}{% if page.seo_title %}{{ page.seo_title }}
+    {% elif page.title %}{{ page.title }}
+    {% else %}Home{% endif %}
+    {% endblock %} — {{ site_settings.institution_name|default:"Nakashara" }}</title>
 
   <!-- Multilingual SEO & hreflang -->
   {% get_hreflang_tags as hreflang_tags %}
   {% for tag in hreflang_tags %}
-    <link rel="alternate" hreflang="{{ tag.lang }}" href="{{ tag.url }}" />
+  <link rel="alternate" hreflang="{{ tag.lang }}" href="{{ tag.url }}" />
   {% endfor %}
 
   <!-- SEO & Meta -->
-  <meta name="description" content="{% block meta_description %}{% if page.get_meta_description %}{{ page.get_meta_description }}{% else %}{{ site_settings.tagline|default:'Institutional Website and Content Management System' }}{% endif %}{% endblock %}" />
+  <meta name="description"
+    content="{% block meta_description %}{% if page.get_meta_description %}{{ page.get_meta_description }}{% else %}{{ site_settings.tagline|default:'Institutional Website and Content Management System' }}{% endif %}{% endblock %}" />
   {% if page.robots_noindex %}
-    <meta name="robots" content="noindex, nofollow" />
+  <meta name="robots" content="noindex, nofollow" />
   {% else %}
-    <meta name="robots" content="index, follow" />
+  <meta name="robots" content="index, follow" />
   {% endif %}
 
   <!-- Canonical URL -->
   {% if page %}
-    <link rel="canonical" href="{{ page.get_canonical_url }}" />
+  <link rel="canonical" href="{{ page.get_canonical_url }}" />
   {% endif %}
 
   <!-- Open Graph -->
   <meta property="og:site_name" content="{{ site_settings.institution_name|default:'Nakashara' }}" />
-  <meta property="og:title" content="{% if page.seo_title %}{{ page.seo_title }}{% elif page.title %}{{ page.title }}{% else %}{{ site_settings.institution_name|default:'Nakashara' }}{% endif %}" />
-  <meta property="og:description" content="{% if page.get_meta_description %}{{ page.get_meta_description }}{% else %}{{ site_settings.tagline }}{% endif %}" />
+  <meta property="og:title"
+    content="{% if page.seo_title %}{{ page.seo_title }}{% elif page.title %}{{ page.title }}{% else %}{{ site_settings.institution_name|default:'Nakashara' }}{% endif %}" />
+  <meta property="og:description"
+    content="{% if page.get_meta_description %}{{ page.get_meta_description }}{% else %}{{ site_settings.tagline }}{% endif %}" />
   <meta property="og:type" content="website" />
   {% if page.og_image %}
-    {% image page.og_image width-1200 as og_img %}
-    <meta property="og:image" content="{{ og_img.url }}" />
+  {% image page.og_image width-1200 as og_img %}
+  <meta property="og:image" content="{{ og_img.url }}" />
   {% elif site_settings.logo %}
-    {% image site_settings.logo width-600 as s_logo %}
-    <meta property="og:image" content="{{ s_logo.url }}" />
+  {% image site_settings.logo width-600 as s_logo %}
+  <meta property="og:image" content="{{ s_logo.url }}" />
   {% endif %}
 
   <!-- Favicon -->
   {% if site_settings.favicon %}
-    {% image site_settings.favicon width-64 as fav %}
-    <link rel="icon" type="image/png" href="{{ fav.url }}" />
+  {% image site_settings.favicon width-64 as fav %}
+  <link rel="icon" type="image/png" href="{{ fav.url }}" />
   {% else %}
-    <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}" />
+  <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}" />
   {% endif %}
 
   <!-- Fonts & Local CSS -->
@@ -56,43 +64,47 @@
 
   {% block extra_head %}{% endblock %}
 </head>
+
 <body class="min-h-full flex flex-col bg-page-bg text-base-content font-sans antialiased">
   <!-- Accessibility Skip Link -->
   <a href="#main-content"
-     class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-content focus:rounded-lg focus:shadow-md focus:ring-2 focus:ring-accent">
+    class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-content focus:rounded-lg focus:shadow-md focus:ring-2 focus:ring-accent">
     Skip to main content
   </a>
 
   <!-- ─── Emergency / Site Alert Banner ─────────────────────────────── -->
   {% if alert_banner %}
-    <aside class="py-2.5 px-4 text-sm font-medium
+  <aside class="py-2.5 px-4 text-sm font-medium
       {% if alert_banner.banner_type == 'critical' %}bg-error text-error-content
       {% elif alert_banner.banner_type == 'warning' %}bg-warning text-warning-content
       {% else %}bg-info text-info-content{% endif %}" role="alert">
-      <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
-        <div class="flex items-center gap-2">
-          <svg class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-          <span>
-            {% if alert_banner.title %}<strong>{{ alert_banner.title }}:</strong>{% endif %}
-            {{ alert_banner.message }}
-          </span>
-        </div>
-        {% if alert_banner.link_url %}
-          <a href="{{ alert_banner.link_url }}" class="underline font-bold text-xs uppercase tracking-wider hover:opacity-80 shrink-0">
-            {{ alert_banner.link_text|default:"Read more" }} &rarr;
-          </a>
-        {% endif %}
+    <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
+      <div class="flex items-center gap-2">
+        <svg class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <span>
+          {% if alert_banner.title %}<strong>{{ alert_banner.title }}:</strong>{% endif %}
+          {{ alert_banner.message }}
+        </span>
       </div>
-    </aside>
+      {% if alert_banner.link_url %}
+      <a href="{{ alert_banner.link_url }}"
+        class="underline font-bold text-xs uppercase tracking-wider hover:opacity-80 shrink-0">
+        {{ alert_banner.link_text|default:"Read more" }} &rarr;
+      </a>
+      {% endif %}
+    </div>
+  </aside>
   {% endif %}
 
   <!-- ─── Institutional Header ──────────────────────────────────────── -->
   <header class="bg-base-100 border-b border-base-300" x-data="{ mobileMenuOpen: false }">
 
     <!-- Top Utility Bar (Refined Institutional Tone) -->
-    <div class="bg-[var(--color-header-utility-bg)] text-[var(--color-header-utility-text)] text-xs py-1.5 px-4 sm:px-6 lg:px-8 border-b border-white/10">
+    <div
+      class="bg-[var(--color-header-utility-bg)] text-[var(--color-header-utility-text)] text-xs py-1.5 px-4 sm:px-6 lg:px-8 border-b border-white/10">
       <div class="max-w-7xl mx-auto flex justify-between items-center gap-4">
         <span class="opacity-80 truncate hidden sm:block">
           {{ site_settings.tagline|default:"Advancing Research, Learning, and Institutional Excellence" }}
@@ -104,9 +116,12 @@
           <span class="opacity-40" aria-hidden="true">&bull;</span>
           <a href="/contact/" class="opacity-80 hover:opacity-100 hover:underline transition-opacity">Contact</a>
           <span class="opacity-40" aria-hidden="true">&bull;</span>
-          <a href="/admin/" class="inline-flex items-center gap-1 opacity-80 hover:opacity-100 hover:text-accent transition-all" title="CMS Admin Portal">
+          <a href="/admin/"
+            class="inline-flex items-center gap-1 opacity-80 hover:opacity-100 hover:text-accent transition-all"
+            title="CMS Admin Portal">
             <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
             </svg>
             Staff Portal
           </a>
@@ -115,20 +130,27 @@
           <span class="opacity-40" aria-hidden="true">&bull;</span>
           {% get_site_languages as site_languages %}
           <div class="relative inline-block text-left" x-data="{ langOpen: false }">
-            <button @click="langOpen = !langOpen" @click.away="langOpen = false" type="button" class="inline-flex items-center gap-1.5 opacity-90 hover:opacity-100 font-medium focus:outline-hidden transition-opacity" aria-expanded="false" aria-haspopup="true">
+            <button @click="langOpen = !langOpen" @click.away="langOpen = false" type="button"
+              class="inline-flex items-center gap-1.5 opacity-90 hover:opacity-100 font-medium focus:outline-hidden transition-opacity"
+              aria-expanded="false" aria-haspopup="true">
               <svg class="w-3.5 h-3.5 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10m-.1-3h-4.8" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10m-.1-3h-4.8" />
               </svg>
               <span>{{ LANGUAGE_CODE|upper }}</span>
               <svg class="w-3 h-3 opacity-60" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
               </svg>
             </button>
-            <div x-show="langOpen" x-transition class="origin-top-right absolute right-0 mt-2 w-40 rounded-md shadow-lg bg-[var(--color-header-utility-bg)] border border-white/10 ring-1 ring-black ring-opacity-5 z-50 py-1" role="menu">
+            <div x-show="langOpen" x-transition
+              class="origin-top-right absolute right-0 mt-2 w-40 rounded-md shadow-lg bg-[var(--color-header-utility-bg)] border border-white/10 ring-1 ring-black ring-opacity-5 z-50 py-1"
+              role="menu">
               {% for l in site_languages %}
-                <a href="{% page_alternate_url l.code %}" class="block px-4 py-1.5 text-xs {% if l.code == LANGUAGE_CODE %}text-accent font-semibold bg-white/10{% else %}text-[var(--color-header-utility-text)] opacity-80 hover:bg-white/10 hover:opacity-100{% endif %} transition-colors" role="menuitem">
-                  {{ l.name }}
-                </a>
+              <a href="{% page_alternate_url l.code %}"
+                class="block px-4 py-1.5 text-xs {% if l.code == LANGUAGE_CODE %}text-accent font-semibold bg-white/10{% else %}text-[var(--color-header-utility-text)] opacity-80 hover:bg-white/10 hover:opacity-100{% endif %} transition-colors"
+                role="menuitem">
+                {{ l.name }}
+              </a>
               {% endfor %}
             </div>
           </div>
@@ -140,32 +162,38 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between gap-6">
 
       <!-- Logo + Name -->
-      <a href="/" class="flex items-center gap-3.5 group shrink-0" aria-label="{{ site_settings.institution_name|default:'Nakashara' }} Home">
+      <a href="/" class="flex items-center gap-3.5 group shrink-0"
+        aria-label="{{ site_settings.institution_name|default:'Nakashara' }} Home">
         {% if site_settings.logo %}
-          {% image site_settings.logo height-64 as nav_logo %}
-          <img src="{{ nav_logo.url }}" alt="{{ site_settings.logo_alt_text }}" class="h-11 w-auto object-contain" />
+        {% image site_settings.logo height-64 as nav_logo %}
+        <img src="{{ nav_logo.url }}" alt="{{ site_settings.logo_alt_text }}" class="h-11 w-auto object-contain" />
         {% else %}
-          <div class="w-10 h-10 rounded-xl bg-primary text-primary-content font-serif font-bold text-lg flex items-center justify-center shadow-xs border border-primary/20">
-            {{ site_settings.institution_short_name|slice:":1"|default:"N" }}
-          </div>
+        <div
+          class="w-10 h-10 rounded-xl bg-primary text-primary-content font-serif font-bold text-lg flex items-center justify-center shadow-xs border border-primary/20">
+          {{ site_settings.institution_short_name|slice:":1"|default:"N" }}
+        </div>
         {% endif %}
         <div>
-          <div class="font-serif font-bold text-xl sm:text-2xl tracking-tight text-base-content group-hover:text-primary transition-colors leading-tight">
+          <div
+            class="font-serif font-bold text-xl sm:text-2xl tracking-tight text-base-content group-hover:text-primary transition-colors leading-tight">
             {{ site_settings.institution_name|default:"Nakashara" }}
           </div>
           {% if site_settings.institution_short_name %}
-            <div class="text-[11px] font-semibold tracking-widest uppercase text-base-content/60 leading-tight mt-0.5">
-              {{ site_settings.institution_short_name }}
-            </div>
+          <div class="text-[11px] font-semibold tracking-widest uppercase text-base-content/60 leading-tight mt-0.5">
+            {{ site_settings.institution_short_name }}
+          </div>
           {% endif %}
         </div>
       </a>
 
       <!-- Desktop Search Bar -->
-      <form action="/search/" method="get" class="hidden md:flex items-center relative max-w-xs lg:max-w-sm w-full" role="search">
+      <form action="/search/" method="get" class="hidden md:flex items-center relative max-w-xs lg:max-w-sm w-full"
+        role="search">
         <label for="header-search" class="sr-only">Search institutional records</label>
-        <svg class="w-4 h-4 text-base-content/40 absolute left-3.5 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        <svg class="w-4 h-4 text-base-content/40 absolute left-3.5 pointer-events-none" fill="none" viewBox="0 0 24 24"
+          stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
         </svg>
         <input id="header-search" type="text" name="query" placeholder="Search pages, faculty, research…"
           class="w-full bg-base-200/60 text-base-content placeholder-base-content/40 border border-base-300 rounded-lg pl-10 pr-4 py-1.5 text-sm
@@ -173,12 +201,13 @@
       </form>
 
       <!-- Mobile Hamburger Button -->
-      <button @click="mobileMenuOpen = !mobileMenuOpen"
-        class="md:hidden btn btn-sm btn-ghost rounded-lg"
+      <button @click="mobileMenuOpen = !mobileMenuOpen" class="md:hidden btn btn-sm btn-ghost rounded-lg"
         aria-label="Toggle navigation" :aria-expanded="mobileMenuOpen.toString()">
         <svg class="w-6 h-6 text-base-content" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path x-show="!mobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-          <path x-show="mobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          <path x-show="!mobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M4 6h16M4 12h16M4 18h16" />
+          <path x-show="mobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M6 18L18 6M6 6l12 12" />
         </svg>
       </button>
     </div>
@@ -189,56 +218,51 @@
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <ul class="flex items-center gap-1 text-sm font-medium flex-wrap py-0.5" role="menubar">
           {% for item in nav_items %}
-            {% if item.is_visible %}
-              {% if item.children.all %}
-                <!-- Dropdown item -->
-                <li role="none" x-data="{ open: false }" class="relative">
-                  <button @click="open = !open" @keydown.escape="open = false"
-                    class="flex items-center gap-1 py-2 px-3 text-base-content/85 hover:text-primary hover:bg-base-200 rounded-lg transition-all"
-                    :class="open ? 'bg-base-200 text-primary' : ''"
-                    role="menuitem" :aria-expanded="open.toString()">
-                    {{ item.label }}
-                    <svg class="w-3.5 h-3.5 text-base-content/50 transition-transform" :class="open ? 'rotate-180 text-primary' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                    </svg>
-                  </button>
-                  <!-- Dropdown Panel -->
-                  <div x-show="open"
-                       x-transition:enter="transition ease-out duration-150"
-                       x-transition:enter-start="opacity-0 scale-95 -translate-y-1"
-                       x-transition:enter-end="opacity-100 scale-100 translate-y-0"
-                       x-transition:leave="transition ease-in duration-100"
-                       x-transition:leave-start="opacity-100"
-                       x-transition:leave-end="opacity-0 scale-95"
-                       @click.outside="open = false"
-                       class="absolute top-full left-0 mt-1 w-56 bg-base-100 text-base-content rounded-xl shadow-lg border border-base-300 py-1.5 z-50 overflow-hidden"
-                       role="menu">
-                    {% for child in item.children.all %}
-                      {% if child.is_visible %}
-                        <a href="{{ child.get_url }}"
-                          class="flex items-center gap-2.5 px-4 py-2 text-sm hover:bg-base-200 hover:text-primary transition-colors"
-                          {% if child.open_in_new_tab %}target="_blank" rel="noopener noreferrer"{% endif %}
-                          role="menuitem">
-                          <span class="w-1.5 h-1.5 rounded-full bg-secondary shrink-0"></span>
-                          {{ child.label }}
-                        </a>
-                      {% endif %}
-                    {% endfor %}
-                  </div>
-                </li>
-              {% else %}
-                <!-- Simple link -->
-                <li role="none">
-                  <a href="{{ item.get_url }}"
-                    class="block py-2 px-3 rounded-lg transition-all
-                           {% if page and page.url == item.get_url %}bg-base-200 text-primary font-semibold border-b-2 border-primary{% else %}text-base-content/85 hover:text-primary hover:bg-base-200{% endif %}"
-                    {% if item.open_in_new_tab %}target="_blank" rel="noopener noreferrer"{% endif %}
-                    role="menuitem">
-                    {{ item.label }}
-                  </a>
-                </li>
+          {% if item.is_visible %}
+          {% if item.children.all %}
+          <!-- Dropdown item -->
+          <li role="none" x-data="{ open: false }" class="relative">
+            <button @click="open = !open" @keydown.escape="open = false"
+              class="flex items-center gap-1 py-2 px-3 text-base-content/85 hover:text-primary hover:bg-base-200 rounded-lg transition-all"
+              :class="open ? 'bg-base-200 text-primary' : ''" role="menuitem" :aria-expanded="open.toString()">
+              {{ item.label }}
+              <svg class="w-3.5 h-3.5 text-base-content/50 transition-transform"
+                :class="open ? 'rotate-180 text-primary' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            <!-- Dropdown Panel -->
+            <div x-show="open" x-transition:enter="transition ease-out duration-150"
+              x-transition:enter-start="opacity-0 scale-95 -translate-y-1"
+              x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+              x-transition:leave="transition ease-in duration-100" x-transition:leave-start="opacity-100"
+              x-transition:leave-end="opacity-0 scale-95" @click.outside="open = false"
+              class="absolute top-full left-0 mt-1 w-56 bg-base-100 text-base-content rounded-xl shadow-lg border border-base-300 py-1.5 z-50 overflow-hidden"
+              role="menu">
+              {% for child in item.children.all %}
+              {% if child.is_visible %}
+              <a href="{{ child.get_url }}"
+                class="flex items-center gap-2.5 px-4 py-2 text-sm hover:bg-base-200 hover:text-primary transition-colors"
+                {% if child.open_in_new_tab %}target="_blank" rel="noopener noreferrer" {% endif %} role="menuitem">
+                <span class="w-1.5 h-1.5 rounded-full bg-secondary shrink-0"></span>
+                {{ child.label }}
+              </a>
               {% endif %}
-            {% endif %}
+              {% endfor %}
+            </div>
+          </li>
+          {% else %}
+          <!-- Simple link -->
+          <li role="none">
+            <a href="{{ item.get_url }}"
+              class="block py-2 px-3 rounded-lg transition-all
+                           {% if page and page.url == item.get_url %}bg-base-200 text-primary font-semibold border-b-2 border-primary{% else %}text-base-content/85 hover:text-primary hover:bg-base-200{% endif %}"
+              {% if item.open_in_new_tab %}target="_blank" rel="noopener noreferrer" {% endif %} role="menuitem">
+              {{ item.label }}
+            </a>
+          </li>
+          {% endif %}
+          {% endif %}
           {% endfor %}
         </ul>
       </div>
@@ -246,13 +270,10 @@
     {% endif %}
 
     <!-- ─── Mobile Menu ───────────────────────────────────────────── -->
-    <div x-show="mobileMenuOpen"
-         x-transition:enter="transition ease-out duration-200"
-         x-transition:enter-start="opacity-0 -translate-y-2"
-         x-transition:enter-end="opacity-100 translate-y-0"
-         x-transition:leave="transition ease-in duration-150"
-         x-transition:leave-end="opacity-0 -translate-y-2"
-         class="md:hidden border-t border-base-300 bg-base-100 px-4 py-4 space-y-2 shadow-lg">
+    <div x-show="mobileMenuOpen" x-transition:enter="transition ease-out duration-200"
+      x-transition:enter-start="opacity-0 -translate-y-2" x-transition:enter-end="opacity-100 translate-y-0"
+      x-transition:leave="transition ease-in duration-150" x-transition:leave-end="opacity-0 -translate-y-2"
+      class="md:hidden border-t border-base-300 bg-base-100 px-4 py-4 space-y-2 shadow-lg">
       <!-- Mobile Search -->
       <form action="/search/" method="get" class="mb-3" role="search">
         <label for="mobile-search" class="sr-only">Search</label>
@@ -261,43 +282,45 @@
       </form>
       <!-- Mobile Nav Links -->
       {% if nav_items %}
-        <ul class="space-y-0.5 text-sm font-medium">
-          {% for item in nav_items %}
-            {% if item.is_visible %}
-              <li>
-                <a href="{{ item.get_url }}"
-                  class="flex items-center gap-2 py-2 px-3 rounded-lg hover:bg-base-200 text-base-content hover:text-primary transition-all"
-                  {% if item.open_in_new_tab %}target="_blank" rel="noopener noreferrer"{% endif %}>
-                  {{ item.label }}
-                </a>
-              </li>
-              {% if item.children.all %}
-                {% for child in item.children.all %}
-                  {% if child.is_visible %}
-                    <li class="pl-4">
-                      <a href="{{ child.get_url }}"
-                        class="flex items-center gap-2 py-1.5 px-3 rounded-lg hover:bg-base-200 text-base-content/75 hover:text-primary text-xs transition-all"
-                        {% if child.open_in_new_tab %}target="_blank" rel="noopener noreferrer"{% endif %}>
-                        <span class="w-1 h-1 rounded-full bg-secondary"></span>
-                        {{ child.label }}
-                      </a>
-                    </li>
-                  {% endif %}
-                {% endfor %}
-              {% endif %}
-            {% endif %}
-          {% endfor %}
-        </ul>
+      <ul class="space-y-0.5 text-sm font-medium">
+        {% for item in nav_items %}
+        {% if item.is_visible %}
+        <li>
+          <a href="{{ item.get_url }}"
+            class="flex items-center gap-2 py-2 px-3 rounded-lg hover:bg-base-200 text-base-content hover:text-primary transition-all"
+            {% if item.open_in_new_tab %}target="_blank" rel="noopener noreferrer" {% endif %}>
+            {{ item.label }}
+          </a>
+        </li>
+        {% if item.children.all %}
+        {% for child in item.children.all %}
+        {% if child.is_visible %}
+        <li class="pl-4">
+          <a href="{{ child.get_url }}"
+            class="flex items-center gap-2 py-1.5 px-3 rounded-lg hover:bg-base-200 text-base-content/75 hover:text-primary text-xs transition-all"
+            {% if child.open_in_new_tab %}target="_blank" rel="noopener noreferrer" {% endif %}>
+            <span class="w-1 h-1 rounded-full bg-secondary"></span>
+            {{ child.label }}
+          </a>
+        </li>
+        {% endif %}
+        {% endfor %}
+        {% endif %}
+        {% endif %}
+        {% endfor %}
+      </ul>
       {% endif %}
 
       <!-- Mobile Language Switcher -->
       <div class="pt-3 border-t border-base-300">
-        <span class="text-xs font-semibold uppercase tracking-wider text-base-content/60 block mb-2 px-1">Language</span>
+        <span
+          class="text-xs font-semibold uppercase tracking-wider text-base-content/60 block mb-2 px-1">Language</span>
         <div class="grid grid-cols-3 gap-1.5">
           {% for l in site_languages %}
-            <a href="{% page_alternate_url l.code %}" class="btn btn-xs {% if l.code == LANGUAGE_CODE %}btn-primary{% else %}btn-ghost border border-base-300{% endif %}">
-              {{ l.name }}
-            </a>
+          <a href="{% page_alternate_url l.code %}"
+            class="btn btn-xs {% if l.code == LANGUAGE_CODE %}btn-primary{% else %}btn-ghost border border-base-300{% endif %}">
+            {{ l.name }}
+          </a>
           {% endfor %}
         </div>
       </div>
@@ -306,39 +329,40 @@
 
   <!-- ─── Unified Global Breadcrumbs ─────────────────────────────────── -->
   {% block breadcrumbs %}
-    {% if page and page.url != '/' %}
-      <nav aria-label="Breadcrumb" class="bg-base-200/70 border-b border-base-300 py-2 px-4 sm:px-6 lg:px-8">
-        <ol class="max-w-7xl mx-auto flex items-center gap-1.5 flex-wrap text-xs text-base-content/70" itemscope itemtype="https://schema.org/BreadcrumbList">
-          <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-            <a href="/" itemprop="item" class="hover:text-primary transition-colors font-medium">
+  {% if page and page.url != '/' %}
+  <nav aria-label="Breadcrumb" class="bg-base-200/70 border-b border-base-300 py-2 px-4 sm:px-6 lg:px-8">
+    <ol class="max-w-7xl mx-auto flex items-center gap-1.5 flex-wrap text-xs text-base-content/70" itemscope
+      itemtype="https://schema.org/BreadcrumbList">
+      <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <!-- <a href="/" itemprop="item" class="hover:text-primary transition-colors font-medium">
               <span itemprop="name">Home</span>
-            </a>
-            <meta itemprop="position" content="1" />
-          </li>
-          {% for ancestor in page.get_ancestors %}
-            {% if ancestor.is_root == False and ancestor.url != '/' %}
-              <li aria-hidden="true">
-                <svg class="w-3 h-3 text-base-content/40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                </svg>
-              </li>
-              <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-                <a href="{{ ancestor.url }}" itemprop="item" class="hover:text-primary transition-colors">
-                  <span itemprop="name">{{ ancestor.title }}</span>
-                </a>
-                <meta itemprop="position" content="{{ forloop.counter|add:1 }}" />
-              </li>
-            {% endif %}
-          {% endfor %}
-          <li aria-hidden="true">
-            <svg class="w-3 h-3 text-base-content/40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-            </svg>
-          </li>
-          <li class="font-semibold text-base-content truncate max-w-sm" aria-current="page">{{ page.title }}</li>
-        </ol>
-      </nav>
-    {% endif %}
+            </a> -->
+        <meta itemprop="position" content="1" />
+      </li>
+      {% for ancestor in page.get_ancestors %}
+      {% if ancestor.is_root == False and ancestor.url != '/' %}
+      <li aria-hidden="true">
+        <svg class="w-3 h-3 text-base-content/40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+      </li>
+      <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a href="{{ ancestor.url }}" itemprop="item" class="hover:text-primary transition-colors">
+          <span itemprop="name">{{ ancestor.title }}</span>
+        </a>
+        <meta itemprop="position" content="{{ forloop.counter|add:1 }}" />
+      </li>
+      {% endif %}
+      {% endfor %}
+      <li aria-hidden="true">
+        <svg class="w-3 h-3 text-base-content/40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+      </li>
+      <li class="font-semibold text-base-content truncate max-w-sm" aria-current="page">{{ page.title }}</li>
+    </ol>
+  </nav>
+  {% endif %}
   {% endblock %}
 
   <!-- ─── Main Content ───────────────────────────────────────────────── -->
@@ -348,9 +372,10 @@
 
   <!-- ─── Institutional Footer ───────────────────────────────────────── -->
   {% block footer %}
-    {% include "includes/footer.html" %}
+  {% include "includes/footer.html" %}
   {% endblock %}
 
   {% block extra_js %}{% endblock %}
 </body>
+
 </html>

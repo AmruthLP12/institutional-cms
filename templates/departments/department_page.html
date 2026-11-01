@@ -40,7 +40,7 @@
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     {# Short name badge #}
     {% if page.short_name %}
-      <span class="inline-block mb-3 badge badge-outline badge-primary font-semibold tracking-wide text-xs">
+      <span class="inline-block mb-3 badge badge-primary font-semibold tracking-wide text-xs">
         {{ page.short_name }}
       </span>
     {% endif %}
@@ -216,7 +216,7 @@
           <h2 id="dept-people-heading"
               class="font-serif text-2xl font-bold text-primary mb-6 flex items-center gap-3">
             <span>Our People</span>
-            <span class="badge badge-sm badge-outline badge-secondary">
+            <span class="badge badge-sm badge-secondary">
               {{ people|length }}{% if people|length == 10 %}+{% endif %}
             </span>
           </h2>

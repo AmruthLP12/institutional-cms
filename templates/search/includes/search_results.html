@@ -8,8 +8,10 @@
     <div class="divide-y divide-base-300">
       {% for result in search_results %}
         <article class="py-4 sm:py-5 first:pt-0">
-          <div class="text-xs text-base-content/60 uppercase tracking-wider font-medium mb-1">
-            {{ result.content_type.name|default:"Page" }}
+          <div class="mb-1.5">
+            <span class="badge badge-neutral badge-xs uppercase tracking-wider">
+              {{ result.content_type.name|default:"Page" }}
+            </span>
           </div>
           <h2 class="text-base sm:text-lg font-serif font-bold text-base-content hover:text-primary transition-colors mb-1.5">
             <a href="{% pageurl result %}">{{ result.title }}</a>

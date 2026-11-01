@@ -6,7 +6,7 @@
 {% with slides=page.hero_slides.all %}
   {% if slides|length > 0 %}
     <!-- Multi-Slide Hero Carousel (Alpine.js) -->
-    <section class="relative bg-slate-950 text-white overflow-hidden select-none"
+    <section class="relative bg-header-utility-bg text-white overflow-hidden select-none"
              aria-label="Institutional Highlights Carousel"
              x-data="{
                current: 0,
@@ -36,91 +36,90 @@
              @keydown.arrow-right.window="next()"
              @keydown.arrow-left.window="prev()">
 
-      <div class="relative min-h-[460px] sm:min-h-[520px] lg:min-h-[580px] flex items-center">
+      <!-- Slides Grid Stack (Forces all slides into the exact same coordinates) -->
+      <div class="relative w-full min-h-[480px] sm:min-h-[540px] lg:min-h-[600px] grid grid-cols-1 grid-rows-1 items-center [&>*]:col-start-1 [&>*]:row-start-1">
         {% for slide in slides %}
           <div x-show="current === {{ forloop.counter0 }}"
-               x-transition:enter="transition ease-out duration-700"
-               x-transition:enter-start="opacity-0 scale-105"
-               x-transition:enter-end="opacity-100 scale-100"
-               x-transition:leave="transition ease-in duration-500"
-               x-transition:leave-start="opacity-100 scale-100"
-               x-transition:leave-end="opacity-0 scale-95"
-               class="absolute inset-0 z-0"
+               x-transition:enter="transition-opacity duration-600 ease-out"
+               x-transition:enter-start="opacity-0"
+               x-transition:enter-end="opacity-100"
+               x-transition:leave="transition-opacity duration-400 ease-in"
+               x-transition:leave-start="opacity-100"
+               x-transition:leave-end="opacity-0"
+               class="relative w-full h-full min-h-[480px] sm:min-h-[540px] lg:min-h-[600px] flex items-center"
                role="group"
                aria-roledescription="slide"
                aria-label="Slide {{ forloop.counter }} of {{ slides|length }}">
 
-            <!-- Background Image -->
-            {% if slide.image %}
-              {% image slide.image width-2000 as slide_img %}
-              <div class="absolute inset-0 bg-cover bg-center"
-                   style="background-image: url('{{ slide_img.url }}');">
-              </div>
-            {% elif page.hero_image %}
-              {% image page.hero_image width-2000 as fallback_bg %}
-              <div class="absolute inset-0 bg-cover bg-center"
-                   style="background-image: url('{{ fallback_bg.url }}');">
-              </div>
-            {% else %}
-              <div class="absolute inset-0 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950"></div>
-            {% endif %}
-
-            <!-- Protective Dark Gradient Scrim (Guarantees 100% text readability) -->
-            <div class="absolute inset-0 bg-gradient-to-r from-slate-950/95 via-slate-950/80 to-slate-900/40"></div>
-            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-transparent to-slate-950/30"></div>
-          </div>
-        {% endfor %}
-
-        <!-- Slide Content Overlay -->
-        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28 w-full">
-          {% for slide in slides %}
-            <div x-show="current === {{ forloop.counter0 }}"
-                 x-transition:enter="transition ease-out duration-500 delay-150"
-                 x-transition:enter-start="opacity-0 translate-y-3"
-                 x-transition:enter-end="opacity-100 translate-y-0"
-                 class="max-w-3xl">
-
-              <!-- Badge Tag -->
-              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent/20 border border-accent/40 text-accent text-xs font-semibold uppercase tracking-wider mb-5 backdrop-blur-xs">
-                <span class="w-2 h-2 rounded-full bg-accent animate-pulse"></span>
-                {{ slide.tag|default:"Featured Program" }}
-              </div>
-
-              <!-- Slide Headline -->
-              <h1 class="text-3xl sm:text-5xl lg:text-6xl font-serif font-bold text-white tracking-tight leading-tight mb-5 drop-shadow-md">
-                {{ slide.headline|default:page.hero_headline|default:"Fostering Rigorous Research & Intellectual Discovery" }}
-              </h1>
-
-              <!-- Slide Subheadline -->
-              {% if slide.subheadline or page.hero_subheadline %}
-                <p class="text-base sm:text-lg lg:text-xl text-slate-200 font-sans max-w-2xl leading-relaxed mb-8 drop-shadow-xs">
-                  {{ slide.subheadline|default:page.hero_subheadline }}
-                </p>
+            <!-- Background Image & Theme-Aware Scrim -->
+            <div class="absolute inset-0 z-0 overflow-hidden bg-header-utility-bg">
+              {% if slide.image %}
+                {% image slide.image width-2000 as slide_img %}
+                <img src="{{ slide_img.url }}"
+                     alt="{{ slide.headline|default:page.hero_headline }}"
+                     class="w-full h-full object-cover object-center"
+                     loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
+                     {% if forloop.first %}fetchpriority="high"{% endif %} />
+              {% elif page.hero_image %}
+                {% image page.hero_image width-2000 as fallback_bg %}
+                <img src="{{ fallback_bg.url }}"
+                     alt="{{ page.hero_headline }}"
+                     class="w-full h-full object-cover object-center"
+                     loading="lazy" />
+              {% else %}
+                <div class="w-full h-full bg-gradient-to-br from-header-utility-bg via-primary to-header-utility-bg opacity-90"></div>
               {% endif %}
 
-              <!-- Slide CTAs -->
-              <div class="flex flex-wrap items-center gap-4">
-                {% if slide.cta_label or page.hero_cta_label %}
-                  <a href="{{ slide.get_cta_href|default:page.hero_cta_href }}"
-                     class="btn bg-accent hover:bg-accent/90 text-accent-content border-none font-semibold px-6 shadow-lg transition-all rounded-xl">
-                    {{ slide.cta_label|default:page.hero_cta_label|default:"Explore Institutional Programs" }} &rarr;
-                  </a>
+              <!-- Theme-Aware Dual Protective Scrims (Guarantees WCAG text readability on any image) -->
+              <div class="absolute inset-0 hero-carousel-scrim"></div>
+              <div class="absolute inset-0 hero-carousel-scrim-vertical"></div>
+            </div>
+
+            <!-- Slide Content Overlay -->
+            <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-20 lg:py-24 pb-28 sm:pb-24 lg:pb-24 w-full">
+              <div class="max-w-3xl">
+                <!-- Badge Tag -->
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent/20 border border-accent/40 text-accent text-xs font-semibold uppercase tracking-wider mb-5 backdrop-blur-xs">
+                  <span class="w-2 h-2 rounded-full bg-accent animate-pulse" aria-hidden="true"></span>
+                  {{ slide.tag|default:"Featured Program" }}
+                </div>
+
+                <!-- Slide Headline -->
+                <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-white tracking-tight leading-tight mb-5 drop-shadow-sm break-words">
+                  {{ slide.headline|default:page.hero_headline|default:"Fostering Rigorous Research & Intellectual Discovery" }}
+                </h1>
+
+                <!-- Slide Subheadline -->
+                {% if slide.subheadline or page.hero_subheadline %}
+                  <p class="text-base sm:text-lg lg:text-xl text-white/90 font-sans max-w-2xl leading-relaxed mb-8 drop-shadow-xs">
+                    {{ slide.subheadline|default:page.hero_subheadline }}
+                  </p>
                 {% endif %}
-                <a href="/about/"
-                   class="btn btn-outline text-white border-white/30 hover:bg-white/10 hover:border-white px-6 rounded-xl backdrop-blur-xs">
-                  About Nakashara
-                </a>
+
+                <!-- Slide CTAs -->
+                <div class="flex flex-wrap items-center gap-3 sm:gap-4">
+                  {% if slide.cta_label or page.hero_cta_label %}
+                    <a href="{{ slide.get_cta_href|default:page.hero_cta_href }}"
+                       class="btn bg-accent hover:bg-accent/90 text-accent-content border-none font-semibold px-6 shadow-md transition-all rounded-xl">
+                      {{ slide.cta_label|default:page.hero_cta_label|default:"Explore Institutional Programs" }} &rarr;
+                    </a>
+                  {% endif %}
+                  <a href="/about/"
+                     class="btn btn-outline text-white border-white/40 hover:bg-white/15 hover:border-white px-6 rounded-xl backdrop-blur-xs">
+                    About Nakashara
+                  </a>
+                </div>
               </div>
             </div>
-          {% endfor %}
-        </div>
+          </div>
+        {% endfor %}
       </div>
 
       <!-- Carousel Navigation Controls -->
-      <div class="absolute bottom-6 right-6 z-20 flex items-center gap-3">
+      <div class="absolute bottom-6 right-4 sm:right-8 z-20 flex items-center gap-2 sm:gap-3">
         <!-- Prev button -->
         <button @click="prev()"
-                class="w-10 h-10 rounded-full bg-slate-900/70 hover:bg-slate-900 border border-white/20 text-white flex items-center justify-center backdrop-blur-md transition-all shadow-md"
+                class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-header-utility-bg/80 hover:bg-header-utility-bg border border-white/20 text-white flex items-center justify-center backdrop-blur-md transition-all shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                 aria-label="Previous slide">
           <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
@@ -128,10 +127,10 @@
         </button>
 
         <!-- Slide Indicators -->
-        <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-900/70 border border-white/15 backdrop-blur-md">
+        <div class="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-full bg-header-utility-bg/80 border border-white/20 backdrop-blur-md">
           {% for slide in slides %}
             <button @click="goTo({{ forloop.counter0 }})"
-                    class="h-2 rounded-full transition-all"
+                    class="h-2 rounded-full transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                     :class="current === {{ forloop.counter0 }} ? 'w-6 bg-accent' : 'w-2 bg-white/40 hover:bg-white/70'"
                     aria-label="Go to slide {{ forloop.counter }}">
             </button>
@@ -140,7 +139,7 @@
 
         <!-- Next button -->
         <button @click="next()"
-                class="w-10 h-10 rounded-full bg-slate-900/70 hover:bg-slate-900 border border-white/20 text-white flex items-center justify-center backdrop-blur-md transition-all shadow-md"
+                class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-header-utility-bg/80 hover:bg-header-utility-bg border border-white/20 text-white flex items-center justify-center backdrop-blur-md transition-all shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                 aria-label="Next slide">
           <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
@@ -151,46 +150,47 @@
 
   {% else %}
     <!-- Single Hero Section (Protected High-Legibility Scrim) -->
-    <section class="relative bg-slate-950 text-white overflow-hidden" aria-labelledby="hero-heading">
+    <section class="relative bg-header-utility-bg text-white overflow-hidden" aria-labelledby="hero-heading">
       <!-- Background Image with Protective Scrim -->
       {% if page.hero_image %}
         {% image page.hero_image width-2000 as hero_bg %}
-        <div class="absolute inset-0 z-0 bg-cover bg-center"
-             style="background-image: url('{{ hero_bg.url }}');">
+        <div class="absolute inset-0 z-0 overflow-hidden">
+          <img src="{{ hero_bg.url }}"
+               alt="{{ page.hero_headline }}"
+               class="w-full h-full object-cover object-center"
+               loading="eager"
+               fetchpriority="high" />
+          <div class="absolute inset-0 hero-carousel-scrim"></div>
+          <div class="absolute inset-0 hero-carousel-scrim-vertical"></div>
         </div>
-        <!-- Multi-stop Dark Gradient Scrim -->
-        <div class="absolute inset-0 z-0 bg-gradient-to-r from-slate-950/95 via-slate-950/80 to-slate-900/40"></div>
-        <div class="absolute inset-0 z-0 bg-gradient-to-t from-slate-950/90 via-transparent to-slate-950/30"></div>
       {% else %}
-        <!-- Calm Deep Slate Canvas -->
-        <div class="absolute inset-0 z-0 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950"
-             style="background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px); background-size: 24px 24px;">
-        </div>
+        <!-- Calm Theme Canvas -->
+        <div class="absolute inset-0 z-0 bg-gradient-to-br from-header-utility-bg via-primary to-header-utility-bg opacity-95"></div>
       {% endif %}
 
       <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28 lg:py-32 flex flex-col items-start justify-center">
         <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent/20 border border-accent/40 text-accent text-xs font-semibold uppercase tracking-wider mb-6 backdrop-blur-xs">
-          <span class="w-2 h-2 rounded-full bg-accent animate-pulse"></span>
+          <span class="w-2 h-2 rounded-full bg-accent animate-pulse" aria-hidden="true"></span>
           Official Institutional Portal
         </div>
 
-        <h1 id="hero-heading" class="text-3xl sm:text-5xl lg:text-6xl font-serif font-bold text-white tracking-tight leading-tight max-w-3xl mb-6 drop-shadow-md">
+        <h1 id="hero-heading" class="text-3xl sm:text-5xl lg:text-6xl font-serif font-bold text-white tracking-tight leading-tight max-w-3xl mb-6 drop-shadow-sm break-words">
           {{ page.hero_headline|default:"Fostering Rigorous Research & Intellectual Discovery" }}
         </h1>
 
         {% if page.hero_subheadline %}
-          <p class="text-base sm:text-lg lg:text-xl text-slate-200 font-sans max-w-2xl leading-relaxed mb-8 drop-shadow-xs">
+          <p class="text-base sm:text-lg lg:text-xl text-white/90 font-sans max-w-2xl leading-relaxed mb-8 drop-shadow-xs">
             {{ page.hero_subheadline }}
           </p>
         {% endif %}
 
         <div class="flex flex-wrap items-center gap-4">
           <a href="{{ page.hero_cta_href }}"
-             class="btn bg-accent hover:bg-accent/90 text-accent-content border-none font-semibold px-6 shadow-lg transition-all rounded-xl">
+             class="btn bg-accent hover:bg-accent/90 text-accent-content border-none font-semibold px-6 shadow-md transition-all rounded-xl">
             {{ page.hero_cta_label|default:"Explore Institutional Programs" }} &rarr;
           </a>
           <a href="/about/"
-             class="btn btn-outline text-white border-white/30 hover:bg-white/10 hover:border-white px-6 rounded-xl backdrop-blur-xs">
+             class="btn btn-outline text-white border-white/40 hover:bg-white/15 hover:border-white px-6 rounded-xl backdrop-blur-xs">
             About the Institution
           </a>
         </div>
@@ -204,7 +204,7 @@
 <section class="bg-base-200/80 border-y border-base-300 py-3.5 px-4" aria-label="Important Announcements">
   <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
     <div class="flex items-center gap-3 min-w-0">
-      <span class="badge badge-warning text-xs font-bold uppercase tracking-wider shrink-0 shadow-xs">
+      <span class="badge badge-warning badge-sm font-bold uppercase tracking-wider shrink-0">
         Notice
       </span>
       <div class="text-sm font-medium text-base-content truncate max-w-3xl">
@@ -224,12 +224,12 @@
 
 <!-- ─── Quick Access Links ──────────────────────────────────────────── -->
 {% if quick_links %}
-<section class="py-8 bg-base-100 border-b border-base-200/80" aria-label="Quick Access Links">
+<section class="py-8 bg-base-100 border-b border-base-300/80" aria-label="Quick Access Links">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3">
       {% for ql in quick_links %}
         <a href="{{ ql.get_url }}"
-           class="p-3.5 bg-base-200/50 hover:bg-base-200 border border-base-200 hover:border-secondary/50 rounded-2xl text-center transition-all group shadow-xs hover:shadow-sm flex flex-col items-center justify-center">
+           class="p-3.5 bg-base-200/60 hover:bg-base-200 border border-base-300 hover:border-primary/50 rounded-2xl text-center transition-all group shadow-xs hover:shadow-sm flex flex-col items-center justify-center">
           <div class="w-9 h-9 rounded-xl bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-content flex items-center justify-center mb-2 transition-all">
             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
@@ -261,8 +261,8 @@
     <!-- News Column (8 cols) -->
     <div class="lg:col-span-8">
       <div class="flex items-center justify-between border-b border-base-300 pb-3.5 mb-6">
-        <h2 class="text-2xl font-serif font-bold text-base-content flex items-center gap-2.5">
-          <span class="w-2.5 h-6 bg-secondary rounded-full"></span>
+        <h2 class="text-2xl font-serif font-bold text-heading flex items-center gap-2.5">
+          <span class="w-2.5 h-6 bg-secondary rounded-full" aria-hidden="true"></span>
           Institutional News &amp; Reports
         </h2>
         <a href="/news/" class="text-sm font-semibold text-primary hover:text-secondary hover:underline transition-colors inline-flex items-center gap-1">
@@ -274,18 +274,25 @@
       {% if featured_news %}
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
           {% for item in featured_news %}
-            <article class="bg-base-100 border border-base-200 rounded-2xl overflow-hidden shadow-xs hover:shadow-md hover:-translate-y-0.5 transition-all flex flex-col">
+            <article class="bg-base-100 border border-base-300 rounded-2xl overflow-hidden shadow-xs hover:shadow-md hover:border-primary/40 hover:-translate-y-0.5 transition-all flex flex-col">
               {% if item.featured_image %}
                 {% image item.featured_image fill-600x380 as news_thumb %}
                 <img src="{{ news_thumb.url }}" alt="{{ item.headline }}" class="w-full h-44 object-cover" loading="lazy" />
               {% else %}
-                <div class="w-full h-44 bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-primary font-serif font-bold text-2xl">
+                <div class="w-full h-44 bg-base-200 flex items-center justify-center text-primary font-serif font-bold text-2xl">
                   NKSR
                 </div>
               {% endif %}
               <div class="p-5 grow flex flex-col justify-between">
                 <div>
-                  <div class="text-xs text-base-content/60 mb-2 font-medium">
+                  {% if item.categories.all %}
+                    <div class="flex flex-wrap gap-1.5 mb-2">
+                      {% for cat in item.categories.all|slice:":2" %}
+                        <span class="badge badge-secondary badge-xs">{{ cat.name }}</span>
+                      {% endfor %}
+                    </div>
+                  {% endif %}
+                  <div class="text-xs text-base-content/70 mb-2 font-medium">
                     {{ item.publication_date|date:"d M Y" }}
                   </div>
                   <h3 class="font-serif font-bold text-base text-base-content hover:text-primary transition-colors leading-snug mb-2">
@@ -297,7 +304,7 @@
                     </p>
                   {% endif %}
                 </div>
-                <div class="mt-4 pt-3 border-t border-base-200 flex items-center justify-between text-xs text-primary font-semibold">
+                <div class="mt-4 pt-3 border-t border-base-300 flex items-center justify-between text-xs text-primary font-semibold">
                   <span>Read article</span>
                   <span aria-hidden="true">&rarr;</span>
                 </div>
@@ -311,12 +318,12 @@
 
       <!-- Official Circulars / Notices -->
       {% if notices %}
-        <div class="mt-10 p-6 bg-base-200/40 border border-base-200 rounded-2xl">
-          <div class="flex items-center justify-between mb-4 pb-2.5 border-b border-base-200">
-            <h3 class="font-serif font-bold text-lg text-base-content">Official Circulars &amp; Orders</h3>
-            <a href="/notices/" class="text-xs font-semibold text-primary hover:underline">All notices &rarr;</a>
+        <div class="mt-10 p-6 bg-base-200/60 border border-base-300 rounded-2xl">
+          <div class="flex items-center justify-between mb-4 pb-2.5 border-b border-base-300">
+            <h3 class="font-serif font-bold text-lg text-heading">Official Circulars &amp; Orders</h3>
+            <a href="/notices/" class="text-xs font-semibold text-primary hover:text-secondary hover:underline">All notices &rarr;</a>
           </div>
-          <ul class="divide-y divide-base-200 text-sm">
+          <ul class="divide-y divide-base-300 text-sm">
             {% for notice in notices %}
               <li class="py-3 flex items-start justify-between gap-4">
                 <div>
@@ -336,8 +343,8 @@
     <!-- Events Column (4 cols) -->
     <div class="lg:col-span-4">
       <div class="flex items-center justify-between border-b border-base-300 pb-3.5 mb-6">
-        <h2 class="text-2xl font-serif font-bold text-base-content flex items-center gap-2.5">
-          <span class="w-2.5 h-6 bg-primary rounded-full"></span>
+        <h2 class="text-2xl font-serif font-bold text-heading flex items-center gap-2.5">
+          <span class="w-2.5 h-6 bg-primary rounded-full" aria-hidden="true"></span>
           Events
         </h2>
         <a href="/events/" class="text-sm font-semibold text-primary hover:text-secondary hover:underline transition-colors inline-flex items-center gap-1">
@@ -349,13 +356,20 @@
       {% if upcoming_events %}
         <div class="space-y-4">
           {% for ev in upcoming_events %}
-            <article class="p-4 bg-base-100 border border-base-200 rounded-2xl shadow-xs hover:border-secondary/50 hover:shadow-sm transition-all flex gap-4 items-start">
-              <!-- Date Badge -->
-              <div class="shrink-0 w-12 h-14 bg-slate-900 text-white rounded-xl flex flex-col items-center justify-center text-center shadow-xs">
+            <article class="p-4 bg-base-100 border border-base-300 rounded-2xl shadow-xs hover:border-primary/40 hover:shadow-sm transition-all flex gap-4 items-start">
+              <!-- Date Badge (Consumes theme primary and accent) -->
+              <div class="shrink-0 w-12 h-14 bg-primary text-primary-content rounded-xl flex flex-col items-center justify-center text-center shadow-xs">
                 <span class="text-[10px] uppercase font-bold tracking-wider text-accent leading-none mb-1">{{ ev.start_datetime|date:"M" }}</span>
                 <span class="text-lg font-bold font-serif leading-none">{{ ev.start_datetime|date:"d" }}</span>
               </div>
               <div class="grow min-w-0">
+                {% if ev.categories.all %}
+                  <div class="flex flex-wrap gap-1 mb-1">
+                    {% for cat in ev.categories.all|slice:":1" %}
+                      <span class="badge badge-secondary badge-xs">{{ cat.name }}</span>
+                    {% endfor %}
+                  </div>
+                {% endif %}
                 <h3 class="font-serif font-bold text-sm text-base-content hover:text-primary transition-colors leading-snug mb-1">
                   <a href="{{ ev.url }}">{{ ev.title }}</a>
                 </h3>
@@ -376,23 +390,23 @@
         <p class="text-sm text-base-content/60 italic py-6">No upcoming events scheduled.</p>
       {% endif %}
 
-      <!-- Work & Collaborate Card (Deep Slate) -->
-      <div class="mt-8 p-6 bg-slate-900 text-slate-100 rounded-2xl shadow-md border border-slate-800">
+      <!-- Work & Collaborate Card (Theme Primary) -->
+      <div class="mt-8 p-6 bg-primary text-primary-content rounded-2xl shadow-md border border-primary/20">
         <div class="w-8 h-8 rounded-xl bg-accent/20 text-accent flex items-center justify-center mb-3">
           <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
           </svg>
         </div>
         <h3 class="font-serif font-bold text-lg text-white mb-1.5">Work &amp; Collaborate</h3>
-        <p class="text-xs text-slate-300 leading-relaxed mb-5">
+        <p class="text-xs text-primary-content/85 leading-relaxed mb-5">
           Discover current procurement notices, career vacancies, and collaborative grant opportunities at Nakashara.
         </p>
         <div class="flex flex-col gap-2.5 text-xs font-semibold">
-          <a href="/tenders/" class="btn btn-sm bg-slate-800 hover:bg-slate-700 text-slate-100 border border-slate-700 justify-between rounded-xl">
+          <a href="/tenders/" class="btn btn-sm bg-white/10 hover:bg-white/20 text-white border border-white/20 justify-between rounded-xl transition-all">
             <span>Active Tenders &amp; Notices</span>
             <span aria-hidden="true">&rarr;</span>
           </a>
-          <a href="/careers/" class="btn btn-sm bg-slate-800 hover:bg-slate-700 text-slate-100 border border-slate-700 justify-between rounded-xl">
+          <a href="/careers/" class="btn btn-sm bg-white/10 hover:bg-white/20 text-white border border-white/20 justify-between rounded-xl transition-all">
             <span>Career Opportunities</span>
             <span aria-hidden="true">&rarr;</span>
           </a>
@@ -404,10 +418,10 @@
 
 <!-- ─── Research Highlights Section ─────────────────────────────────── -->
 {% if page.research_highlights %}
-<section class="bg-base-200/40 border-t border-base-200 py-14">
+<section class="bg-base-200/40 border-t border-base-300 py-14">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="mb-8">
-      <h2 class="text-3xl font-serif font-bold text-base-content mb-2">Research Highlights</h2>
+      <h2 class="text-3xl font-serif font-bold text-heading mb-2">Research Highlights</h2>
       <p class="text-base-content/70 text-sm">Pioneering discoveries and strategic research programs across centers.</p>
     </div>
     <div class="prose max-w-none">

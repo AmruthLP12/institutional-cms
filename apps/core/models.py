@@ -182,7 +182,7 @@ class ScheduledVisibilityModel(models.Model):
             VisibilityStatus.INACTIVE: "badge-neutral",
             VisibilityStatus.SCHEDULED: "badge-info",
             VisibilityStatus.ACTIVE: "badge-success",
-            VisibilityStatus.EXPIRED: "badge-ghost",
+            VisibilityStatus.EXPIRED: "badge-neutral",
             VisibilityStatus.INVALID_SCHEDULE: "badge-error",
         }
         return classes.get(self.visibility_status, "badge-neutral")

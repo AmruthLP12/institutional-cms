@@ -95,6 +95,47 @@
   --color-info-fg: #FFFFFF;
   --color-info-bg: #EFF6FF;
   --color-info-border: #BFDBFE;
+
+  /* Badges (WCAG 2.2 AA compliant, subtle tinted pill system) */
+  --color-badge-neutral-bg: #F1F5F9;
+  --color-badge-neutral-text: #202C3A;
+  --color-badge-neutral-border: #CBD5E1;
+  --color-badge-neutral-hover: #E2E8F0;
+
+  --color-badge-primary-bg: #EBF2FA;
+  --color-badge-primary-text: #17365D;
+  --color-badge-primary-border: #BFD3EA;
+  --color-badge-primary-hover: #DEEAF7;
+
+  --color-badge-secondary-bg: #EEF3F8;
+  --color-badge-secondary-text: #264361;
+  --color-badge-secondary-border: #CADAE8;
+  --color-badge-secondary-hover: #E1ECF4;
+
+  --color-badge-accent-bg: #FAF3E7;
+  --color-badge-accent-text: #6C4E13;
+  --color-badge-accent-border: #EAD5AC;
+  --color-badge-accent-hover: #F5E9D3;
+
+  --color-badge-success-bg: #F0FDF4;
+  --color-badge-success-text: #14532D;
+  --color-badge-success-border: #BBF7D0;
+  --color-badge-success-hover: #DCFCE7;
+
+  --color-badge-warning-bg: #FEFCE8;
+  --color-badge-warning-text: #854D0E;
+  --color-badge-warning-border: #FEF08A;
+  --color-badge-warning-hover: #FEF9C3;
+
+  --color-badge-error-bg: #FEF2F2;
+  --color-badge-error-text: #991B1B;
+  --color-badge-error-border: #FECACA;
+  --color-badge-error-hover: #FEE2E2;
+
+  --color-badge-info-bg: #EFF6FF;
+  --color-badge-info-text: #1E40AF;
+  --color-badge-info-border: #BFDBFE;
+  --color-badge-info-hover: #DBEAFE;
 }
 
 /* -------------------------------------------------------------------------
@@ -173,6 +214,47 @@
   --color-info-fg: #FFFFFF;
   --color-info-bg: #EFF6FF;
   --color-info-border: #BFDBFE;
+
+  /* Badges (WCAG 2.2 AA compliant, subtle tinted pill system) */
+  --color-badge-neutral-bg: #EAECE3;
+  --color-badge-neutral-text: #28342D;
+  --color-badge-neutral-border: #CBD2C4;
+  --color-badge-neutral-hover: #DFE3D6;
+
+  --color-badge-primary-bg: #EAF0EB;
+  --color-badge-primary-text: #23342C;
+  --color-badge-primary-border: #BFD1C4;
+  --color-badge-primary-hover: #DDE7DF;
+
+  --color-badge-secondary-bg: #EFF4F0;
+  --color-badge-secondary-text: #304638;
+  --color-badge-secondary-border: #CAD7CE;
+  --color-badge-secondary-hover: #E3ECE5;
+
+  --color-badge-accent-bg: #F8F4EA;
+  --color-badge-accent-text: #5E4B22;
+  --color-badge-accent-border: #E3D5B5;
+  --color-badge-accent-hover: #F1EADA;
+
+  --color-badge-success-bg: #F0FDF4;
+  --color-badge-success-text: #14532D;
+  --color-badge-success-border: #BBF7D0;
+  --color-badge-success-hover: #DCFCE7;
+
+  --color-badge-warning-bg: #FEFCE8;
+  --color-badge-warning-text: #854D0E;
+  --color-badge-warning-border: #FEF08A;
+  --color-badge-warning-hover: #FEF9C3;
+
+  --color-badge-error-bg: #FEF2F2;
+  --color-badge-error-text: #991B1B;
+  --color-badge-error-border: #FECACA;
+  --color-badge-error-hover: #FEE2E2;
+
+  --color-badge-info-bg: #EFF6FF;
+  --color-badge-info-text: #1E40AF;
+  --color-badge-info-border: #BFDBFE;
+  --color-badge-info-hover: #DBEAFE;
 }
 
 /* -------------------------------------------------------------------------
@@ -251,6 +333,47 @@
   --color-info-fg: #FFFFFF;
   --color-info-bg: #EFF6FF;
   --color-info-border: #BFDBFE;
+
+  /* Badges (WCAG 2.2 AA compliant, subtle tinted pill system) */
+  --color-badge-neutral-bg: #EAEFF4;
+  --color-badge-neutral-text: #273444;
+  --color-badge-neutral-border: #CBD5E0;
+  --color-badge-neutral-hover: #DFE6ED;
+
+  --color-badge-primary-bg: #EAEEF3;
+  --color-badge-primary-text: #1E293B;
+  --color-badge-primary-border: #C0CCD7;
+  --color-badge-primary-hover: #DFE5EC;
+
+  --color-badge-secondary-bg: #EFF3F7;
+  --color-badge-secondary-text: #304150;
+  --color-badge-secondary-border: #CAD5E0;
+  --color-badge-secondary-hover: #E2EAF1;
+
+  --color-badge-accent-bg: #F7F2EB;
+  --color-badge-accent-text: #594121;
+  --color-badge-accent-border: #DECBB0;
+  --color-badge-accent-hover: #EFE6D9;
+
+  --color-badge-success-bg: #F0FDF4;
+  --color-badge-success-text: #14532D;
+  --color-badge-success-border: #BBF7D0;
+  --color-badge-success-hover: #DCFCE7;
+
+  --color-badge-warning-bg: #FEFCE8;
+  --color-badge-warning-text: #854D0E;
+  --color-badge-warning-border: #FEF08A;
+  --color-badge-warning-hover: #FEF9C3;
+
+  --color-badge-error-bg: #FEF2F2;
+  --color-badge-error-text: #991B1B;
+  --color-badge-error-border: #FECACA;
+  --color-badge-error-hover: #FEE2E2;
+
+  --color-badge-info-bg: #EFF6FF;
+  --color-badge-info-text: #1E40AF;
+  --color-badge-info-border: #BFDBFE;
+  --color-badge-info-hover: #DBEAFE;
 }
 
 /* -------------------------------------------------------------------------
@@ -329,6 +452,47 @@
   --color-info-fg: #FFFFFF;
   --color-info-bg: #EFF6FF;
   --color-info-border: #BFDBFE;
+
+  /* Badges (WCAG 2.2 AA compliant, subtle tinted pill system) */
+  --color-badge-neutral-bg: #F2ECE4;
+  --color-badge-neutral-text: #382D30;
+  --color-badge-neutral-border: #DCD0C3;
+  --color-badge-neutral-hover: #E7DFD5;
+
+  --color-badge-primary-bg: #F5ECEE;
+  --color-badge-primary-text: #47292F;
+  --color-badge-primary-border: #DEC4CA;
+  --color-badge-primary-hover: #ECDDE0;
+
+  --color-badge-secondary-bg: #F8F0F2;
+  --color-badge-secondary-text: #57373D;
+  --color-badge-secondary-border: #E3CCD1;
+  --color-badge-secondary-hover: #EFE2E5;
+
+  --color-badge-accent-bg: #F9F4EB;
+  --color-badge-accent-text: #5A4522;
+  --color-badge-accent-border: #E2D2B5;
+  --color-badge-accent-hover: #F2E9D8;
+
+  --color-badge-success-bg: #F0FDF4;
+  --color-badge-success-text: #14532D;
+  --color-badge-success-border: #BBF7D0;
+  --color-badge-success-hover: #DCFCE7;
+
+  --color-badge-warning-bg: #FEFCE8;
+  --color-badge-warning-text: #854D0E;
+  --color-badge-warning-border: #FEF08A;
+  --color-badge-warning-hover: #FEF9C3;
+
+  --color-badge-error-bg: #FEF2F2;
+  --color-badge-error-text: #991B1B;
+  --color-badge-error-border: #FECACA;
+  --color-badge-error-hover: #FEE2E2;
+
+  --color-badge-info-bg: #EFF6FF;
+  --color-badge-info-text: #1E40AF;
+  --color-badge-info-border: #BFDBFE;
+  --color-badge-info-hover: #DBEAFE;
 }
 
 /* -------------------------------------------------------------------------
@@ -407,6 +571,47 @@
   --color-info-fg: #FFFFFF;
   --color-info-bg: #EFF6FF;
   --color-info-border: #BFDBFE;
+
+  /* Badges (WCAG 2.2 AA compliant, subtle tinted pill system) */
+  --color-badge-neutral-bg: #E9EFEB;
+  --color-badge-neutral-text: #293838;
+  --color-badge-neutral-border: #CBD7D3;
+  --color-badge-neutral-hover: #DCE4E1;
+
+  --color-badge-primary-bg: #E9F2F1;
+  --color-badge-primary-text: #163232;
+  --color-badge-primary-border: #BDD6D4;
+  --color-badge-primary-hover: #DBE9E8;
+
+  --color-badge-secondary-bg: #EEF5F4;
+  --color-badge-secondary-text: #254442;
+  --color-badge-secondary-border: #C7DDD9;
+  --color-badge-secondary-hover: #DEECE9;
+
+  --color-badge-accent-bg: #F8F3E9;
+  --color-badge-accent-text: #5E4921;
+  --color-badge-accent-border: #E2D2B3;
+  --color-badge-accent-hover: #F1E8D7;
+
+  --color-badge-success-bg: #F0FDF4;
+  --color-badge-success-text: #14532D;
+  --color-badge-success-border: #BBF7D0;
+  --color-badge-success-hover: #DCFCE7;
+
+  --color-badge-warning-bg: #FEFCE8;
+  --color-badge-warning-text: #854D0E;
+  --color-badge-warning-border: #FEF08A;
+  --color-badge-warning-hover: #FEF9C3;
+
+  --color-badge-error-bg: #FEF2F2;
+  --color-badge-error-text: #991B1B;
+  --color-badge-error-border: #FECACA;
+  --color-badge-error-hover: #FEE2E2;
+
+  --color-badge-info-bg: #EFF6FF;
+  --color-badge-info-text: #1E40AF;
+  --color-badge-info-border: #BFDBFE;
+  --color-badge-info-hover: #DBEAFE;
 }
 
 /* =========================================================================
@@ -464,6 +669,49 @@
   --color-error-content: var(--color-error-content);
   --color-info: var(--color-info);
   --color-info-content: var(--color-info-content);
+
+  --color-header-utility-bg: var(--color-header-utility-bg);
+  --color-header-utility-text: var(--color-header-utility-text);
+
+  --color-badge-neutral-bg: var(--color-badge-neutral-bg);
+  --color-badge-neutral-text: var(--color-badge-neutral-text);
+  --color-badge-neutral-border: var(--color-badge-neutral-border);
+  --color-badge-neutral-hover: var(--color-badge-neutral-hover);
+
+  --color-badge-primary-bg: var(--color-badge-primary-bg);
+  --color-badge-primary-text: var(--color-badge-primary-text);
+  --color-badge-primary-border: var(--color-badge-primary-border);
+  --color-badge-primary-hover: var(--color-badge-primary-hover);
+
+  --color-badge-secondary-bg: var(--color-badge-secondary-bg);
+  --color-badge-secondary-text: var(--color-badge-secondary-text);
+  --color-badge-secondary-border: var(--color-badge-secondary-border);
+  --color-badge-secondary-hover: var(--color-badge-secondary-hover);
+
+  --color-badge-accent-bg: var(--color-badge-accent-bg);
+  --color-badge-accent-text: var(--color-badge-accent-text);
+  --color-badge-accent-border: var(--color-badge-accent-border);
+  --color-badge-accent-hover: var(--color-badge-accent-hover);
+
+  --color-badge-success-bg: var(--color-badge-success-bg);
+  --color-badge-success-text: var(--color-badge-success-text);
+  --color-badge-success-border: var(--color-badge-success-border);
+  --color-badge-success-hover: var(--color-badge-success-hover);
+
+  --color-badge-warning-bg: var(--color-badge-warning-bg);
+  --color-badge-warning-text: var(--color-badge-warning-text);
+  --color-badge-warning-border: var(--color-badge-warning-border);
+  --color-badge-warning-hover: var(--color-badge-warning-hover);
+
+  --color-badge-error-bg: var(--color-badge-error-bg);
+  --color-badge-error-text: var(--color-badge-error-text);
+  --color-badge-error-border: var(--color-badge-error-border);
+  --color-badge-error-hover: var(--color-badge-error-hover);
+
+  --color-badge-info-bg: var(--color-badge-info-bg);
+  --color-badge-info-text: var(--color-badge-info-text);
+  --color-badge-info-border: var(--color-badge-info-border);
+  --color-badge-info-hover: var(--color-badge-info-hover);
 }
 
 /* =========================================================================
@@ -568,32 +816,247 @@
     box-shadow: 0 4px 12px -2px rgb(0 0 0 / 0.06);
   }
 
-  /* --- Badges ------------------------------------------------------------- */
+  /* --- Authoritative Institutional Badge System --------------------------- */
   .badge {
-    border-radius: 9999px; /* pill */
+    --radius-selector: 9999px !important;
+    --badge-bg: var(--color-badge-neutral-bg);
+    --badge-fg: var(--color-badge-neutral-text);
+    --badge-color: var(--color-badge-neutral-border);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.375rem;
+    width: fit-content;
+    white-space: nowrap;
+    vertical-align: middle;
+    border-radius: 9999px !important; /* Force pill shape consistently across all pages */
     font-weight: 600;
     font-size: 0.75rem;
+    line-height: 1rem;
     letter-spacing: 0.025em;
-    padding-left: 0.625rem;
-    padding-right: 0.625rem;
+    padding: 0.25rem 0.6875rem;
+    height: auto;
+    min-height: 1.5rem;
+    border: 1px solid var(--color-badge-neutral-border);
+    background-color: var(--color-badge-neutral-bg);
+    color: var(--color-badge-neutral-text);
+    transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+    text-decoration: none;
+    box-shadow: none !important;
   }
 
+  a.badge:hover,
+  button.badge:hover {
+    background-color: var(--color-badge-neutral-hover);
+    color: var(--color-badge-neutral-text);
+  }
+
+  .badge:focus-visible,
+  a.badge:focus-visible,
+  button.badge:focus-visible {
+    outline: 2px solid var(--color-focus-ring) !important;
+    outline-offset: 2px !important;
+  }
+
+  /* Badge Sizes */
+  .badge-xs {
+    border-radius: 9999px !important;
+    font-size: 0.6875rem;
+    line-height: 0.875rem;
+    padding: 0.125rem 0.4375rem;
+    min-height: 1.125rem;
+  }
+
+  .badge-sm {
+    border-radius: 9999px !important;
+    font-size: 0.6875rem;
+    line-height: 0.875rem;
+    padding: 0.1875rem 0.5625rem;
+    min-height: 1.25rem;
+  }
+
+  .badge-md {
+    border-radius: 9999px !important;
+    font-size: 0.75rem;
+    line-height: 1rem;
+    padding: 0.25rem 0.6875rem;
+    min-height: 1.5rem;
+  }
+
+  .badge-lg {
+    border-radius: 9999px !important;
+    font-size: 0.8125rem;
+    line-height: 1.125rem;
+    padding: 0.3125rem 0.875rem;
+    min-height: 1.75rem;
+  }
+
+  /* Badge Variants (Subtle tinted background + dark readable text + visible border) */
   .badge-primary {
-    background-color: var(--color-primary);
-    color: var(--color-primary-content);
-    border-color: var(--color-primary);
+    --badge-bg: var(--color-badge-primary-bg) !important;
+    --badge-fg: var(--color-badge-primary-text) !important;
+    --badge-color: var(--color-badge-primary-border) !important;
+    background-color: var(--color-badge-primary-bg) !important;
+    color: var(--color-badge-primary-text) !important;
+    border-color: var(--color-badge-primary-border) !important;
+  }
+  a.badge-primary:hover,
+  button.badge-primary:hover {
+    background-color: var(--color-badge-primary-hover) !important;
+    color: var(--color-badge-primary-text) !important;
   }
 
   .badge-secondary {
-    background-color: var(--color-secondary);
-    color: var(--color-secondary-content);
-    border-color: var(--color-secondary);
+    --badge-bg: var(--color-badge-secondary-bg) !important;
+    --badge-fg: var(--color-badge-secondary-text) !important;
+    --badge-color: var(--color-badge-secondary-border) !important;
+    background-color: var(--color-badge-secondary-bg) !important;
+    color: var(--color-badge-secondary-text) !important;
+    border-color: var(--color-badge-secondary-border) !important;
+  }
+  a.badge-secondary:hover,
+  button.badge-secondary:hover {
+    background-color: var(--color-badge-secondary-hover) !important;
+    color: var(--color-badge-secondary-text) !important;
   }
 
   .badge-accent {
-    background-color: var(--color-accent);
-    color: var(--color-accent-content);
-    border-color: var(--color-accent);
+    --badge-bg: var(--color-badge-accent-bg) !important;
+    --badge-fg: var(--color-badge-accent-text) !important;
+    --badge-color: var(--color-badge-accent-border) !important;
+    background-color: var(--color-badge-accent-bg) !important;
+    color: var(--color-badge-accent-text) !important;
+    border-color: var(--color-badge-accent-border) !important;
+  }
+  a.badge-accent:hover,
+  button.badge-accent:hover {
+    background-color: var(--color-badge-accent-hover) !important;
+    color: var(--color-badge-accent-text) !important;
+  }
+
+  .badge-neutral,
+  .badge-ghost {
+    --badge-bg: var(--color-badge-neutral-bg) !important;
+    --badge-fg: var(--color-badge-neutral-text) !important;
+    --badge-color: var(--color-badge-neutral-border) !important;
+    background-color: var(--color-badge-neutral-bg) !important;
+    color: var(--color-badge-neutral-text) !important;
+    border-color: var(--color-badge-neutral-border) !important;
+  }
+  a.badge-neutral:hover,
+  button.badge-neutral:hover,
+  a.badge-ghost:hover,
+  button.badge-ghost:hover {
+    background-color: var(--color-badge-neutral-hover) !important;
+    color: var(--color-badge-neutral-text) !important;
+  }
+
+  .badge-success {
+    --badge-bg: var(--color-badge-success-bg) !important;
+    --badge-fg: var(--color-badge-success-text) !important;
+    --badge-color: var(--color-badge-success-border) !important;
+    background-color: var(--color-badge-success-bg) !important;
+    color: var(--color-badge-success-text) !important;
+    border-color: var(--color-badge-success-border) !important;
+  }
+  a.badge-success:hover,
+  button.badge-success:hover {
+    background-color: var(--color-badge-success-hover) !important;
+    color: var(--color-badge-success-text) !important;
+  }
+
+  .badge-warning {
+    --badge-bg: var(--color-badge-warning-bg) !important;
+    --badge-fg: var(--color-badge-warning-text) !important;
+    --badge-color: var(--color-badge-warning-border) !important;
+    background-color: var(--color-badge-warning-bg) !important;
+    color: var(--color-badge-warning-text) !important;
+    border-color: var(--color-badge-warning-border) !important;
+  }
+  a.badge-warning:hover,
+  button.badge-warning:hover {
+    background-color: var(--color-badge-warning-hover) !important;
+    color: var(--color-badge-warning-text) !important;
+  }
+
+  .badge-error {
+    --badge-bg: var(--color-badge-error-bg) !important;
+    --badge-fg: var(--color-badge-error-text) !important;
+    --badge-color: var(--color-badge-error-border) !important;
+    background-color: var(--color-badge-error-bg) !important;
+    color: var(--color-badge-error-text) !important;
+    border-color: var(--color-badge-error-border) !important;
+  }
+  a.badge-error:hover,
+  button.badge-error:hover {
+    background-color: var(--color-badge-error-hover) !important;
+    color: var(--color-badge-error-text) !important;
+  }
+
+  .badge-info {
+    --badge-bg: var(--color-badge-info-bg) !important;
+    --badge-fg: var(--color-badge-info-text) !important;
+    --badge-color: var(--color-badge-info-border) !important;
+    background-color: var(--color-badge-info-bg) !important;
+    color: var(--color-badge-info-text) !important;
+    border-color: var(--color-badge-info-border) !important;
+  }
+  a.badge-info:hover,
+  button.badge-info:hover {
+    background-color: var(--color-badge-info-hover) !important;
+    color: var(--color-badge-info-text) !important;
+  }
+
+  .badge-outline {
+    --badge-bg: transparent !important;
+    background-color: transparent !important;
+    color: var(--color-text-main) !important;
+    border-color: var(--color-border-strong) !important;
+  }
+  a.badge-outline:hover,
+  button.badge-outline:hover {
+    background-color: var(--color-hover-bg) !important;
+    color: var(--color-text-main) !important;
+  }
+  .badge-outline.badge-primary {
+    background-color: transparent !important;
+    color: var(--color-primary) !important;
+    border-color: var(--color-primary) !important;
+  }
+  a.badge-outline.badge-primary:hover,
+  button.badge-outline.badge-primary:hover {
+    background-color: var(--color-badge-primary-bg) !important;
+    color: var(--color-badge-primary-text) !important;
+  }
+  .badge-outline.badge-secondary {
+    background-color: transparent !important;
+    color: var(--color-secondary) !important;
+    border-color: var(--color-secondary) !important;
+  }
+  a.badge-outline.badge-secondary:hover,
+  button.badge-outline.badge-secondary:hover {
+    background-color: var(--color-badge-secondary-bg) !important;
+    color: var(--color-badge-secondary-text) !important;
+  }
+
+  /* --- Hero & Carousel Scrims ---------------------------------------------- */
+  .hero-carousel-scrim {
+    background: linear-gradient(
+      to right,
+      color-mix(in srgb, var(--color-header-utility-bg) 96%, transparent) 0%,
+      color-mix(in srgb, var(--color-header-utility-bg) 88%, transparent) 45%,
+      color-mix(in srgb, var(--color-header-utility-bg) 65%, transparent) 75%,
+      color-mix(in srgb, var(--color-header-utility-bg) 40%, transparent) 100%
+    );
+  }
+
+  .hero-carousel-scrim-vertical {
+    background: linear-gradient(
+      to top,
+      color-mix(in srgb, var(--color-header-utility-bg) 96%, transparent) 0%,
+      color-mix(in srgb, var(--color-header-utility-bg) 50%, transparent) 40%,
+      transparent 75%
+    );
   }
 
   /* --- Form Inputs -------------------------------------------------------- */
